@@ -10,7 +10,7 @@ backend:
   name: git-gateway
   repo: bosconext/bosconext-site           
   branch: main                                              # ← 基本ブランチ（通常 main）
-  https://auth.decapbridge.com/sites/d705ef0d-2d21-481d-be33-47ebbf3ea0e0
+  identity_url: https://auth.decapbridge.com/sites/d705ef0d-2d21-481d-be33-47ebbf3ea0e0
   gateway_url: https://gateway.decapbridge.com
   commit_messages:
     create: 'Create {{collection}} "{{slug}}" - {{author-name}} <{{author-login}}> via DecapBridge'
