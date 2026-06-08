@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>フォトギャラリー｜BOSCO NEXT</title>
-<meta name="description" content="BOSCO NEXT（ボスコ ネクスト）の試合・練習・合宿の写真ギャラリー。">
+<title>お問い合わせ｜BOSCO NEXT</title>
+<meta name="description" content="BOSCO NEXT（ボスコ ネクスト）へのお問い合わせ。体験・入部・対戦・取材などのご連絡はこちらから。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -17,63 +17,60 @@
 
 <section class="subhero">
   <div class="wrap subhero-inner">
-    <div class="breadcrumb"><a href="index.html">ホーム</a> ／ フォトギャラリー</div>
-    <span class="kicker">Gallery</span>
-    <h1>フォトギャラリー</h1>
-    <p>試合・練習・合宿の風景をお届けします。</p>
+    <div class="breadcrumb"><a href="index.html">ホーム</a> ／ お問い合わせ</div>
+    <span class="kicker">Contact</span>
+    <h1>お問い合わせ</h1>
+    <p>体験・入部・練習試合の対戦・取材など、お気軽にご連絡ください。見学だけでも大丈夫です。</p>
   </div>
 </section>
 
 <section class="block">
-  <div class="wrap">
-    <div class="gallery-grid reveal" id="gallery"></div>
-    <p class="cnote reveal" style="margin-top:20px">※ 写真を追加するには、下の photos に画像URLを足してください（SNSの画像URLや、画像をネット上に置いたURLが使えます）。空欄のマスは追加用の見本です。</p>
-  </div>
-</section>
+  <div class="wrap contact-grid">
 
-<section class="cta-band">
-  <div class="wrap">
-    <h2>もっと見る</h2>
-    <p>最新の写真はSNSでも随時更新しています。</p>
-    <div class="hero-cta">
-      <a class="btn btn-primary" href="links.html">SNS・リンク集へ</a>
-      <a class="btn btn-ghost" data-link="contact">お問い合わせ</a>
+    <!-- 連絡方法 -->
+    <div class="contact-card reveal">
+      <h3>連絡方法</h3>
+      <p>右のフォーム、またはSNSのDMからご連絡いただけます。体験・見学・入部・対戦のご相談も歓迎です。</p>
+      <div class="contact-methods">
+        <a class="cmethod" data-link="x" target="_blank" rel="noopener">
+          <span class="ic">𝕏</span><span><span class="l1">X（旧Twitter）のDM</span><span class="l2">@BOSCONEXT</span></span>
+        </a>
+        <a class="cmethod" data-link="instagram" target="_blank" rel="noopener">
+          <span class="ic">📷</span><span><span class="l1">Instagram のDM</span><span class="l2">@bosconext_futsal</span></span>
+        </a>
+      </div>
     </div>
+
+    <!-- フォーム（Netlify Forms） -->
+    <div class="contact-card reveal">
+      <h3>メッセージを送る</h3>
+      <p>必要事項をご記入のうえ、送信してください。</p>
+      <form name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/thanks.html" class="cform">
+        <input type="hidden" name="form-name" value="contact">
+        <p hidden><label>これは記入しないでください: <input name="bot-field"></label></p>
+        <div class="cfield"><label for="cf-name">お名前</label><input id="cf-name" type="text" name="name" placeholder="山田 太郎" required></div>
+        <div class="cfield"><label for="cf-mail">メールアドレス</label><input id="cf-mail" type="email" name="email" placeholder="example@email.com" required></div>
+        <div class="cfield"><label for="cf-type">お問い合わせの種類</label>
+          <select id="cf-type" name="種類" style="width:100%;padding:.8em 1em;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff;color:var(--ink)">
+            <option>体験・見学希望</option>
+            <option>入部希望</option>
+            <option>練習試合・対戦のご相談</option>
+            <option>取材・メディア</option>
+            <option>その他</option>
+          </select>
+        </div>
+        <div class="cfield"><label for="cf-msg">お問い合わせ内容</label><textarea id="cf-msg" name="message" rows="5" placeholder="ご相談内容をご記入ください" required></textarea></div>
+        <button type="submit" class="btn btn-primary">送信する</button>
+        <p class="cnote">送信いただいた内容は、チームのメールアドレスに届きます。<br>（送信が有効になるのは、Netlifyで「フォーム検出」を有効化し、通知先メールを設定した後です。設定が済むまではSNSのDMをご利用ください）</p>
+      </form>
+    </div>
+
   </div>
 </section>
 
 <footer id="site-footer"></footer>
 <button class="to-top" id="toTop" aria-label="上に戻る">↑</button>
 
-<!-- チーム写真を1枚目に使うため読み込み -->
-<script src="team-photo.js"></script>
 <script src="site.js"></script>
-<script>
-/* =====================================================================
-   ★★★ このページの内容はここを編集します ★★★
-   ・写真を追加 → photos に { src:"画像のURL", cap:"説明" } を足す
-   ・src を "" にすると「追加用の見本マス」になります
-   ===================================================================== */
-const PAGE = {
-  photos: [
-    {src: HERO_IMG, cap:"2026 ソーシャルフットボール東京都大会"},
-    {src:"", cap:"写真の説明"},
-    {src:"", cap:"写真の説明"},
-    {src:"", cap:"写真の説明"},
-    {src:"", cap:"写真の説明"},
-    {src:"", cap:"写真の説明"}
-  ]
-};
-
-/* ===== 表示の仕組み ===== */
-document.getElementById("gallery").innerHTML = PAGE.photos.map(function(p){
-  var inner = p.src
-    ? '<img src="'+esc(p.src)+'" alt="'+esc(p.cap||"")+'"><span class="cap">'+esc(p.cap||"")+'</span>'
-    : '<span class="gallery-empty">＋ 画像URLを追加</span>';
-  return '<div class="gallery-item">'+inner+'</div>';
-}).join("");
-
-observeReveals();
-</script>
 </body>
 </html>

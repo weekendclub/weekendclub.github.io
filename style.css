@@ -1,140 +1,130 @@
-/* ============================================================
-   BOSCO NEXT 共通スクリプト（全ページのヘッダー・フッター・動作）
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>スケジュール｜BOSCO NEXT</title>
+<meta name="description" content="BOSCO NEXT（ボスコ ネクスト）の試合・大会スケジュールと、これまでの結果。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-   ★ メニュー・リンク・チーム名は、この下の SITE_INFO を
-      書き換えれば「すべてのページ」にまとめて反映されます。
-   ============================================================ */
-var SITE_INFO = {
-  clubName:   "BOSCO NEXT",
-  clubNameJa: "ボスコ ネクスト",
-  tagline:    "どんな壁も乗り越えられる",
+<header id="site-header"></header>
+<nav class="mobile-menu" id="mobileMenu"></nav>
 
-  /* 体験・入部やお問い合わせの行き先、SNS など（URLを書き換えればOK） */
-  links: {
-    join:        "contact.html",   /* 「体験・入部」ボタンの行き先 */
-    contact:     "contact.html",   /* 「お問い合わせ」ボタンの行き先 */
-    x:           "https://x.com/BOSCONEXT",
-    instagram:   "https://www.instagram.com/bosconext_futsal/",
-    note:        "https://note.com/mackeyfootball/n/ndbd9daead388",
-    blog:        "http://ameblo.jp/bosconext/",
-    jimdoContact:"https://bosconext.jimdofree.com/お問い合わせ/お問い合わせ/",
-    jimdoJoin:   "https://bosconext.jimdofree.com/お問い合わせ/入部希望/",
-    jimdoMembers:"https://bosconext.jimdofree.com/会員専用ページ/"
-  },
+<section class="subhero">
+  <div class="wrap subhero-inner">
+    <div class="breadcrumb"><a href="index.html">ホーム</a> ／ スケジュール</div>
+    <span class="kicker">Schedule</span>
+    <h1>スケジュール</h1>
+    <p>直近の試合予定と、これまでの結果をまとめています。</p>
+  </div>
+</section>
 
-  /* 上のメニューに出すページ */
-  nav: [
-    {label:"ホーム",           url:"index.html"},
-    {label:"チーム＆選手",     url:"team.html"},
-    {label:"大会出場概要",     url:"tournaments.html"},
-    {label:"スケジュール",     url:"schedule.html"},
-    {label:"フォトギャラリー", url:"gallery.html"},
-    {label:"リンク",           url:"links.html"},
-    {label:"お問い合わせ",     url:"contact.html"}
+<section class="block">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="kicker">Upcoming</span>
+      <h2 class="sec-title">これからの予定</h2>
+    </div>
+    <div class="reveal" id="nextMatch"></div>
+    <div class="sched-list reveal" id="upcomingList"></div>
+  </div>
+</section>
+
+<section class="block" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="kicker">Results</span>
+      <h2 class="sec-title">これまでの結果</h2>
+      <p class="sec-lead">新しい結果を上に追記していけます。</p>
+    </div>
+    <div class="reveal" id="resultList"></div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="wrap">
+    <h2>会場での応援、お待ちしています</h2>
+    <p>見学・体験のご希望もお気軽に。</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" data-link="join">⚽ 体験・入部のお問い合わせ</a>
+      <a class="btn btn-ghost" data-link="contact">お問い合わせ</a>
+    </div>
+  </div>
+</section>
+
+<footer id="site-footer"></footer>
+<button class="to-top" id="toTop" aria-label="上に戻る">↑</button>
+
+<script src="site.js"></script>
+<script>
+/* =====================================================================
+   ★★★ このページの内容はここを編集します ★★★
+   ・予定を追加 → upcoming の { } をコピー（一番上が「次の一戦」）
+   ・結果を追加 → results の { } をコピーして上に貼る
+   ・wl は "w"（勝ち）/ "l"（負け）/ "d"（引き分け）/ ""（記載なし）
+   ===================================================================== */
+const PAGE = {
+  upcoming: [
+    {
+      date:"7.19", sub:"2026 ㈰",
+      title:"JIFF 第6回ソーシャルフットボール全国大会 予選・関東大会",
+      place:"サイデン化学アリーナさいたま（さいたま市記念総合体育館）",
+      placeLink:"http://sai-kinen-spomachi.jp/",
+      note:"全国大会〈神奈川県／11/21〉の出場をかけた予選です。応援よろしくお願いします🔥"
+    }
+    /* ↓ 追加するときはこの下に貼り付け（先頭の , を忘れずに）
+    ,{ date:"8.10", sub:"2026 ㈯", title:"練習試合 vs ◯◯", place:"◯◯体育館", placeLink:"", note:"" }
+    */
   ],
-  /* 補助的なページ（スマホメニューとフッターに表示） */
-  morePages: [
-    {label:"リーグ",             url:"league.html"},
-    {label:"新聞・雑誌切り抜き", url:"press.html"},
-    {label:"会員専用ページ",     url:"members.html"}
+
+  results: [
+    {
+      date:"2026.5.31",
+      title:"ソーシャルフットボール東京都大会2026",
+      score:"準優勝 🥈", wl:"d",
+      note:"＠明治学院大学白金キャンパス。4連覇とはならずも全力で闘いました。"
+    },
+    {
+      date:"20XX.XX.XX",
+      title:"練習試合 vs ◯◯（サンプル）",
+      score:"3 - 1", wl:"w",
+      note:"スコアやひとことをここに記入してください。"
+    }
   ]
 };
 
-/* ===== ここから下は仕組み（基本さわらなくてOK） ===== */
-function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
-
-function currentPage(){
-  var p = location.pathname.split("/").pop();
-  return (p && p.length) ? p : "index.html";
-}
-
-function renderHeader(){
-  var here = currentPage();
-  var links = SITE_INFO.nav.map(function(n){
-    var act = (n.url === here) ? ' class="active"' : '';
-    return '<li><a href="'+esc(n.url)+'"'+act+'>'+esc(n.label)+'</a></li>';
-  }).join("");
-
-  var header = document.getElementById("site-header");
-  if(header){
-    header.innerHTML =
-      '<div class="wrap nav">'+
-        '<a href="index.html" class="brand"><span class="ball"></span>'+esc(SITE_INFO.clubName)+'</a>'+
-        '<ul class="nav-links">'+links+'</ul>'+
-        '<div class="nav-cta"><a class="btn btn-dark" href="'+esc(SITE_INFO.links.join)+'">⚽ 体験・入部</a></div>'+
-        '<button class="burger" id="burger" aria-label="メニュー"><span></span><span></span><span></span></button>'+
-      '</div>';
+/* ===== 表示の仕組み ===== */
+(function(){
+  var s = PAGE.upcoming || [];
+  if(!s.length){ document.getElementById("nextMatch").innerHTML = '<p style="color:var(--ink-soft)">現在、公開できる予定はありません。</p>'; }
+  else {
+    var n = s[0];
+    document.getElementById("nextMatch").innerHTML =
+      '<div class="next-match"><span class="nm-flag">⚽ 次の一戦 / NEXT MATCH</span>'+
+      '<div class="nm-grid"><div class="nm-date"><div class="d">'+esc(n.date)+'</div><div class="m">'+esc(n.sub||"")+'</div></div>'+
+      '<div class="nm-info"><h3>'+esc(n.title)+'</h3>'+
+      '<div class="place">📍 '+(n.placeLink?'<a href="'+esc(n.placeLink)+'" target="_blank" rel="noopener">'+esc(n.place)+'</a>':esc(n.place))+'</div>'+
+      (n.note?'<p class="note">'+esc(n.note)+'</p>':'')+'</div></div></div>';
+    document.getElementById("upcomingList").innerHTML = s.slice(1).map(function(e){
+      return '<div class="sched-row"><div class="sd">'+esc(e.date)+' <small>'+esc(e.sub||"")+'</small></div>'+
+        '<div><div class="st">'+esc(e.title)+'</div>'+(e.place?'<div class="sp">📍 '+esc(e.place)+'</div>':'')+'</div></div>';
+    }).join("");
   }
+})();
 
-  var all = SITE_INFO.nav.concat(SITE_INFO.morePages);
-  var mob = document.getElementById("mobileMenu");
-  if(mob){
-    mob.innerHTML = all.map(function(n){
-      return '<a href="'+esc(n.url)+'">'+esc(n.label)+'</a>';
-    }).join("") +
-    '<a class="btn btn-primary" href="'+esc(SITE_INFO.links.join)+'">⚽ 体験・入部のお問い合わせ</a>';
-  }
-}
+document.getElementById("resultList").innerHTML = (PAGE.results||[]).map(function(r){
+  var wl = r.wl ? '<span class="wl '+r.wl+'">'+({w:"WIN",l:"LOSE",d:"-"}[r.wl]||"")+'</span>' : '';
+  return '<div class="result-row"><div class="rd">'+esc(r.date)+'</div>'+
+    '<div class="rt">'+esc(r.title)+(r.note?'<div class="sp" style="font-weight:400;color:var(--ink-soft);font-size:.85rem;margin-top:4px">'+esc(r.note)+'</div>':'')+'</div>'+
+    '<div class="rs">'+esc(r.score||"")+wl+'</div></div>';
+}).join("");
 
-function renderFooter(){
-  var foot = document.getElementById("site-footer");
-  if(!foot) return;
-  var all = SITE_INFO.nav.concat(SITE_INFO.morePages);
-  var pages = all.map(function(n){return '<a href="'+esc(n.url)+'">'+esc(n.label)+'</a>';}).join("");
-  var sns =
-    '<a href="'+esc(SITE_INFO.links.x)+'" target="_blank" rel="noopener">X</a>'+
-    '<a href="'+esc(SITE_INFO.links.instagram)+'" target="_blank" rel="noopener">Instagram</a>'+
-    '<a href="'+esc(SITE_INFO.links.note)+'" target="_blank" rel="noopener">note</a>'+
-    '<a href="'+esc(SITE_INFO.links.blog)+'" target="_blank" rel="noopener">ブログ</a>';
-  foot.innerHTML =
-    '<div class="wrap">'+
-      '<div class="foot-top">'+
-        '<div>'+
-          '<div class="foot-brand"><span class="ball"></span>'+esc(SITE_INFO.clubName)+'</div>'+
-          '<p class="foot-tag">'+esc(SITE_INFO.tagline)+'</p>'+
-        '</div>'+
-        '<div class="foot-links">'+sns+'</div>'+
-      '</div>'+
-      '<div class="foot-cols">'+pages+'</div>'+
-      '<div class="foot-bottom">'+
-        '<span>© '+esc(SITE_INFO.clubName)+' '+(new Date().getFullYear())+'</span>'+
-        '<span>東京近辺で活動するソーシャルフットボールクラブ</span>'+
-      '</div>'+
-    '</div>';
-}
-
-/* スクロールで要素をふわっと出す（動的に追加した要素にも使える） */
-var __revObserver = new IntersectionObserver(function(entries){
-  entries.forEach(function(e){
-    if(e.isIntersecting){ e.target.classList.add("in"); __revObserver.unobserve(e.target); }
-  });
-},{threshold:.12});
-function observeReveals(){
-  document.querySelectorAll(".reveal").forEach(function(el){
-    if(!el.classList.contains("in")) __revObserver.observe(el);
-  });
-}
-
-function initChrome(){
-  var burger = document.getElementById("burger");
-  var mm = document.getElementById("mobileMenu");
-  if(burger && mm){
-    burger.addEventListener("click",function(){burger.classList.toggle("open");mm.classList.toggle("open");});
-    mm.addEventListener("click",function(e){if(e.target.tagName==="A"){burger.classList.remove("open");mm.classList.remove("open");}});
-  }
-  var toTop = document.getElementById("toTop");
-  if(toTop){
-    window.addEventListener("scroll",function(){toTop.classList.toggle("show", window.scrollY>500);});
-    toTop.addEventListener("click",function(){window.scrollTo({top:0,behavior:"smooth"});});
-  }
-  /* data-link="join" などのボタンに、上の links のURLを自動で設定 */
-  document.querySelectorAll("[data-link]").forEach(function(el){
-    var u = SITE_INFO.links[el.getAttribute("data-link")];
-    if(u){ el.setAttribute("href", u); }
-  });
-  observeReveals();
-}
-
-renderHeader();
-renderFooter();
-initChrome();
+observeReveals();
+</script>
+</body>
+</html>

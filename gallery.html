@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>お問い合わせ｜BOSCO NEXT</title>
-<meta name="description" content="BOSCO NEXT（ボスコ ネクスト）へのお問い合わせ。体験・入部・対戦・取材などのご連絡はこちらから。">
+<title>フォトギャラリー｜BOSCO NEXT</title>
+<meta name="description" content="BOSCO NEXT（ボスコ ネクスト）の試合・遠征・練習の写真ギャラリー。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -17,55 +17,68 @@
 
 <section class="subhero">
   <div class="wrap subhero-inner">
-    <div class="breadcrumb"><a href="index.html">ホーム</a> ／ お問い合わせ</div>
-    <span class="kicker">Contact</span>
-    <h1>お問い合わせ</h1>
-    <p>体験・入部・練習試合の対戦・取材など、お気軽にご連絡ください。見学だけでも大丈夫です。</p>
+    <div class="breadcrumb"><a href="index.html">ホーム</a> ／ フォトギャラリー</div>
+    <span class="kicker">Gallery</span>
+    <h1>フォトギャラリー</h1>
+    <p>試合・遠征・練習の風景をお届けします。</p>
   </div>
 </section>
 
 <section class="block">
-  <div class="wrap contact-grid">
+  <div class="wrap">
+    <div class="gallery-grid reveal" id="gallery"></div>
+    <p class="cnote reveal" style="margin-top:20px">※ 写真を追加するには、下の photos に { src:"画像のURL", cap:"説明" } を足してください。現在の写真は今のサイト（Jimdo）から表示しています。将来Jimdoを閉じる場合は、画像を新しい場所にアップして src を差し替えてください。</p>
+  </div>
+</section>
 
-    <!-- 連絡方法 -->
-    <div class="contact-card reveal">
-      <h3>連絡方法</h3>
-      <p>下のいずれかの方法でご連絡いただけます。</p>
-      <div class="contact-methods">
-        <a class="cmethod" data-link="jimdoContact" target="_blank" rel="noopener">
-          <span class="ic">✉️</span><span><span class="l1">お問い合わせフォーム</span><span class="l2">いまの公式フォームへ（Jimdo）</span></span>
-        </a>
-        <a class="cmethod" data-link="jimdoJoin" target="_blank" rel="noopener">
-          <span class="ic">📝</span><span><span class="l1">入部希望フォーム</span><span class="l2">入部・体験のお申し込み（Jimdo）</span></span>
-        </a>
-        <a class="cmethod" data-link="x" target="_blank" rel="noopener">
-          <span class="ic">𝕏</span><span><span class="l1">X（旧Twitter）のDM</span><span class="l2">@BOSCONEXT</span></span>
-        </a>
-        <a class="cmethod" data-link="instagram" target="_blank" rel="noopener">
-          <span class="ic">📷</span><span><span class="l1">Instagram のDM</span><span class="l2">@bosconext_futsal</span></span>
-        </a>
-      </div>
+<section class="cta-band">
+  <div class="wrap">
+    <h2>もっと見る</h2>
+    <p>最新の写真はSNSでも随時更新しています。</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="links.html">SNS・リンク集へ</a>
+      <a class="btn btn-ghost" data-link="contact">お問い合わせ</a>
     </div>
-
-    <!-- フォーム雛形 -->
-    <div class="contact-card reveal">
-      <h3>メッセージを送る</h3>
-      <p>必要事項をご記入のうえ、送信してください。</p>
-      <div class="cform">
-        <div class="cfield"><label for="cf-name">お名前</label><input id="cf-name" type="text" placeholder="山田 太郎"></div>
-        <div class="cfield"><label for="cf-mail">メールアドレス</label><input id="cf-mail" type="email" placeholder="example@email.com"></div>
-        <div class="cfield"><label for="cf-msg">お問い合わせ内容</label><textarea id="cf-msg" rows="5" placeholder="体験を希望／対戦のご相談／取材について など"></textarea></div>
-        <a class="btn btn-primary" data-link="jimdoContact" target="_blank" rel="noopener">送信フォームへ進む</a>
-        <p class="cnote">※ このフォームのデザインは雛形です。実際に送信できるようにするには、Formspree などのフォーム送信サービスとの連携が必要です。<br>今すぐ連絡したい場合は、上の「お問い合わせフォーム」やSNSのDMをご利用ください。</p>
-      </div>
-    </div>
-
   </div>
 </section>
 
 <footer id="site-footer"></footer>
 <button class="to-top" id="toTop" aria-label="上に戻る">↑</button>
 
+<!-- 集合写真を1枚目に使うため読み込み -->
+<script src="team-photo.js"></script>
 <script src="site.js"></script>
+<script>
+/* =====================================================================
+   ★★★ このページの内容はここを編集します ★★★
+   ・写真を追加 → photos に { src:"画像のURL", cap:"説明" } を足す
+   ・src を "" にすると「追加用の見本マス」になります
+   ===================================================================== */
+var IMG = "https://image.jimcdn.com/app/cms/image/transf/dimension=640x480:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/";
+const PAGE = {
+  photos: [
+    {src: HERO_IMG, cap:"BOSCO NEXT 集合写真"},
+    {src: IMG+"i40f8081a10853751/version/1760499494/image.jpg", cap:"2025 東京都大会 優勝🏆"},
+    {src: IMG+"ide35bf613a4fda0a/version/1758130414/image.jpg", cap:"2025 東京都大会"},
+    {src: IMG+"i149f4370d0156da4/version/1758332591/image.jpg", cap:"BOSCO NEXT"},
+    {src: IMG+"i86de3bbb5cb7813f/version/1758332591/image.jpg", cap:"BOSCO NEXT"},
+    {src: IMG+"ic73cc5c566366a3d/version/1737084319/image.jpg", cap:"2024 エスパルスハートフルカップ"},
+    {src: IMG+"i279c7c5d95993180/version/1521024346/image.jpg", cap:"ヨコハマぽるとカップ2014"},
+    {src: IMG+"i83c013dc8de88a59/version/1431687782/image.jpg", cap:"ホームグラウンド 下丸子公園"},
+    {src: IMG+"ic2fdceab0925d4f9/version/1431688868/image.jpg", cap:"交流試合＋キッズクリニック＆BBQ"},
+    {src: IMG+"i0bbda1acd3660129/version/1431687434/image.jpg", cap:"初の大阪遠征"}
+  ]
+};
+
+/* ===== 表示の仕組み ===== */
+document.getElementById("gallery").innerHTML = PAGE.photos.map(function(p){
+  var inner = p.src
+    ? '<img src="'+esc(p.src)+'" alt="'+esc(p.cap||"")+'" loading="lazy"><span class="cap">'+esc(p.cap||"")+'</span>'
+    : '<span class="gallery-empty">＋ 画像URLを追加</span>';
+  return '<div class="gallery-item">'+inner+'</div>';
+}).join("");
+
+observeReveals();
+</script>
 </body>
 </html>

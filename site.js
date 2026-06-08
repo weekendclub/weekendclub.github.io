@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>スケジュール｜BOSCO NEXT</title>
-<meta name="description" content="BOSCO NEXT（ボスコ ネクスト）の試合・大会スケジュールと、これまでの結果。">
+<title>新聞・雑誌切り抜き｜BOSCO NEXT</title>
+<meta name="description" content="BOSCO NEXT（ボスコ ネクスト）が掲載された新聞・雑誌・Web記事などのまとめ。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -17,42 +17,28 @@
 
 <section class="subhero">
   <div class="wrap subhero-inner">
-    <div class="breadcrumb"><a href="index.html">ホーム</a> ／ スケジュール</div>
-    <span class="kicker">Schedule</span>
-    <h1>スケジュール</h1>
-    <p>直近の試合予定と、これまでの結果をまとめています。</p>
+    <div class="breadcrumb"><a href="index.html">ホーム</a> ／ 新聞・雑誌切り抜き</div>
+    <span class="kicker">Press</span>
+    <h1>新聞・雑誌切り抜き</h1>
+    <p>新聞・雑誌・Web記事などで取り上げていただいた情報をまとめています。</p>
   </div>
 </section>
 
 <section class="block">
   <div class="wrap">
-    <div class="sec-head reveal">
-      <span class="kicker">Upcoming</span>
-      <h2 class="sec-title">これからの予定</h2>
-    </div>
-    <div class="reveal" id="nextMatch"></div>
-    <div class="sched-list reveal" id="upcomingList"></div>
-  </div>
-</section>
-
-<section class="block" style="padding-top:0">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <span class="kicker">Results</span>
-      <h2 class="sec-title">これまでの結果</h2>
-      <p class="sec-lead">新しい結果を上に追記していけます。</p>
-    </div>
-    <div class="reveal" id="resultList"></div>
+    <div class="lead-block reveal" id="lead"></div>
+    <div class="cliplist reveal" id="clips" style="margin-top:24px"></div>
+    <p class="cnote reveal" style="margin-top:20px">※ 下の一覧はサンプルです。掲載日・媒体名・見出し・リンクを clips に追記してください。</p>
   </div>
 </section>
 
 <section class="cta-band">
   <div class="wrap">
-    <h2>会場での応援、お待ちしています</h2>
-    <p>見学・体験のご希望もお気軽に。</p>
+    <h2>取材・掲載のご相談</h2>
+    <p>取材やメディア掲載に関するお問い合わせもお気軽にどうぞ。</p>
     <div class="hero-cta">
-      <a class="btn btn-primary" data-link="join">⚽ 体験・入部のお問い合わせ</a>
-      <a class="btn btn-ghost" data-link="contact">お問い合わせ</a>
+      <a class="btn btn-primary" data-link="contact">お問い合わせ</a>
+      <a class="btn btn-ghost" href="links.html">SNSを見る</a>
     </div>
   </div>
 </section>
@@ -64,65 +50,30 @@
 <script>
 /* =====================================================================
    ★★★ このページの内容はここを編集します ★★★
-   ・予定を追加 → upcoming の { } をコピー（一番上が「次の一戦」）
-   ・結果を追加 → results の { } をコピーして上に貼る
-   ・wl は "w"（勝ち）/ "l"（負け）/ "d"（引き分け）/ ""（記載なし）
+   ・掲載情報を追加 → clips の { } をコピーして上に貼る（新しい順）
+   ・リンクが無いときは url を "" にすると「リンクへ」ボタンは出ません
    ===================================================================== */
 const PAGE = {
-  upcoming: [
-    {
-      date:"7.19", sub:"2026 ㈰",
-      title:"JIFF 第6回ソーシャルフットボール全国大会 予選・関東大会",
-      place:"サイデン化学アリーナさいたま（さいたま市記念総合体育館）",
-      placeLink:"http://sai-kinen-spomachi.jp/",
-      note:"全国大会〈神奈川県／11/21〉の出場をかけた予選です。応援よろしくお願いします🔥"
-    }
-    /* ↓ 追加するときはこの下に貼り付け（先頭の , を忘れずに）
-    ,{ date:"8.10", sub:"2026 ㈯", title:"練習試合 vs ◯◯", place:"◯◯体育館", placeLink:"", note:"" }
-    */
-  ],
-
-  results: [
-    {
-      date:"2026.5.31",
-      title:"ソーシャルフットボール東京都大会2026",
-      score:"準優勝 🥈", wl:"d",
-      note:"＠明治学院大学白金キャンパス。4連覇とはならずも全力で闘いました。"
-    },
-    {
-      date:"20XX.XX.XX",
-      title:"練習試合 vs ◯◯（サンプル）",
-      score:"3 - 1", wl:"w",
-      note:"スコアやひとことをここに記入してください。"
-    }
+  clips: [
+    {date:"20XX.XX", outlet:"媒体名", title:"見出し・タイトルをここに（サンプル）", url:""},
+    {date:"20XX.XX", outlet:"媒体名", title:"見出し・タイトルをここに（サンプル）", url:""}
   ]
 };
 
 /* ===== 表示の仕組み ===== */
-(function(){
-  var s = PAGE.upcoming || [];
-  if(!s.length){ document.getElementById("nextMatch").innerHTML = '<p style="color:var(--ink-soft)">現在、公開できる予定はありません。</p>'; }
-  else {
-    var n = s[0];
-    document.getElementById("nextMatch").innerHTML =
-      '<div class="next-match"><span class="nm-flag">⚽ 次の一戦 / NEXT MATCH</span>'+
-      '<div class="nm-grid"><div class="nm-date"><div class="d">'+esc(n.date)+'</div><div class="m">'+esc(n.sub||"")+'</div></div>'+
-      '<div class="nm-info"><h3>'+esc(n.title)+'</h3>'+
-      '<div class="place">📍 '+(n.placeLink?'<a href="'+esc(n.placeLink)+'" target="_blank" rel="noopener">'+esc(n.place)+'</a>':esc(n.place))+'</div>'+
-      (n.note?'<p class="note">'+esc(n.note)+'</p>':'')+'</div></div></div>';
-    document.getElementById("upcomingList").innerHTML = s.slice(1).map(function(e){
-      return '<div class="sched-row"><div class="sd">'+esc(e.date)+' <small>'+esc(e.sub||"")+'</small></div>'+
-        '<div><div class="st">'+esc(e.title)+'</div>'+(e.place?'<div class="sp">📍 '+esc(e.place)+'</div>':'')+'</div></div>';
-    }).join("");
-  }
-})();
+document.getElementById("lead").innerHTML =
+  '<p>これまでに新聞・雑誌・Webメディアなどで紹介していただいた記事をまとめています。</p>';
 
-document.getElementById("resultList").innerHTML = (PAGE.results||[]).map(function(r){
-  var wl = r.wl ? '<span class="wl '+r.wl+'">'+({w:"WIN",l:"LOSE",d:"-"}[r.wl]||"")+'</span>' : '';
-  return '<div class="result-row"><div class="rd">'+esc(r.date)+'</div>'+
-    '<div class="rt">'+esc(r.title)+(r.note?'<div class="sp" style="font-weight:400;color:var(--ink-soft);font-size:.85rem;margin-top:4px">'+esc(r.note)+'</div>':'')+'</div>'+
-    '<div class="rs">'+esc(r.score||"")+wl+'</div></div>';
-}).join("");
+var clips = PAGE.clips || [];
+document.getElementById("clips").innerHTML = clips.length
+  ? clips.map(function(c){
+      return '<div class="clip"><span class="cd">'+esc(c.date)+'</span>'+
+        '<span class="outlet">'+esc(c.outlet)+'</span>'+
+        '<span class="ct">'+esc(c.title)+'</span>'+
+        (c.url?'<a class="cmore" href="'+esc(c.url)+'" target="_blank" rel="noopener">リンクへ →</a>':'<span></span>')+
+        '</div>';
+    }).join("")
+  : '<p style="color:var(--ink-soft)">現在、掲載情報はありません。</p>';
 
 observeReveals();
 </script>

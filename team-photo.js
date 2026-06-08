@@ -1,123 +1,140 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>チーム＆選手プロフィール｜BOSCO NEXT</title>
-<meta name="description" content="BOSCO NEXT（ボスコ ネクスト）の選手・スタッフ紹介。東京近辺で活動するソーシャルフットボールのクラブチームです。">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
+/* ============================================================
+   BOSCO NEXT 共通スクリプト（全ページのヘッダー・フッター・動作）
 
-<header id="site-header"></header>
-<nav class="mobile-menu" id="mobileMenu"></nav>
+   ★ メニュー・リンク・チーム名は、この下の SITE_INFO を
+      書き換えれば「すべてのページ」にまとめて反映されます。
+   ============================================================ */
+var SITE_INFO = {
+  clubName:   "BOSCO NEXT",
+  clubNameJa: "ボスコ ネクスト",
+  tagline:    "どんな壁も乗り越えられる",
 
-<section class="subhero">
-  <div class="wrap subhero-inner">
-    <div class="breadcrumb"><a href="index.html">ホーム</a> ／ チーム＆選手</div>
-    <span class="kicker">Team &amp; Players</span>
-    <h1>チーム＆選手プロフィール</h1>
-    <p>ピッチで闘うメンバーと、チームを支えるスタッフを紹介します。</p>
-  </div>
-</section>
+  /* 体験・入部やお問い合わせの行き先、SNS など（URLを書き換えればOK） */
+  links: {
+    join:        "contact.html",   /* 「体験・入部」ボタンの行き先 */
+    contact:     "contact.html",   /* 「お問い合わせ」ボタンの行き先 */
+    x:           "https://x.com/BOSCONEXT",
+    instagram:   "https://www.instagram.com/bosconext_futsal/",
+    note:        "https://note.com/mackeyfootball/n/ndbd9daead388",
+    blog:        "http://ameblo.jp/bosconext/",
+    jimdoContact:"https://bosconext.jimdofree.com/お問い合わせ/お問い合わせ/",
+    jimdoJoin:   "https://bosconext.jimdofree.com/お問い合わせ/入部希望/",
+    jimdoMembers:"https://bosconext.jimdofree.com/会員専用ページ/"
+  },
 
-<section class="block">
-  <div class="wrap">
-    <div class="lead-block reveal" id="teamLead"></div>
-  </div>
-</section>
-
-<section class="block" style="padding-top:0">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <span class="kicker">Players</span>
-      <h2 class="sec-title">選手</h2>
-      <p class="sec-lead">背番号・お名前・ポジションを並べています。</p>
-    </div>
-    <div class="roster-grid reveal" id="roster"></div>
-  </div>
-</section>
-
-<section class="block" style="padding-top:0">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <span class="kicker">Staff</span>
-      <h2 class="sec-title">スタッフ</h2>
-    </div>
-    <div class="staff-grid reveal" id="staff"></div>
-  </div>
-</section>
-
-<section class="cta-band">
-  <div class="wrap">
-    <h2>一緒に闘う仲間を募集中</h2>
-    <p>プレイヤー・マネージャー・サポーター歓迎。見学・体験だけでも大丈夫です。</p>
-    <div class="hero-cta">
-      <a class="btn btn-primary" data-link="join">⚽ 体験・入部のお問い合わせ</a>
-      <a class="btn btn-ghost" data-link="contact">お問い合わせ</a>
-    </div>
-  </div>
-</section>
-
-<footer id="site-footer"></footer>
-<button class="to-top" id="toTop" aria-label="上に戻る">↑</button>
-
-<script src="site.js"></script>
-<script>
-/* =====================================================================
-   ★★★ このページの内容はここを編集します ★★★
-   ・選手を追加 → players の { } をコピーして増やす
-   ・スタッフを追加 → staff の { } をコピーして増やす
-   ・写真を入れたいときは photo に画像URLを入れる（空 "" なら背番号を表示）
-   ===================================================================== */
-const PAGE = {
-  lead: [
-    "BOSCO NEXTは、精神障がいのある方を中心に、誰もがフットサルを楽しみ、本気で勝利を目指すチームです。",
-    "※ 下のプロフィールはサンプルです。実際の選手・スタッフに書き換えてお使いください。"
+  /* 上のメニューに出すページ */
+  nav: [
+    {label:"ホーム",           url:"index.html"},
+    {label:"チーム＆選手",     url:"team.html"},
+    {label:"大会出場概要",     url:"tournaments.html"},
+    {label:"スケジュール",     url:"schedule.html"},
+    {label:"フォトギャラリー", url:"gallery.html"},
+    {label:"リンク",           url:"links.html"},
+    {label:"お問い合わせ",     url:"contact.html"}
   ],
-
-  /* 選手（背番号・名前・ポジション・ひとこと） */
-  players: [
-    {no:"1",  name:"選手名", kana:"せんしゅめい", pos:"GK", note:"", photo:""},
-    {no:"7",  name:"選手名", kana:"せんしゅめい", pos:"FP", note:"", photo:""},
-    {no:"10", name:"選手名", kana:"せんしゅめい", pos:"FP", note:"", photo:""},
-    {no:"11", name:"選手名", kana:"せんしゅめい", pos:"FP", note:"", photo:""},
-    {no:"18", name:"選手名", kana:"せんしゅめい", pos:"FP", note:"", photo:""},
-    {no:"23", name:"選手名", kana:"せんしゅめい", pos:"FP", note:"", photo:""}
-  ],
-
-  /* スタッフ（役割・名前） */
-  staff: [
-    {role:"監督",       name:"お名前"},
-    {role:"コーチ",     name:"お名前"},
-    {role:"マネージャー", name:"お名前"}
+  /* 補助的なページ（スマホメニューとフッターに表示） */
+  morePages: [
+    {label:"リーグ",             url:"league.html"},
+    {label:"新聞・雑誌切り抜き", url:"press.html"},
+    {label:"会員専用ページ",     url:"members.html"}
   ]
 };
 
-/* ===== 表示の仕組み ===== */
-document.getElementById("teamLead").innerHTML = PAGE.lead.map(function(p){return '<p>'+esc(p)+'</p>';}).join("");
+/* ===== ここから下は仕組み（基本さわらなくてOK） ===== */
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 
-document.getElementById("roster").innerHTML = PAGE.players.map(function(p){
-  var top = p.photo
-    ? '<img src="'+esc(p.photo)+'" alt="'+esc(p.name)+'">'
-    : '<span class="player-no">'+esc(p.no)+'</span>';
-  return '<div class="player-card"><div class="player-top">'+top+'</div>'+
-    '<div class="player-body"><span class="player-pos">'+esc(p.pos)+' ・ No.'+esc(p.no)+'</span>'+
-    '<div class="player-name">'+esc(p.name)+'</div>'+
-    (p.kana?'<div class="player-kana">'+esc(p.kana)+'</div>':'')+
-    (p.note?'<div class="player-note">'+esc(p.note)+'</div>':'')+
-    '</div></div>';
-}).join("");
+function currentPage(){
+  var p = location.pathname.split("/").pop();
+  return (p && p.length) ? p : "index.html";
+}
 
-document.getElementById("staff").innerHTML = PAGE.staff.map(function(s){
-  return '<div class="staff-card"><div class="staff-role">'+esc(s.role)+'</div>'+
-    '<div class="staff-name">'+esc(s.name)+'</div></div>';
-}).join("");
+function renderHeader(){
+  var here = currentPage();
+  var links = SITE_INFO.nav.map(function(n){
+    var act = (n.url === here) ? ' class="active"' : '';
+    return '<li><a href="'+esc(n.url)+'"'+act+'>'+esc(n.label)+'</a></li>';
+  }).join("");
 
-observeReveals();
-</script>
-</body>
-</html>
+  var header = document.getElementById("site-header");
+  if(header){
+    header.innerHTML =
+      '<div class="wrap nav">'+
+        '<a href="index.html" class="brand"><span class="ball"></span>'+esc(SITE_INFO.clubName)+'</a>'+
+        '<ul class="nav-links">'+links+'</ul>'+
+        '<div class="nav-cta"><a class="btn btn-dark" href="'+esc(SITE_INFO.links.join)+'">⚽ 体験・入部</a></div>'+
+        '<button class="burger" id="burger" aria-label="メニュー"><span></span><span></span><span></span></button>'+
+      '</div>';
+  }
+
+  var all = SITE_INFO.nav.concat(SITE_INFO.morePages);
+  var mob = document.getElementById("mobileMenu");
+  if(mob){
+    mob.innerHTML = all.map(function(n){
+      return '<a href="'+esc(n.url)+'">'+esc(n.label)+'</a>';
+    }).join("") +
+    '<a class="btn btn-primary" href="'+esc(SITE_INFO.links.join)+'">⚽ 体験・入部のお問い合わせ</a>';
+  }
+}
+
+function renderFooter(){
+  var foot = document.getElementById("site-footer");
+  if(!foot) return;
+  var all = SITE_INFO.nav.concat(SITE_INFO.morePages);
+  var pages = all.map(function(n){return '<a href="'+esc(n.url)+'">'+esc(n.label)+'</a>';}).join("");
+  var sns =
+    '<a href="'+esc(SITE_INFO.links.x)+'" target="_blank" rel="noopener">X</a>'+
+    '<a href="'+esc(SITE_INFO.links.instagram)+'" target="_blank" rel="noopener">Instagram</a>'+
+    '<a href="'+esc(SITE_INFO.links.note)+'" target="_blank" rel="noopener">note</a>'+
+    '<a href="'+esc(SITE_INFO.links.blog)+'" target="_blank" rel="noopener">ブログ</a>';
+  foot.innerHTML =
+    '<div class="wrap">'+
+      '<div class="foot-top">'+
+        '<div>'+
+          '<div class="foot-brand"><span class="ball"></span>'+esc(SITE_INFO.clubName)+'</div>'+
+          '<p class="foot-tag">'+esc(SITE_INFO.tagline)+'</p>'+
+        '</div>'+
+        '<div class="foot-links">'+sns+'</div>'+
+      '</div>'+
+      '<div class="foot-cols">'+pages+'</div>'+
+      '<div class="foot-bottom">'+
+        '<span>© '+esc(SITE_INFO.clubName)+' '+(new Date().getFullYear())+'</span>'+
+        '<span>東京近辺で活動するソーシャルフットボールクラブ</span>'+
+      '</div>'+
+    '</div>';
+}
+
+/* スクロールで要素をふわっと出す（動的に追加した要素にも使える） */
+var __revObserver = new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting){ e.target.classList.add("in"); __revObserver.unobserve(e.target); }
+  });
+},{threshold:.12});
+function observeReveals(){
+  document.querySelectorAll(".reveal").forEach(function(el){
+    if(!el.classList.contains("in")) __revObserver.observe(el);
+  });
+}
+
+function initChrome(){
+  var burger = document.getElementById("burger");
+  var mm = document.getElementById("mobileMenu");
+  if(burger && mm){
+    burger.addEventListener("click",function(){burger.classList.toggle("open");mm.classList.toggle("open");});
+    mm.addEventListener("click",function(e){if(e.target.tagName==="A"){burger.classList.remove("open");mm.classList.remove("open");}});
+  }
+  var toTop = document.getElementById("toTop");
+  if(toTop){
+    window.addEventListener("scroll",function(){toTop.classList.toggle("show", window.scrollY>500);});
+    toTop.addEventListener("click",function(){window.scrollTo({top:0,behavior:"smooth"});});
+  }
+  /* data-link="join" などのボタンに、上の links のURLを自動で設定 */
+  document.querySelectorAll("[data-link]").forEach(function(el){
+    var u = SITE_INFO.links[el.getAttribute("data-link")];
+    if(u){ el.setAttribute("href", u); }
+  });
+  observeReveals();
+}
+
+renderHeader();
+renderFooter();
+initChrome();
