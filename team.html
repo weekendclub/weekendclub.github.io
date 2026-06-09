@@ -9,6 +9,106 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+
+<style>
+/* =====================================================================
+   📌 追加：詳細プロフィール（モーダルポップアップ）の専用デザイン
+   ===================================================================== */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.75);
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.modal.show {
+  display: flex;
+  opacity: 1;
+}
+.modal-content {
+  background-color: #fff;
+  padding: 40px 30px 30px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 450px;
+  position: relative;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  transform: translateY(-30px);
+  transition: transform 0.3s ease;
+  color: #333;
+}
+.modal.show .modal-content {
+  transform: translateY(0);
+}
+.modal-close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 32px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #aaa;
+  line-height: 1;
+  transition: color 0.2s;
+}
+.modal-close:hover {
+  color: #333;
+}
+.modal-detail-img {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 20px;
+  border: 4px solid #e60012; /* チームカラーの赤をアクセントに */
+  display: block;
+}
+.modal-no-img {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  font-weight: bold;
+  margin: 0 auto 20px;
+  color: #ccc;
+  border: 4px solid #ddd;
+}
+.modal-pos {
+  font-size: 13px;
+  font-weight: 700;
+  color: #e60012;
+  letter-spacing: 0.05em;
+  margin-bottom: 5px;
+}
+.modal-name {
+  font-size: 26px;
+  font-weight: 900;
+  margin-bottom: 20px;
+  letter-spacing: 0.02em;
+}
+.modal-comment {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #444;
+  background: #f7f8fa;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: left;
+  white-space: pre-wrap; /* 改行コードを有効にする設定 */
+}
+</style>
 </head>
 <body>
 
@@ -20,7 +120,7 @@
     <div class="breadcrumb"><a href="index.html">ホーム</a> ／ チーム＆選手</div>
     <span class="kicker">Team &amp; Players</span>
     <h1>チーム＆選手プロフィール</h1>
-    <p>ピッチで闘うメンバーと、チームを支えるスタッフ、そこでチームのあゆみを紹介します。</p>
+    <p>ピッチで闘うメンバーと、チームを支えるスタッフ、そしてチームのあゆみを紹介します。</p>
   </div>
 </section>
 
@@ -36,7 +136,7 @@
     <div class="sec-head reveal">
       <span class="kicker">Players</span>
       <h2 class="sec-title">選手</h2>
-      <p class="sec-lead">背番号とニックネームでご紹介します。</p>
+      <p class="sec-lead">クリックすると詳細なプロフィールが見られます。</p>
     </div>
     <div class="roster-grid reveal" id="roster"></div>
   </div>
@@ -66,26 +166,29 @@
 <footer id="site-footer"></footer>
 <button class="to-top" id="toTop" aria-label="上に戻る">↑</button>
 
+<div id="profileModal" class="modal">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closeModal()">&times;</span>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
 <script src="site.js"></script>
 <script>
 /* =====================================================================
-   ★★★ このページの内容はここを編集します ★★★
-   ・選手を追加 → players の { } をコピーして増やす（no・name）
-   ・スタッフを追加 → staff の { } をコピーして増やす
+   バックアップ用データ（万が一jsonが読み込めなかった場合の予備）
    ===================================================================== */
 const PAGE = {
   lead: [
     "BOSCO NEXT（ボスコ ネクスト）は、精神障がいのある方を中心としたチームですが、障害の枠にとらわれず、仲間・チームワークを大切にしながら、楽しんで勝利を目指しています。",
     "2012年5月頃、デイケアのフットサルチーム「BOSCO」として活動を開始。2013年4月1日、デイケア卒業後も「フットサルをできる場をつくろう」という声から、BOSCO NEXTと改名して独立し、現在はチームで自主運営を行っています。"
   ],
-
   data: [
     {k:"発足日",     v:"2013年4月1日"},
     {k:"活動場所",   v:"大田区・目黒区・品川区・神奈川県 ほか"},
     {k:"活動日",     v:"毎週土曜日（祝日等あり）"},
     {k:"ユニフォーム", v:"1st：レッド ／ 2nd：ブルー"}
   ],
-
   players: [
     {no:"2",  name:"まこ",      pos:"フィクソ", photo:""},
     {no:"5",  name:"だいき",    pos:"", photo:""},
@@ -103,74 +206,121 @@ const PAGE = {
     {no:"",   name:"ハマさん",  pos:"ゴレイロ", photo:""},
     {no:"",   name:"うら",      pos:"FP", photo:""}
   ],
-
   staff: [
     {role:"監督", name:"アキさん"}
   ]
 };
 
-/* ===== 表示の仕組み（標準のfetch方式にアップグレード） ===== */
+// 読み込んだデータを一時保存する変数
+let globalTeamData = null;
+
+/* ===== 画面にデータを組み立てるプログラム ===== */
 function renderTeam(d){
   if (!d) return;
+  globalTeamData = d; // データをポップアップ機能に共有
   
-  // 1. リード文
   if(document.getElementById("teamLead")) {
     document.getElementById("teamLead").innerHTML = (d.lead||[]).map(function(p){return '<p>'+esc(p)+'</p>';}).join("");
   }
   
-  // 2. チームデータ
   if(document.getElementById("teamData")) {
     document.getElementById("teamData").innerHTML = (d.data||[]).map(function(x){
       return '<dt>'+esc(x.k)+'</dt><dd>'+esc(x.v)+'</dd>';
     }).join("");
   }
   
-  // 3. 選手一覧
+  // 選手一覧（クリックイベントを仕込み、カーソルを指マークに）
   if(document.getElementById("roster")) {
-    document.getElementById("roster").innerHTML = (d.players||[]).map(function(p){
+    document.getElementById("roster").innerHTML = (d.players||[]).map(function(p, i){
       var num = p.no ? esc(p.no) : '⚽';
       var top = p.photo ? '<img src="'+esc(p.photo)+'" alt="'+esc(p.name)+'">' : '<span class="player-no">'+num+'</span>';
       var meta = [];
       if(p.pos) meta.push(esc(p.pos));
       if(p.no)  meta.push('No.'+esc(p.no));
       var metaText = meta.length ? meta.join(' ・ ') : 'メンバー';
-      return '<div class="player-card"><div class="player-top">'+top+'</div>'+
+      return '<div class="player-card" onclick="openPlayerModal('+i+')" style="cursor: pointer;"><div class="player-top">'+top+'</div>'+
         '<div class="player-body"><span class="player-pos">'+metaText+'</span>'+
         '<div class="player-name">'+esc(p.name)+'</div></div></div>';
     }).join("");
   }
   
-  // 4. スタッフ一覧
+  // スタッフ一覧
   if(document.getElementById("staff")) {
-    document.getElementById("staff").innerHTML = (d.staff||[]).map(function(s){
+    document.getElementById("staff").innerHTML = (d.staff||[]).map(function(s, i){
       var top = s.photo ? '<img src="'+esc(s.photo)+'" alt="'+esc(s.name)+'">' : '<span class="player-no">★</span>';
-      return '<div class="player-card"><div class="player-top">'+top+'</div>'+
+      return '<div class="player-card" onclick="openStaffModal('+i+')" style="cursor: pointer;"><div class="player-top">'+top+'</div>'+
         '<div class="player-body"><span class="player-pos">'+esc(s.role)+'</span>'+
         '<div class="player-name">'+esc(s.name)+'</div></div></div>';
     }).join("");
   }
   
-  // ふわっと出すアニメーションの実行（念のためエラー回避処理付き）
   if(typeof observeReveals === "function") {
     observeReveals();
   }
 }
 
-// team.json を確実に読み込む処理
+/* ===== 📌 追加：ポップアップを開閉するプログラム ===== */
+function openPlayerModal(index) {
+  if (!globalTeamData || !globalTeamData.players || !globalTeamData.players[index]) return;
+  var p = globalTeamData.players[index];
+  
+  var num = p.no ? esc(p.no) : '⚽';
+  var imgHtml = p.photo ? '<img class="modal-detail-img" src="'+esc(p.photo)+'" alt="'+esc(p.name)+'">' : '<div class="modal-no-img">'+num+'</div>';
+  var commentHtml = p.comment ? '<div class="modal-comment">'+esc(p.comment)+'</div>' : '<div class="modal-comment" style="color:#999; text-align:center;">紹介文はまだ登録されていません。</div>';
+  
+  var meta = [];
+  if(p.pos) meta.push(esc(p.pos));
+  if(p.no)  meta.push('No.'+esc(p.no));
+  var metaText = meta.length ? meta.join(' ・ ') : 'メンバー';
+
+  document.getElementById("modalBody").innerHTML = imgHtml +
+    '<div class="modal-pos">' + metaText + '</div>' +
+    '<div class="modal-name">' + esc(p.name) + '</div>' +
+    commentHtml;
+             
+  var modal = document.getElementById("profileModal");
+  modal.style.display = "flex";
+  setTimeout(function(){ modal.classList.add("show"); }, 10);
+}
+
+function openStaffModal(index) {
+  if (!globalTeamData || !globalTeamData.staff || !globalTeamData.staff[index]) return;
+  var s = globalTeamData.staff[index];
+  
+  var imgHtml = s.photo ? '<img class="modal-detail-img" src="'+esc(s.photo)+'" alt="'+esc(s.name)+'">' : '<div class="modal-no-img">★</div>';
+  var commentHtml = s.comment ? '<div class="modal-comment">'+esc(s.comment)+'</div>' : '<div class="modal-comment" style="color:#999; text-align:center;">紹介文はまだ登録されていません。</div>';
+  
+  document.getElementById("modalBody").innerHTML = imgHtml +
+    '<div class="modal-pos">' + esc(s.role) + '</div>' +
+    '<div class="modal-name">' + esc(s.name) + '</div>' +
+    commentHtml;
+             
+  var modal = document.getElementById("profileModal");
+  modal.style.display = "flex";
+  setTimeout(function(){ modal.classList.add("show"); }, 10);
+}
+
+function closeModal() {
+  var modal = document.getElementById("profileModal");
+  modal.classList.remove("show");
+  setTimeout(function(){ modal.style.display = "none"; }, 300);
+}
+
+// 黒い背景をクリックしたときも閉じる
+window.onclick = function(event) {
+  var modal = document.getElementById("profileModal");
+  if (event.target == modal) { closeModal(); }
+}
+
+// データの読み込み
 fetch("team.json")
-  .then(function(response) {
-    if (!response.ok) {
-      throw new Error("JSONファイルの読み込みに失敗しました。ステータス: " + response.status);
-    }
-    return response.json();
+  .then(function(res) {
+    if (!res.ok) throw new Error("Status: " + res.status);
+    return res.json();
   })
-  .then(function(data) {
-    // 読み込み成功：最新のjsonデータで画面を作る
-    renderTeam(data);
-  })
-  .catch(function(error) {
-    console.error("【確認用ログ】外付けJSONが読めなかったため、HTML内のデータで表示します:", error);
-    // 読み込み失敗：安全弁としてHTML内のPAGEデータで画面を作る
+  .then(function(data) { renderTeam(data); })
+  .catch(function(err) {
+    console.error("JSON読込失敗、予備データを使用します:", err);
     renderTeam(PAGE);
   });
 </script>
