@@ -10,23 +10,118 @@
     {"k": "ユニフォーム", "v": "1st：レッド ／ 2nd：ブルー"}
   ],
   "players": [
-    {"no": "2",  "name": "まこ",      "pos": "フィクソ",      "photo": "https://image.jimcdn.com/app/cms/image/transf/dimension=400x400:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/ia82c54914911547a/version/1768278234/image.jpg"},
-    {"no": "5",  "name": "だいき",    "pos": "",            "photo": "https://image.jimcdn.com/app/cms/image/transf/dimension=400x400:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/i2f9e23ee69a3593e/version/1759204502/image.jpg"},
-    {"no": "7",  "name": "あゆねえ",  "pos": "FP",          "photo": "https://image.jimcdn.com/app/cms/image/transf/dimension=400x400:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/ifd41a4024f03f922/version/1759204579/image.jpg"},
-    {"no": "8",  "name": "せいちゃん", "pos": "アラ",         "photo": "https://image.jimcdn.com/app/cms/image/transf/dimension=400x400:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/iced6e3cd5a20356e/version/1418134116/image.jpg"},
-    {"no": "10", "name": "ヒットミー", "pos": "FP",          "photo": "https://image.jimcdn.com/app/cms/image/transf/dimension=400x400:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/i6f2aec36d78d5d57/version/1418135442/image.jpg"},
-    {"no": "14", "name": "にっしー",  "pos": "アラ/フィクソ", "photo": "https://image.jimcdn.com/app/cms/image/transf/dimension=400x400:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/i42bb6f476c698401/version/1759530459/image.jpg"},
-    {"no": "18", "name": "たっちゃん", "pos": "FP",          "photo": "https://image.jimcdn.com/app/cms/image/transf/dimension=400x400:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/ie07438dc7e43695f/version/1759530728/image.jpg"},
-    {"no": "19", "name": "ヒカル",    "pos": "",            "photo": "https://image.jimcdn.com/app/cms/image/transf/dimension=400x400:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/i90a566673ccf7b69/version/1759528295/image.jpg"},
-    {"no": "23", "name": "すがちゃん", "pos": "FP",          "photo": "https://image.jimcdn.com/app/cms/image/transf/dimension=400x400:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/i307a9a0d6d51cbd1/version/1759531432/image.jpg"},
-    {"no": "25", "name": "マッキー",  "pos": "ゴレイロ/ピヴォ", "photo": "https://image.jimcdn.com/app/cms/image/transf/dimension=400x400:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/i8c3ffdaddbe11666/version/1759463407/image.jpg"},
-    {"no": "26", "name": "とま",      "pos": "アラ",         "photo": "https://image.jimcdn.com/app/cms/image/transf/dimension=400x400:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/i493b60d674dcb983/version/1759529278/image.jpg"},
-    {"no": "39", "name": "おのっち",  "pos": "FP",          "photo": "https://image.jimcdn.com/app/cms/image/transf/dimension=400x400:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/icd1d16259258df13/version/1759463334/image.jpg"},
-    {"no": "40", "name": "あべちゃん", "pos": "FP",          "photo": "https://image.jimcdn.com/app/cms/image/transf/dimension=400x400:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/id747e68dfc185f61/version/1759531602/image.jpg"},
-    {"no": "",   "name": "ハマさん",  "pos": "ゴレイロ",      "photo": "https://image.jimcdn.com/app/cms/image/transf/dimension=400x400:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/i53a62a38f6e87abb/version/1780601636/image.jpg"},
-    {"no": "",   "name": "うら",      "pos": "FP",          "photo": "https://image.jimcdn.com/app/cms/image/transf/dimension=400x400:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/ifd596bf928701c7a/version/1759531820/image.jpg"}
+    {
+      "no": "2",
+      "name": "まこ",
+      "pos": "フィクソ",
+      "photo": "https://image.jimcdn.com/app/cms/image/transf/dimension=400x400:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/ia82c54914911547a/version/1768278234/image.jpg",
+      "comment": "ここに紹介文を書きます。\n「\\n」を入れると画面で改行されます。"
+    },
+    {
+      "no": "5",
+      "name": "だいき",
+      "pos": "",
+      "photo": "https://image.jimcdn.com/app/cms/image/transf/dimension=400x400:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/i2f9e23ee69a3593e/version/1759204502/image.jpg",
+      "comment": "ここに紹介文を書きます。"
+    },
+    {
+      "no": "7",
+      "name": "あゆねえ",
+      "pos": "FP",
+      "photo": "https://image.jimcdn.com/app/cms/image/transf/dimension=400x400:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/ifd41a4024f03f922/version/1759204579/image.jpg",
+      "comment": "ここに紹介文を書きます。"
+    },
+    {
+      "no": "8",
+      "name": "せいちゃん",
+      "pos": "アラ",
+      "photo": "https://image.jimcdn.com/app/cms/image/transf/dimension=400x400:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/iced6e3cd5a20356e/version/1418134116/image.jpg",
+      "comment": "ここに紹介文を書きます。"
+    },
+    {
+      "no": "10",
+      "name": "ヒットミー",
+      "pos": "FP",
+      "photo": "https://image.jimcdn.com/app/cms/image/transf/dimension=400x400:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/i6f2aec36d78d5d57/version/1418135442/image.jpg",
+      "comment": "ここに紹介文を書きます。"
+    },
+    {
+      "no": "14",
+      "name": "にっしー",
+      "pos": "アラ/フィクソ",
+      "photo": "https://image.jimcdn.com/app/cms/image/transf/dimension=400x400:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/i42bb6f476c698401/version/1759530459/image.jpg",
+      "comment": "ここに紹介文を書きます。"
+    },
+    {
+      "no": "18",
+      "name": "たっちゃん",
+      "pos": "FP",
+      "photo": "https://image.jimcdn.com/app/cms/image/transf/dimension=400x400:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/ie07438dc7e43695f/version/1759530728/image.jpg",
+      "comment": "ここに紹介文を書きます。"
+    },
+    {
+      "no": "19",
+      "name": "ヒカル",
+      "pos": "",
+      "photo": "https://image.jimcdn.com/app/cms/image/transf/dimension=400x400:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/i90a566673ccf7b69/version/1759528295/image.jpg",
+      "comment": "ここに紹介文を書きます。"
+    },
+    {
+      "no": "23",
+      "name": "すがちゃん",
+      "pos": "FP",
+      "photo": "https://image.jimcdn.com/app/cms/image/transf/dimension=400x400:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/i307a9a0d6d51cbd1/version/1759531432/image.jpg",
+      "comment": "ここに紹介文を書きます。"
+    },
+    {
+      "no": "25",
+      "name": "マッキー",
+      "pos": "ゴレイロ/ピヴォ",
+      "photo": "https://image.jimcdn.com/app/cms/image/transf/dimension=400x400:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/i8c3ffdaddbe11666/version/1759463407/image.jpg",
+      "comment": "ここに紹介文を書きます。"
+    },
+    {
+      "no": "26",
+      "name": "とま",
+      "pos": "アラ",
+      "photo": "https://image.jimcdn.com/app/cms/image/transf/dimension=400x400:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/i493b60d674dcb983/version/1759529278/image.jpg",
+      "comment": "ここに紹介文を書きます。"
+    },
+    {
+      "no": "39",
+      "name": "おのっち",
+      "pos": "FP",
+      "photo": "https://image.jimcdn.com/app/cms/image/transf/dimension=400x400:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/icd1d16259258df13/version/1759463334/image.jpg",
+      "comment": "ここに紹介文を書きます。"
+    },
+    {
+      "no": "40",
+      "name": "あべちゃん",
+      "pos": "FP",
+      "photo": "https://image.jimcdn.com/app/cms/image/transf/dimension=400x400:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/id747e68dfc185f61/version/1759531602/image.jpg",
+      "comment": "ここに紹介文を書きます。"
+    },
+    {
+      "no": "",
+      "name": "ハマさん",
+      "pos": "ゴレイロ",
+      "photo": "https://image.jimcdn.com/app/cms/image/transf/dimension=400x400:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/i53a62a38f6e87abb/version/1780601636/image.jpg",
+      "comment": "ここに紹介文を書きます。"
+    },
+    {
+      "no": "",
+      "name": "うら",
+      "pos": "FP",
+      "photo": "https://image.jimcdn.com/app/cms/image/transf/dimension=400x400:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/ifd596bf928701c7a/version/1759531820/image.jpg",
+      "comment": "ここに紹介文を書きます。"
+    }
   ],
   "staff": [
-    {"role": "監督", "name": "アキさん", "photo": "https://image.jimcdn.com/app/cms/image/transf/dimension=400x400:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/ieb1b69d5dabe471f/version/1759529685/image.jpg"}
+    {
+      "role": "監督",
+      "name": "アキさん",
+      "photo": "https://image.jimcdn.com/app/cms/image/transf/dimension=400x400:mode=crop:format=jpg/path/sa4c70deaa5976d3d/image/ieb1b69d5dabe471f/version/1759529685/image.jpg",
+      "comment": "ここに紹介文を書きます。"
+    }
   ]
 }
