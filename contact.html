@@ -42,45 +42,32 @@
 
     <div class="contact-card reveal">
       <h3>メッセージを送る</h3>
-      <p>必要事項をご記入のうえ、送信してください。</p>
+      <p>必要事項をご記入のうえ、送信ボタンを押してください。お使いのメールアプリが起動します。</p>
       
-      <div class="cfield">
-        <label for="cf-type">お問い合わせの種類</label>
-        <select id="cf-type" onchange="switchForm()" style="width:100%;padding:.8em 1em;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff;color:var(--ink)">
-          <option value="general">体験・見学希望 / 取材 / その他</option>
-          <option value="join">入部希望</option>
-          <option value="matchmake">練習試合・対戦のご相談</option>
-        </select>
-      </div>
-
-      <form name="contact-general" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/thanks.html" id="form-general" class="cform">
-        <input type="hidden" name="form-name" value="contact-general">
-        <p hidden><label>これは記入しないでください: <input name="bot-field"></label></p>
-        <div class="cfield"><label for="general-name">お名前</label><input id="general-name" type="text" name="name" placeholder="山田 太郎" required></div>
-        <div class="cfield"><label for="general-mail">メールアドレス</label><input id="general-mail" type="email" name="email" placeholder="example@email.com" required></div>
-        <div class="cfield"><label for="general-msg">お問い合わせ内容</label><textarea id="general-msg" name="message" rows="5" placeholder="ご相談内容をご記入ください" required></textarea></div>
-        <button type="submit" class="btn btn-primary">送信する</button>
+      <form onsubmit="sendEmail(event)" class="cform">
+        <div class="cfield">
+          <label for="cf-name">お名前</label>
+          <input id="cf-name" type="text" placeholder="山田 太郎" required>
+        </div>
+        
+        <div class="cfield">
+          <label for="cf-type">お問い合わせの種類</label>
+          <select id="cf-type" style="width:100%;padding:.8em 1em;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff;color:var(--ink)">
+            <option value="general">体験・見学希望 / 取材 / その他</option>
+            <option value="join">入部希望</option>
+            <option value="matchmake">練習試合・対戦のご相談</option>
+          </select>
+        </div>
+        
+        <div class="cfield">
+          <label for="cf-msg">お問い合わせ内容</label>
+          <textarea id="cf-msg" rows="5" placeholder="ご相談内容をご記入ください" required></textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">メールを作成する</button>
       </form>
-
-      <form name="contact-join" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/thanks.html" id="form-join" class="cform" style="display: none;">
-        <input type="hidden" name="form-name" value="contact-join">
-        <p hidden><label>これは記入しないでください: <input name="bot-field"></label></p>
-        <div class="cfield"><label for="join-name">お名前</label><input id="join-name" type="text" name="name" placeholder="山田 太郎" required></div>
-        <div class="cfield"><label for="join-mail">メールアドレス</label><input id="join-mail" type="email" name="email" placeholder="example@email.com" required></div>
-        <div class="cfield"><label for="join-msg">メッセージ（サッカー・フットサル歴や志望動機など）</label><textarea id="join-msg" name="message" rows="5" placeholder="簡単な球歴などを記入していただけるとスムーズです" required></textarea></div>
-        <button type="submit" class="btn btn-primary">入部希望を送信する</button>
-      </form>
-
-      <form name="contact-matchmake" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/thanks.html" id="form-matchmake" class="cform" style="display: none;">
-        <input type="hidden" name="form-name" value="contact-matchmake">
-        <p hidden><label>これは記入しないでください: <input name="bot-field"></label></p>
-        <div class="cfield"><label for="match-team">チーム名 / ご担当者様名</label><input id="match-team" type="text" name="team_name" placeholder="〇〇FC 山田" required></div>
-        <div class="cfield"><label for="match-mail">メールアドレス</label><input id="match-mail" type="email" name="email" placeholder="example@email.com" required></div>
-        <div class="cfield"><label for="match-msg">ご提案内容（希望日時や場所など）</label><textarea id="match-msg" name="message" rows="5" placeholder="対戦希望日、レベル、場所などの詳細をご記入ください" required></textarea></div>
-        <button type="submit" class="btn btn-primary">マッチメイクを申し込む</button>
-      </form>
-
-      <p class="cnote" style="margin-top: 20px;">送信いただいた内容は、選択した目的に応じたチームのアドレスに届きます。<br>（送信が有効になるのは、Netlifyで「フォーム検出」を有効化し、通知先メールを設定した後です）</p>
+      
+      <p class="cnote" style="margin-top: 20px;">※「メールを作成する」を押すと、選択した目的に応じたチームの担当者宛てにメールの下書きが作成されますので、そのまま送信してください。</p>
     </div>
 
   </div>
@@ -90,22 +77,29 @@
 <button class="to-top" id="toTop" aria-label="上に戻る">↑</button>
 
 <script>
-function switchForm() {
-  const purpose = document.getElementById('cf-type').value;
+function sendEmail(event) {
+  event.preventDefault(); // 通常の送信をキャンセル
+
+  const name = document.getElementById('cf-name').value;
+  const typeSelect = document.getElementById('cf-type');
+  const typeText = typeSelect.options[typeSelect.selectedIndex].text;
+  const message = document.getElementById('cf-msg').value;
+
+  // 選択肢によってメールアドレスを切り替え
+  let emailTo = "bosco_futsal@yahoo.co.jp"; // デフォルト（総合）
   
-  // 一旦すべてのフォームを非表示にする
-  document.getElementById('form-general').style.display = 'none';
-  document.getElementById('form-join').style.display = 'none';
-  document.getElementById('form-matchmake').style.display = 'none';
-  
-  // 選ばれた目的のフォームだけを表示する
-  if (purpose === 'general') {
-    document.getElementById('form-general').style.display = 'block';
-  } else if (purpose === 'join') {
-    document.getElementById('form-join').style.display = 'block';
-  } else if (purpose === 'matchmake') {
-    document.getElementById('form-matchmake').style.display = 'block';
+  if (typeSelect.value === "join") {
+    emailTo = "bosco_next_futsal-management@yahoo.co.jp"; // 入部希望
+  } else if (typeSelect.value === "matchmake") {
+    emailTo = "bosco_next_futsal-matchmake@yahoo.co.jp"; // マッチメイク
   }
+
+  // メール件名と本文の作成
+  const subject = encodeURIComponent(`【BOSCO NEXTお問い合わせ】${typeText}`);
+  const body = encodeURIComponent(`お名前: ${name}様\n\n【本文】\n${message}`);
+
+  // メールアプリを起動するリンクにジャンプ
+  window.location.href = `mailto:${emailTo}?subject=${subject}&body=${body}`;
 }
 </script>
 
