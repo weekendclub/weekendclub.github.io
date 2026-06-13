@@ -451,3 +451,32 @@ table.ltable{width:100%;border-collapse:collapse;min-width:520px}
 .kvlist dt{font-weight:700;color:var(--brand)}
 .kvlist dd{margin:0;color:var(--ink-soft)}
 @media(max-width:480px){ .kvlist{grid-template-columns:1fr;gap:2px 0} .kvlist dd{margin:0 0 10px} }
+
+/* ===================================================
+   プロフィール詳細・ポップアップのスクロール対策
+   =================================================== */
+
+/* ポップアップや詳細画面全体が画面からはみ出るのを防ぐ */
+.modal, .modal-content, .dialog, .popup, 
+[class*="modal"], [class*="dialog"], [class*="popup"], [class*="detail"] {
+    max-height: 80vh !important;       /* 画面の高さの80%までに制限 */
+    overflow-y: auto !important;       /* 縦方向にはみ出したらスクロールさせる */
+    box-sizing: border-box !important;
+}
+
+/* コメント欄やテキスト部分自体が伸びすぎている場合の対策 */
+.comment, .player-comment, [class*="comment"], [class*="text"] {
+    max-height: 300px !important;      /* コメント枠の最大高さを300pxに制限 */
+    overflow-y: auto !important;       /* 縦スクロールを有効にする */
+    padding-right: 8px !important;     /* スクロールバーと文字の被り防止 */
+}
+
+/* スクロールバーをスッキリした細いデザインにする設定 */
+::-webkit-scrollbar {
+    width: 6px !important;
+    height: 6px !important;
+}
+::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2) !important;
+    border-radius: 3px !important;
+}
