@@ -47,7 +47,8 @@ function cardHtml(r){
     shopLine = '<div class="rs-shop">' +
       '<span class="place">📍 ' + (r.shop ? escHtml(r.shop) + (r.shopArea ? "（"+escHtml(r.shopArea)+"）" : "") : "購入先 未記入") + '</span>' +
       (typeof r.price === "number" ? '<span class="price">' + yen(r.price) + '</span>' : '<span class="price">価格 未記入</span>') +
-      '</div>';
+      '</div>' +
+      (r.note ? '<p class="rs-purchase-note">※ '+escHtml(r.note)+'</p>' : '');
   } else {
     shopLine = '<div class="rs-shop unknown">購入先・価格は未記入です</div>';
   }
