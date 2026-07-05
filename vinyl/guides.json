@@ -1,0 +1,34 @@
+{
+  "series": [
+    {
+      "id": "classical",
+      "no": 1,
+      "title": "クラシック入門",
+      "subtitle": "レコードで聴きはじめる",
+      "theme": "classical",
+      "url": "guide-classical.html",
+      "status": "published",
+      "description": "「難しそう」で止まっている人のための、中古レコード店から入るクラシック。時代の地図、最初の5枚、店での掘り方まで。"
+    },
+    {
+      "id": "jazz",
+      "no": 2,
+      "title": "ジャズ入門",
+      "subtitle": "夜更けの一枚から",
+      "theme": "jazz",
+      "url": "",
+      "status": "coming",
+      "description": "ブルーノートだけがジャズじゃない。編成と年代から入る、迷子にならないジャズの歩き方。（準備中）"
+    },
+    {
+      "id": "citypop",
+      "no": 3,
+      "title": "シティ・ポップ入門",
+      "subtitle": "日本の夏を発明した人たち",
+      "theme": "citypop",
+      "url": "",
+      "status": "coming",
+      "description": "ナイアガラからAORまで。世界が再発見した日本のポップスを、当時の盤で。（準備中）"
+    }
+  ]
+}
