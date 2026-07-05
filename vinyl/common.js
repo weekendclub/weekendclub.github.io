@@ -7,8 +7,8 @@
 var SITE = {
   name: "レコード棚",
   nameEn: "THE RECORD SHELF",
-  tagline: "買ったレコードを、1枚ずつ。",
-  description: "買ったレコードを1枚ずつ記録していく個人的な音楽ブログ。購入店・価格つきで、盤の背景をまじめに解説します。",
+  tagline: "一枚ずつ、確かめるように。",
+  description: "買ったレコードを一枚ずつ、どこで・いくらで手に入れたかまで含めて記録していく音楽ブログ。ロックもジャズも歌謡曲もクラシックも、針を落として、確かめて、言葉にします。",
   nav: [
     {label: "すべての記事", url: "index.html"},
     {label: "レコード店から探す", url: "shops.html"},
@@ -53,31 +53,66 @@ function loadRecords(cb){
     .catch(function(){ cb([]); });
 }
 
+/* 長い解説文を、読みやすい段落（数文ずつ）に分ける */
+function toParagraphs(text){
+  var sentences = String(text || "").match(/[^。]*。?/g) || [];
+  var paras = [], cur = "";
+  sentences.forEach(function(s){
+    if(!s) return;
+    cur += s;
+    if(cur.length > 130){ paras.push(cur); cur = ""; }
+  });
+  if(cur) paras.push(cur);
+  return paras;
+}
+
+/* およその読了時間（分）。日本語は1分あたり約450文字で計算 */
+function readingMinutes(text){
+  return Math.max(1, Math.round(String(text||"").length / 450));
+}
+
+/* ジャケット＋盤のビジュアル（全ページ共通で使う） */
+function coverHtml(r, extraClass){
+  return (
+    '<span class="cover '+(extraClass||"")+'" data-theme="'+escHtml(r.theme)+'">' +
+      '<span class="disc" aria-hidden="true"><span class="disc-label"><b>'+escHtml(initial(r.artist))+'</b></span></span>' +
+      '<span class="sleeve">' +
+        '<span class="sl-top">'+escHtml(r.label || r.genre || "LP")+'</span>' +
+        '<span class="sl-title">'+escHtml(r.title)+'</span>' +
+        '<span class="sl-artist">'+escHtml(r.artist)+'</span>' +
+      '</span>' +
+    '</span>'
+  );
+}
+
 function renderNav(activeUrl){
   var here = activeUrl || location.pathname.split("/").pop() || "index.html";
   var links = SITE.nav.map(function(n){
     var act = (n.url === here) ? ' class="active"' : '';
-    return '<a href="'+esc_(n.url)+'"'+act+'>'+esc_(n.label)+'</a>';
+    return '<a href="'+escHtml(n.url)+'"'+act+'>'+escHtml(n.label)+'</a>';
   }).join("");
-  var el = document.getElementById("rs-nav");
+  var el = document.getElementById("site-nav");
   if(!el) return;
   el.innerHTML =
-    '<div class="wrap rs-nav-inner">' +
-      '<a class="rs-brand" href="index.html"><span class="disc-mark"></span>' +
-        '<span class="rs-brand-text">'+esc_(SITE.name)+'<small>'+esc_(SITE.nameEn)+'</small></span>' +
+    '<div class="wrap nav-inner">' +
+      '<a class="brand" href="index.html"><span class="brand-disc"></span>' +
+        '<span class="brand-text">'+escHtml(SITE.name)+'<small>'+escHtml(SITE.nameEn)+'</small></span>' +
       '</a>' +
-      '<nav class="rs-nav-links">'+links+'</nav>' +
+      '<nav class="nav-links">'+links+'</nav>' +
     '</div>';
 }
-function esc_(s){ return escHtml(s); }
 
 function renderFooter(){
-  var el = document.getElementById("rs-footer");
+  var el = document.getElementById("site-footer");
   if(!el) return;
   el.innerHTML =
-    '<div class="wrap rs-foot-inner">' +
-      '<div><strong>'+esc_(SITE.name)+'</strong><span class="rs-foot-tag">'+esc_(SITE.tagline)+'</span></div>' +
-      '<nav>' + SITE.nav.map(function(n){ return '<a href="'+esc_(n.url)+'">'+esc_(n.label)+'</a>'; }).join("") + '</nav>' +
+    '<div class="wrap foot-inner">' +
+      '<div class="foot-brand">' +
+        '<strong>'+escHtml(SITE.name)+'</strong>' +
+        '<span>'+escHtml(SITE.tagline)+'</span>' +
+      '</div>' +
+      '<nav>' + SITE.nav.map(function(n){ return '<a href="'+escHtml(n.url)+'">'+escHtml(n.label)+'</a>'; }).join("") + '</nav>' +
+      '<p class="foot-note">ここに載っているレコードは、すべて実際に店で手に取って買った盤です。</p>' +
     '</div>';
 }
 
