@@ -4,10 +4,16 @@
 #  ▼ あとで直すのは backend の中の2か所だけ：
 #     ・repo          … あなたの「GitHubユーザー名/リポジトリ名」
 #     ・identity_url   … DecapBridgeが表示する値
+#
+#  ※ このサイトはリポジトリ内の bosconext/ フォルダに移動しました。
+#     GitHubアカウント名は weekendclub にリネーム済みです。
+#     DecapBridge/Netlify側の連携先リポジトリも
+#     weekendclub/weekendclub.github.io に更新してください。
 # ============================================================
 backend:
   name: git-gateway
-  repo: あなたのGitHubユーザー名/bosconext-site            # ← DecapBridgeの値に置き換え
+  repo: weekendclub/weekendclub.github.io                  # ← リネーム後のリポジトリ名
+
   branch: main                                              # ← 基本ブランチ（通常 main）
   identity_url: https://auth.decapbridge.com/sites/あなたのサイトID   # ← DecapBridgeの値に置き換え
   gateway_url: https://gateway.decapbridge.com
@@ -24,8 +30,8 @@ locale: ja
 # site_url: https://bosconext-futsal.netlify.app
 # display_url: https://bosconext-futsal.netlify.app
 
-media_folder: images/uploads
-public_folder: /images/uploads
+media_folder: bosconext/images/uploads
+public_folder: /bosconext/images/uploads
 
 collections:
   # ===== お知らせ =====
@@ -34,7 +40,7 @@ collections:
     files:
       - name: news_list
         label: お知らせ一覧
-        file: news.json
+        file: bosconext/news.json
         description: トップページに表示されるお知らせです。上にあるものほど新しく表示されます。
         fields:
           - label: お知らせ
@@ -63,7 +69,7 @@ collections:
     files:
       - name: home_content
         label: トップページ
-        file: home.json
+        file: bosconext/home.json
         description: トップページの見出しや紹介文など。
         fields:
           - { label: 上の小さな英字, name: eyebrow, widget: string, required: false }
@@ -84,7 +90,7 @@ collections:
     files:
       - name: team_content
         label: チーム＆選手
-        file: team.json
+        file: bosconext/team.json
         description: チーム紹介・チームデータ・選手・スタッフ。
         fields:
           - { label: 'チーム紹介（段落ごと）', name: lead, widget: list }
@@ -122,7 +128,7 @@ collections:
     files:
       - name: schedule_content
         label: スケジュール
-        file: schedule.json
+        file: bosconext/schedule.json
         description: 「これからの予定」と「これまでの結果」。予定の一番上が「次の一戦」として大きく表示されます。
         fields:
           - label: これからの予定
@@ -164,7 +170,7 @@ collections:
     files:
       - name: tournaments_content
         label: 大会戦績
-        file: tournaments.json
+        file: bosconext/tournaments.json
         description: 大会の戦績（新しいものを上に）。
         fields:
           - { label: '紹介文（段落ごと）', name: lead, widget: list, required: false }
@@ -194,7 +200,7 @@ collections:
     files:
       - name: gallery_content
         label: フォトギャラリー
-        file: gallery.json
+        file: bosconext/gallery.json
         description: 写真を追加・削除できます。
         fields:
           - label: 写真
@@ -212,7 +218,7 @@ collections:
     files:
       - name: links_content
         label: リンク集
-        file: links.json
+        file: bosconext/links.json
         description: SNSや関連団体などのリンク。
         fields:
           - label: リンク

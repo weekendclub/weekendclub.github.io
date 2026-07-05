@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>レコード棚｜買ったレコードを1枚ずつ解説する音楽ブログ</title>
+<meta name="description" content="買ったレコードを1枚ずつ、購入店・価格つきで記録していく音楽ブログ「レコード棚」。ロック、ジャズ、シティ・ポップ、クラシックまでジャンルを問わず解説します。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="レコード棚">
+<meta property="og:title" content="レコード棚｜買ったレコードを1枚ずつ解説する音楽ブログ">
+<meta property="og:description" content="買ったレコードを1枚ずつ、購入店・価格つきで記録していく音楽ブログ。">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header id="rs-nav"></header>
+
+<section class="rs-hero">
+  <div class="wrap">
+    <span class="rs-kicker">Vinyl Diary</span>
+    <h1><span class="disc-mark"></span>レコード棚</h1>
+    <p class="lede">買ったレコードを1枚ずつ、どこで・いくらで買ったかも含めて記録していく音楽ブログです。ジャンルを問わず、その盤の背景をまじめに掘り下げます。</p>
+
+    <div class="rs-stats">
+      <div class="rs-stat"><div class="num" id="statCount">0</div><div class="label">掲載レコード数</div></div>
+      <div class="rs-stat"><div class="num" id="statSpent">―</div><div class="label">総購入額（判明分）</div></div>
+      <div class="rs-stat"><div class="num" id="statShops">0</div><div class="label">購入店舗数</div></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+  <div class="rs-controls">
+    <input type="search" id="search" placeholder="アーティスト・タイトル・レーベルで検索…">
+    <select id="genreFilter"><option value="">すべてのジャンル</option></select>
+    <select id="shopFilter"><option value="">すべての購入先</option></select>
+    <select id="sortBy">
+      <option value="added">新着順</option>
+      <option value="artist">アーティスト名順</option>
+      <option value="title">タイトル順</option>
+      <option value="priceHigh">価格が高い順</option>
+      <option value="priceLow">価格が安い順</option>
+    </select>
+  </div>
+
+  <div class="rs-grid" id="grid"></div>
+
+  <div class="rs-editnote">
+    <p>★ レコードを追加するには、この下の <code>records.json</code> に1件分をコピー＆編集して足してください（このページの見た目はさわらなくてOK）。</p>
+    <p><code>title</code> / <code>artist</code> / <code>artistJa</code> / <code>year</code> / <code>label</code> / <code>genre</code> / <code>format</code> / <code>pressing</code> / <code>price</code> / <code>shop</code> / <code>shopArea</code> / <code>purchaseDate</code> / <code>note</code>（購入時の一言メモ）/ <code>highlight</code>（記事一覧に出す一言フック）/ <code>description</code>（本文の解説）</p>
+  </div>
+</main>
+
+<footer id="rs-footer"></footer>
+
+<script src="common.js"></script>
+<script src="index.js"></script>
+</body>
+</html>

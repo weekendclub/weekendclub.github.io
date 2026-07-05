@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>レコード店から探す｜レコード棚</title>
+<meta name="description" content="レコード棚に掲載したレコードを、購入したレコード店ごとに一覧できるページです。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header id="rs-nav"></header>
+
+<section class="rs-hero">
+  <div class="wrap">
+    <span class="rs-kicker">Shops</span>
+    <h1>レコード店から探す</h1>
+    <p class="lede">これまで訪れたレコード店と、そこで買ったレコードをまとめています。店ごとの購入枚数・合計金額もひと目で分かります。</p>
+  </div>
+</section>
+
+<main class="wrap">
+  <div id="shopGrid" class="rs-shop-grid"></div>
+</main>
+
+<footer id="rs-footer"></footer>
+
+<script src="common.js"></script>
+<script src="shops.js"></script>
+</body>
+</html>
