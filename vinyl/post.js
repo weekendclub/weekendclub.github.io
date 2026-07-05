@@ -4,14 +4,23 @@
 renderNav("post.html");
 renderFooter();
 
+/* 読み進み具合のバー */
+window.addEventListener("scroll", function(){
+  var h = document.documentElement;
+  var max = h.scrollHeight - h.clientHeight;
+  var p = max > 0 ? (h.scrollTop / max) * 100 : 0;
+  document.getElementById("progress").style.width = p + "%";
+});
+
 function relatedCardHtml(r){
+  var url = "post.html?id=" + encodeURIComponent(r.id);
   return (
-    '<article class="rs-postcard" data-theme="'+escHtml(r.theme)+'">' +
-      '<div class="rs-sleeve"><div class="disc"></div><span class="kicker-tag">'+escHtml(r.genre||"Record")+'</span></div>' +
-      '<div class="rs-post-body">' +
-        '<h2 class="rs-post-title"><a href="post.html?id='+encodeURIComponent(r.id)+'">'+escHtml(r.title)+'</a></h2>' +
-        '<p class="rs-post-byline">'+escHtml(r.artist)+'</p>' +
-        '<a class="rs-readmore" href="post.html?id='+encodeURIComponent(r.id)+'">読む →</a>' +
+    '<article class="pc" data-theme="'+escHtml(r.theme)+'">' +
+      '<a href="'+url+'">'+coverHtml(r)+'</a>' +
+      '<div class="pc-body">' +
+        '<h2 class="pc-title"><a href="'+url+'">'+escHtml(r.title)+'</a></h2>' +
+        '<p class="pc-byline">'+escHtml(r.artist)+'</p>' +
+        '<a class="readmore" href="'+url+'">読む →</a>' +
       '</div>' +
     '</article>'
   );
@@ -45,10 +54,26 @@ function renderArticle(r, all){
     '<dt>購入価格</dt><dd class="price">'+ (typeof r.price === "number" ? yen(r.price) : "未記入") +'</dd>' +
     (r.purchaseDate ? '<dt>購入日</dt><dd>'+escHtml(r.purchaseDate)+'</dd>' : "");
 
-  var noteBox = r.note ? '<div class="rs-note-box">※ '+escHtml(r.note)+'</div>' : "";
+  var noteBox = r.note ? '<div class="note-box">※ '+escHtml(r.note)+'</div>' : "";
 
   var pageUrl = location.href.split("#")[0];
   var share = shareUrls(r.title + "／" + r.artist, pageUrl);
+
+  var paras = toParagraphs(r.description).map(function(p){
+    return '<p>'+escHtml(p)+'</p>';
+  }).join("");
+
+  /* 前後の記事（FEED順＝新着順） */
+  var feed = all.slice().reverse();
+  var idx = feed.indexOf(r);
+  var newer = idx > 0 ? feed[idx-1] : null;
+  var older = idx < feed.length-1 ? feed[idx+1] : null;
+  function pnLink(rec, cls, lbl, arrow){
+    if(!rec) return '<a class="'+cls+' ph" aria-hidden="true"></a>';
+    return '<a class="'+cls+'" href="post.html?id='+encodeURIComponent(rec.id)+'">' +
+      '<span class="lbl">'+lbl+'</span>' +
+      '<span class="ttl">'+arrow[0]+escHtml(rec.title)+arrow[1]+'</span></a>';
+  }
 
   var related = all.filter(function(o){ return o.id !== r.id && o.genre === r.genre; }).slice(0,3);
   if(!related.length){
@@ -57,39 +82,47 @@ function renderArticle(r, all){
 
   document.getElementById("articleRoot").innerHTML =
     '<article data-theme="'+escHtml(r.theme)+'">' +
-      '<div class="rs-article-head">' +
-        '<span class="rs-kicker">'+escHtml(r.genre||"Record")+'</span>' +
+      '<div class="art-head">' +
+        '<span class="kicker">'+escHtml(r.genre||"Record")+'</span>' +
         '<h1>'+escHtml(r.title)+'</h1>' +
-        '<p class="rs-article-byline"><b>'+escHtml(r.artist)+'</b>'+(metaBits.length?' ・ '+escHtml(metaBits.join(" ・ ")):'')+'</p>' +
-        (r.highlight ? '<p class="rs-lede">'+escHtml(r.highlight)+'</p>' : '') +
+        '<div class="art-byline"><b>'+escHtml(r.artist)+'</b>' +
+          (metaBits.length ? '<span class="dot"></span><span>'+escHtml(metaBits.join(" ・ "))+'</span>' : '') +
+          '<span class="dot"></span><span>約'+readingMinutes(r.description)+'分で読めます</span>' +
+        '</div>' +
+        (r.highlight ? '<p class="art-lede">'+escHtml(r.highlight)+'</p>' : '') +
       '</div>' +
 
-      '<div class="rs-article-visual"><div class="disc"></div></div>' +
+      '<div class="turntable"><div class="tt-disc"><div class="tt-label">'+escHtml(initial(r.artist))+'</div></div>' +
+        '<span class="tt-note">33 1/3 RPM ・ Now Playing</span></div>' +
 
-      '<div class="rs-article-grid">' +
-        '<div class="rs-article-body">' +
-          '<h2>解説</h2>' +
-          '<p>'+escHtml(r.description||"").replace(/\n/g,"<br>")+'</p>' +
+      '<div class="art-grid">' +
+        '<div class="art-body">' +
+          '<h2>解説</h2>' + paras +
         '</div>' +
-        '<aside class="rs-spec">' +
+        '<aside class="spec">' +
           '<h3>盤の基本情報</h3>' +
           '<dl>'+specRows+'</dl>' +
           '<hr>' +
-          '<h3>購入情報</h3>' +
+          '<h3>購入の記録</h3>' +
           '<dl>'+purchaseRows+'</dl>' +
           noteBox +
-          '<div class="rs-share">' +
+          '<div class="share">' +
             '<a href="'+escHtml(share.x)+'" target="_blank" rel="noopener">Xでシェア</a>' +
             '<a href="'+escHtml(share.line)+'" target="_blank" rel="noopener">LINEで送る</a>' +
           '</div>' +
         '</aside>' +
       '</div>' +
 
-      '<a class="rs-back" href="index.html">← レコード棚トップに戻る</a>' +
+      '<nav class="pn">' +
+        pnLink(newer, "prev", "新しい記事", ["← ",""]) +
+        pnLink(older, "next", "古い記事", [""," →"]) +
+      '</nav>' +
+
+      '<a class="backlink" href="index.html">← レコード棚トップに戻る</a>' +
     '</article>' +
 
     (related.length ? (
-      '<section class="rs-related"><h2>あわせて読みたい</h2><div class="rs-grid">' +
+      '<section class="related"><h2>あわせて聴きたい・読みたい</h2><div class="grid">' +
         related.map(relatedCardHtml).join("") +
       '</div></section>'
     ) : "");
@@ -118,9 +151,9 @@ function injectJsonLd(r, pageUrl){
 
 function renderNotFound(){
   document.getElementById("articleRoot").innerHTML =
-    '<div style="padding:70px 0;text-align:center;color:var(--ink-dim)">' +
-      '<p>指定されたレコードが見つかりませんでした。</p>' +
-      '<a class="rs-back" href="index.html">← レコード棚トップに戻る</a>' +
+    '<div style="padding:80px 0;text-align:center;color:var(--ink3)">' +
+      '<p style="font-family:var(--serif);font-size:17px">その盤は、棚に見あたりませんでした。</p>' +
+      '<a class="backlink" href="index.html">← レコード棚トップに戻る</a>' +
     '</div>';
 }
 

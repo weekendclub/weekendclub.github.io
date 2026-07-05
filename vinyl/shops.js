@@ -16,13 +16,13 @@ function shopCardHtml(shop, records){
   }).join("");
 
   return (
-    '<div class="rs-shop-card">' +
+    '<div class="shop-card">' +
       '<h3>📍 '+escHtml(shop)+'</h3>' +
-      '<div class="rs-shop-stats">' +
-        '<div><div class="n">'+records.length+'</div><div class="l">購入枚数</div></div>' +
+      '<div class="shop-stats">' +
+        '<div><div class="n">'+records.length+'枚</div><div class="l">ここで買った盤</div></div>' +
         '<div><div class="n">'+ (withPrice.length ? yen(total) : "―") +'</div><div class="l">合計金額</div></div>' +
       '</div>' +
-      '<ul class="rs-shop-list">'+list+'</ul>' +
+      '<ul class="shop-list">'+list+'</ul>' +
     '</div>'
   );
 }
@@ -37,7 +37,7 @@ loadRecords(function(list){
 
   var grid = document.getElementById("shopGrid");
   if(!shopNames.length){
-    grid.innerHTML = '<p class="rs-empty">まだレコードが登録されていません。</p>';
+    grid.innerHTML = '<p class="empty">まだレコードが登録されていません。</p>';
     return;
   }
   grid.innerHTML = shopNames.map(function(s){ return shopCardHtml(s, byShop[s]); }).join("");
