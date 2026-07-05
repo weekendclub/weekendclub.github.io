@@ -11,6 +11,7 @@ var SITE = {
   description: "買ったレコードを一枚ずつ、どこで・いくらで手に入れたかまで含めて記録していく音楽ブログ。ロックもジャズも歌謡曲もクラシックも、針を落として、確かめて、言葉にします。",
   nav: [
     {label: "すべての記事", url: "index.html"},
+    {label: "音楽入門", url: "guides.html"},
     {label: "レコード店から探す", url: "shops.html"},
     {label: "About", url: "about.html"}
   ]
