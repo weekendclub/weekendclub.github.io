@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>レコード棚｜購入レコードの記録と解説</title>
+<meta name="description" content="買ったレコードを1枚ずつ記録していく個人的なレコード棚。購入店・価格・盤の情報つきで解説を積み上げていきます。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="rs-header">
+  <div class="wrap">
+    <span class="kicker">My Vinyl Log</span>
+    <h1><span class="disc-mark"></span>レコード棚</h1>
+    <p>買ったレコードを1枚ずつ記録していくページです。どこで・いくらで買ったか、どんな盤か、そしてその音楽の背景を解説つきで積み上げていきます。</p>
+
+    <div class="rs-stats">
+      <div class="rs-stat"><div class="num" id="statCount">0</div><div class="label">所蔵枚数</div></div>
+      <div class="rs-stat"><div class="num" id="statSpent">―</div><div class="label">総購入額（判明分）</div></div>
+      <div class="rs-stat"><div class="num" id="statShops">0</div><div class="label">購入店舗数</div></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="rs-controls">
+    <input type="search" id="search" placeholder="アーティスト・タイトル・レーベルで検索…">
+    <select id="shopFilter"><option value="">すべての購入先</option></select>
+    <select id="sortBy">
+      <option value="added">追加順（新しい順）</option>
+      <option value="artist">アーティスト名順</option>
+      <option value="title">タイトル順</option>
+      <option value="priceHigh">価格が高い順</option>
+      <option value="priceLow">価格が安い順</option>
+    </select>
+  </div>
+
+  <div class="rs-grid" id="grid"></div>
+
+  <div class="rs-note">
+    <p>★ レコードを追加するには、この下の <code>records.json</code> に1件分の情報をコピー＆編集して足してください（デザインやこのページはさわらなくてOK）。</p>
+    <p><code>title</code>（タイトル）/ <code>artist</code>（アーティスト）/ <code>year</code>（発売年）/ <code>label</code>（レーベル）/ <code>genre</code>（ジャンル）/ <code>format</code>（LPなど）/ <code>pressing</code>（盤の情報。USプレスなど）/ <code>price</code>（購入価格・数字）/ <code>shop</code>（購入店）/ <code>shopArea</code>（店舗の地域、任意）/ <code>purchaseDate</code>（購入日、任意）/ <code>description</code>（解説文）</p>
+  </div>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
