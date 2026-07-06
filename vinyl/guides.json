@@ -95,6 +95,17 @@
       "status": "published",
       "requires": "rock",
       "description": "「入門④」の5枚を聴き終えた人へ。カヴァー文化、バンドの家系図、ミックスの沼、次に手を伸ばす一枚まで。"
+    },
+    {
+      "id": "soul-funk-deep",
+      "no": 5,
+      "title": "ソウル&ファンク深掘り",
+      "subtitle": "ハウスバンドという名の主役",
+      "theme": "soul",
+      "url": "deep-soul-funk.html",
+      "status": "published",
+      "requires": "soul-funk",
+      "description": "「入門⑤」の5枚を聴き終えた人へ。ハウスバンドを辿る沼、ファンクの遺伝子の広がり方、次に手を伸ばす一枚まで。"
     }
   ]
 }
