@@ -119,6 +119,63 @@
       "status": "published",
       "requires": "classical-deep",
       "description": "「深掘り」のさらに先へ。ディスコグラフィーの沼、録音会場の音、プレス工場と国盤の違い、レーベル考古学まで。"
+    },
+    {
+      "id": "jazz-swamp",
+      "no": 2,
+      "title": "ジャズ沼",
+      "subtitle": "テイクとオリジナル至上主義の奥底へ",
+      "theme": "jazz",
+      "url": "swamp-jazz.html",
+      "status": "published",
+      "requires": "jazz-deep",
+      "description": "「深掘り」のさらに先へ。アウトテイクを追う沼、オールアナログ再発、モノラル至上主義、レーベル考古学まで。"
+    },
+    {
+      "id": "citypop-swamp",
+      "no": 3,
+      "title": "シティ・ポップ沼",
+      "subtitle": "機材とスタジオの奥底へ",
+      "theme": "citypop",
+      "url": "swamp-citypop.html",
+      "status": "published",
+      "requires": "citypop-deep",
+      "description": "「深掘り」のさらに先へ。シンセサイザーという機材の沼、スタジオという場所の沼、初回盤の見分け方まで。"
+    },
+    {
+      "id": "rock-swamp",
+      "no": 4,
+      "title": "ロック沼",
+      "subtitle": "マトリクスとブートレグの奥底へ",
+      "theme": "rock",
+      "url": "swamp-rock.html",
+      "status": "published",
+      "requires": "rock-deep",
+      "description": "「深掘り」のさらに先へ。マトリクス読解、ブートレグ文化の歴史、差し替えジャケット事件まで。"
+    },
+    {
+      "id": "soul-funk-swamp",
+      "no": 5,
+      "title": "ソウル&ファンク沼",
+      "subtitle": "レア・グルーヴという運動",
+      "theme": "soul",
+      "url": "swamp-soul-funk.html",
+      "status": "published",
+      "requires": "soul-funk-deep",
+      "description": "「深掘り」のさらに先へ。レア・グルーヴ運動、ディガー文化、覆面プロジェクトの沼まで。"
+    }
+  ],
+  "lab": [
+    {
+      "id": "classical-lab",
+      "no": 1,
+      "title": "クラシック研究室",
+      "subtitle": "ピッチとテンポの、その先へ",
+      "theme": "classical",
+      "url": "lab-classical.html",
+      "status": "published",
+      "requires": "classical-swamp",
+      "description": "「沼」のさらに先へ。ピッチ基準の沼、ベートーヴェンのメトロノーム論争、ピリオド楽器という思想、編集という魔法まで。"
     }
   ]
 }

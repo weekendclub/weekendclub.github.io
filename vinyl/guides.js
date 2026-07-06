@@ -2,9 +2,9 @@
    レコード棚 - 音楽入門／深掘り／沼シリーズ一覧の表示ロジック
 
    ★ 連載を増やすには guides.json に1件足してください。
-     入門は "series"、深掘りは "deepDives"、沼は "swamp" の
-     配列に追加します。status を "published" にして url に
-     記事ページを指定するとリンクが有効になります
+     入門は "series"、深掘りは "deepDives"、沼は "swamp"、
+     研究室は "lab" の配列に追加します。status を "published"
+     にして url に記事ページを指定するとリンクが有効になります
      （"coming" のあいだは準備中表示）。
    ============================================================ */
 renderNav("guides.html");
@@ -13,7 +13,8 @@ renderFooter();
 var TIERS = [
   {key: "series",    grid: "guideGrid", labelPrefix: null},      // 第N回
   {key: "deepDives", grid: "deepGrid",  labelPrefix: "深掘り"},
-  {key: "swamp",     grid: "swampGrid", labelPrefix: "沼"}
+  {key: "swamp",     grid: "swampGrid", labelPrefix: "沼"},
+  {key: "lab",       grid: "labGrid",   labelPrefix: "研究室"}
 ];
 
 function guideCardHtml(g, labelPrefix, allById){
