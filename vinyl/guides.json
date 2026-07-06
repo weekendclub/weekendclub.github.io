@@ -50,5 +50,18 @@
       "status": "published",
       "description": "頭で理解するより先に、体が動く音楽。系譜の地図、最初の5枚、レーベルと45回転シングルの話まで。"
     }
+  ],
+  "deepDives": [
+    {
+      "id": "classical-deep",
+      "no": 1,
+      "title": "クラシック深掘り",
+      "subtitle": "有名曲の次に聴く一枚",
+      "theme": "classical",
+      "url": "deep-classical.html",
+      "status": "published",
+      "requires": "classical",
+      "description": "「入門①」の5枚を聴き終えた人へ。聴き比べという楽しみ方、版と指揮者の沼、そして次に手を伸ばす一枚まで。"
+    }
   ]
 }
