@@ -62,6 +62,17 @@
       "status": "published",
       "requires": "classical",
       "description": "「入門①」の5枚を聴き終えた人へ。聴き比べという楽しみ方、版と指揮者の沼、そして次に手を伸ばす一枚まで。"
+    },
+    {
+      "id": "jazz-deep",
+      "no": 2,
+      "title": "ジャズ深掘り",
+      "subtitle": "誰が誰と鳴らしているか",
+      "theme": "jazz",
+      "url": "deep-jazz.html",
+      "status": "published",
+      "requires": "jazz",
+      "description": "「入門②」の5枚を聴き終えた人へ。同じ曲の聴き比べ、パーソネルを辿る沼、次に手を伸ばす一枚まで。"
     }
   ]
 }
