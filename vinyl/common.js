@@ -113,7 +113,7 @@ function renderFooter(){
         '<strong>'+escHtml(SITE.name)+'</strong>' +
         '<span>'+escHtml(SITE.tagline)+'</span>' +
       '</div>' +
-      '<nav>' + SITE.nav.map(function(n){ return '<a href="'+escHtml(n.url)+'">'+escHtml(n.label)+'</a>'; }).join("") + '</nav>' +
+      '<nav>' + SITE.nav.map(function(n){ return '<a href="'+escHtml(n.url)+'">'+escHtml(n.label)+'</a>'; }).join("") + '<a href="privacy.html">プライバシーポリシー</a></nav>' +
       '<p class="foot-note">ここに載っているレコードは、すべて実際に店で手に取って買った盤です。</p>' +
     '</div>';
 }
