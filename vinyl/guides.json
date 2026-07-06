@@ -84,6 +84,17 @@
       "status": "published",
       "requires": "citypop",
       "description": "「入門③」の5枚を聴き終えた人へ。作詞家買い・アレンジャー買いという掘り方、次に手を伸ばす一枚まで。"
+    },
+    {
+      "id": "rock-deep",
+      "no": 4,
+      "title": "ロック深掘り",
+      "subtitle": "バンドの家系図を辿る",
+      "theme": "rock",
+      "url": "deep-rock.html",
+      "status": "published",
+      "requires": "rock",
+      "description": "「入門④」の5枚を聴き終えた人へ。カヴァー文化、バンドの家系図、ミックスの沼、次に手を伸ばす一枚まで。"
     }
   ]
 }
