@@ -38,6 +38,7 @@ function genreTheme(genre){
   if(g.indexOf("jazz") !== -1) return "jazz";
   if(g.indexOf("classical") !== -1 || g.indexOf("室内楽") !== -1 || g.indexOf("クラシック") !== -1) return "classical";
   if(g.indexOf("j-pop") !== -1 || g.indexOf("シティ") !== -1 || g.indexOf("citypop") !== -1) return "citypop";
+  if(g.indexOf("soul") !== -1 || g.indexOf("funk") !== -1 || g.indexOf("ソウル") !== -1 || g.indexOf("ファンク") !== -1) return "soul";
   if(g.indexOf("rock") !== -1 || g.indexOf("ロック") !== -1) return "rock";
   return "default";
 }

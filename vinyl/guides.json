@@ -39,6 +39,16 @@
       "url": "guide-rock.html",
       "status": "published",
       "description": "入り口が多すぎて迷うロックを、系譜の地図と「誰が音を作っているか」という視点から整理する。"
+    },
+    {
+      "id": "soul-funk",
+      "no": 5,
+      "title": "ソウル&ファンク入門",
+      "subtitle": "体が先に分かる音楽",
+      "theme": "soul",
+      "url": "guide-soul-funk.html",
+      "status": "published",
+      "description": "頭で理解するより先に、体が動く音楽。系譜の地図、最初の5枚、レーベルと45回転シングルの話まで。"
     }
   ]
 }
