@@ -107,5 +107,18 @@
       "requires": "soul-funk",
       "description": "「入門⑤」の5枚を聴き終えた人へ。ハウスバンドを辿る沼、ファンクの遺伝子の広がり方、次に手を伸ばす一枚まで。"
     }
+  ],
+  "swamp": [
+    {
+      "id": "classical-swamp",
+      "no": 1,
+      "title": "クラシック沼",
+      "subtitle": "録音会場とプレスの奥底へ",
+      "theme": "classical",
+      "url": "swamp-classical.html",
+      "status": "published",
+      "requires": "classical-deep",
+      "description": "「深掘り」のさらに先へ。ディスコグラフィーの沼、録音会場の音、プレス工場と国盤の違い、レーベル考古学まで。"
+    }
   ]
 }
