@@ -73,6 +73,17 @@
       "status": "published",
       "requires": "jazz",
       "description": "「入門②」の5枚を聴き終えた人へ。同じ曲の聴き比べ、パーソネルを辿る沼、次に手を伸ばす一枚まで。"
+    },
+    {
+      "id": "citypop-deep",
+      "no": 3,
+      "title": "シティ・ポップ深掘り",
+      "subtitle": "歌手より先に、書いた人を見る",
+      "theme": "citypop",
+      "url": "deep-citypop.html",
+      "status": "published",
+      "requires": "citypop",
+      "description": "「入門③」の5枚を聴き終えた人へ。作詞家買い・アレンジャー買いという掘り方、次に手を伸ばす一枚まで。"
     }
   ]
 }
