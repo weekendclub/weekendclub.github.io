@@ -29,6 +29,16 @@
       "url": "guide-citypop.html",
       "status": "published",
       "description": "はっぴいえんどからAORまで。世界が再発見した日本のポップスを、系譜とスタジオミュージシャンから読み解く。"
+    },
+    {
+      "id": "rock",
+      "no": 4,
+      "title": "ロック入門",
+      "subtitle": "型にはまらない聴き方",
+      "theme": "rock",
+      "url": "guide-rock.html",
+      "status": "published",
+      "description": "入り口が多すぎて迷うロックを、系譜の地図と「誰が音を作っているか」という視点から整理する。"
     }
   ]
 }
