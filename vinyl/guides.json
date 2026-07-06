@@ -176,6 +176,50 @@
       "status": "published",
       "requires": "classical-swamp",
       "description": "「沼」のさらに先へ。ピッチ基準の沼、ベートーヴェンのメトロノーム論争、ピリオド楽器という思想、編集という魔法まで。"
+    },
+    {
+      "id": "jazz-lab",
+      "no": 2,
+      "title": "ジャズ研究室",
+      "subtitle": "採譜と批評という学問へ",
+      "theme": "jazz",
+      "url": "lab-jazz.html",
+      "status": "published",
+      "requires": "jazz-swamp",
+      "description": "「沼」のさらに先へ。ソロを採譜する沼、スウィングを測る研究、1942年の録音禁止令、ディスコグラフィーとライナーノーツの世界まで。"
+    },
+    {
+      "id": "citypop-lab",
+      "no": 3,
+      "title": "シティ・ポップ研究室",
+      "subtitle": "コード進行と再文脈化の先へ",
+      "theme": "citypop",
+      "url": "lab-citypop.html",
+      "status": "published",
+      "requires": "citypop-swamp",
+      "description": "「沼」のさらに先へ。テンションコードと分数コードの美学、ヴェイパーウェイヴという再文脈化、配信解禁という事件まで。"
+    },
+    {
+      "id": "rock-lab",
+      "no": 4,
+      "title": "ロック研究室",
+      "subtitle": "マスタリングの物理学と批評の文学へ",
+      "theme": "rock",
+      "url": "lab-rock.html",
+      "status": "published",
+      "requires": "rock-swamp",
+      "description": "「沼」のさらに先へ。マスタリングの物理学、盗作訴訟という沼、ロック批評という文学、アーカイブ学まで。"
+    },
+    {
+      "id": "soul-funk-lab",
+      "no": 5,
+      "title": "ソウル&ファンク研究室",
+      "subtitle": "サンプリング裁判と保存活動の先へ",
+      "theme": "soul",
+      "url": "lab-soul-funk.html",
+      "status": "published",
+      "requires": "soul-funk-swamp",
+      "description": "「沼」のさらに先へ。サンプリング裁判という沼、グルーヴを科学する試み、リイシュー・レーベルという保存活動まで。"
     }
   ]
 }
