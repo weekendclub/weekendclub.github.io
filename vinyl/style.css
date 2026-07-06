@@ -25,6 +25,7 @@
 [data-theme="jazz"]      { --accent: #4fb8ae; }
 [data-theme="citypop"]   { --accent: #e8b73f; }
 [data-theme="classical"] { --accent: #a695e0; }
+[data-theme="soul"]      { --accent: #d1519a; }
 [data-theme="default"]   { --accent: var(--gold); }
 
 *{box-sizing:border-box;}
