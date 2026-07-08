@@ -99,7 +99,6 @@ function renderFooter(){
       '<div class="foot-bottom">'+
         '<span>© '+esc(SITE_INFO.clubName)+' '+(new Date().getFullYear())+'</span>'+
         '<span>東京近辺で活動するソーシャルフットボールクラブ</span>'+
-        '<span><a href="../index.html" style="color:inherit;">weekendclub（ホーム）</a></span>'+
       '</div>'+
     '</div>';
 }
