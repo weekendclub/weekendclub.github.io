@@ -40,7 +40,7 @@ function guideCardHtml(g, labelPrefix, allById){
   return '<div class="gcard coming" data-theme="'+escHtml(g.theme||"default")+'">'+inner+'</div>';
 }
 
-fetch("guides.json", {cache:"no-store"})
+fetch("guides.json")
   .then(function(r){ if(!r.ok) throw 0; return r.json(); })
   .then(function(d){
     d = d || {};

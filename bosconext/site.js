@@ -99,6 +99,7 @@ function renderFooter(){
       '<div class="foot-bottom">'+
         '<span>© '+esc(SITE_INFO.clubName)+' '+(new Date().getFullYear())+'</span>'+
         '<span>東京近辺で活動するソーシャルフットボールクラブ</span>'+
+        '<span><a href="../index.html" style="color:inherit;">weekendclub（ホーム）</a></span>'+
       '</div>'+
     '</div>';
 }
@@ -138,7 +139,7 @@ function initChrome(){
 /* データファイル(JSON)を読み込む共通処理。CMSで編集した内容をページに反映するために使う。
    読み込めない場合（ローカルで直接ファイルを開いたとき等）は cb(null) を呼ぶので、各ページで予備データを表示できる。 */
 function loadJSON(path, cb){
-  fetch(path, {cache:"no-store"})
+  fetch(path)
     .then(function(r){ if(!r.ok) throw 0; return r.json(); })
     .then(function(d){ cb(d); })
     .catch(function(){ cb(null); });

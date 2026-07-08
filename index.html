@@ -3,22 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>weekendclub</title>
-<meta name="description" content="週末に打ち込んでいるもの、あれこれ。">
+<title>weekendclub｜週末の、あれこれ。</title>
+<meta name="description" content="週末に打ち込んでいるものを集めた個人サイト。ソーシャルフットボールクラブ「BOSCO NEXT」、レコードを1枚ずつ解説する音楽ブログ「レコード棚」、スマートウォッチの選び方ガイド、公認心理師CBT模擬問題など。">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="weekendclub">
+<meta property="og:title" content="weekendclub｜週末の、あれこれ。">
+<meta property="og:description" content="週末に打ち込んでいるものを集めた個人サイト。フットボール、レコード、スマートウォッチ、資格勉強。">
+<meta property="og:url" content="https://weekendclub.github.io/">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://weekendclub.github.io/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"weekendclub","alternateName":"週末の、あれこれ。","url":"https://weekendclub.github.io/","inLanguage":"ja","description":"週末に打ち込んでいるものを集めた個人サイト。"}</script>
 <style>
   :root{
     --bg:#14110e; --card:#1f1a15; --border:#332a20;
-    --ink:#f2ead9; --ink-dim:#b9ac97; --gold:#d6a34a;
+    --ink:#f2ead9; --ink-dim:#b9ac97; --ink-mute:#8a7d68; --gold:#d6a34a; --gold-soft:#e6c078;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
-    min-height:100vh; display:flex; align-items:center; justify-content:center;
+    min-height:100vh;
     background:var(--bg); color:var(--ink);
     font-family:"Hiragino Sans","Zen Kaku Gothic New",sans-serif;
-    padding:32px;
+    display:flex; flex-direction:column;
   }
-  main{max-width:640px; width:100%; text-align:center;}
+  main{max-width:680px; width:100%; margin:0 auto; padding:64px 24px 48px; text-align:center; flex:1;}
   h1{font-size:14px; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); margin:0 0 8px; font-weight:700;}
   p.lede{color:var(--ink-dim); margin:0 0 40px; font-size:14px;}
   .cards{display:grid; grid-template-columns:repeat(2,1fr); gap:18px;}
@@ -30,7 +38,21 @@
   a.card .icon{font-size:32px; display:block; margin-bottom:14px;}
   a.card .title{display:block; font-size:17px; font-weight:700; margin-bottom:6px;}
   a.card .desc{display:block; font-size:12.5px; color:var(--ink-dim); line-height:1.6;}
-  @media (max-width:720px){ .cards{grid-template-columns:1fr;} }
+  /* 更新情報 */
+  section.news{margin-top:56px; text-align:left;}
+  section.news h2{font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); font-weight:700; margin:0 0 16px; text-align:center;}
+  ul.news-list{list-style:none; margin:0; padding:0; border-top:1px solid var(--border);}
+  ul.news-list li{display:flex; gap:16px; align-items:baseline; padding:13px 4px; border-bottom:1px solid var(--border); font-size:13.5px; line-height:1.7;}
+  ul.news-list time{flex:0 0 84px; color:var(--ink-mute); font-size:12px; letter-spacing:.04em; font-variant-numeric:tabular-nums;}
+  ul.news-list a{color:var(--gold-soft); text-decoration:none;}
+  ul.news-list a:hover{text-decoration:underline;}
+  ul.news-list .t{color:var(--ink-dim);}
+  footer{border-top:1px solid var(--border); padding:26px 24px; text-align:center;}
+  footer .brand{color:var(--gold-soft); font-weight:700; font-size:13px; letter-spacing:.08em;}
+  footer nav{margin-top:10px; display:flex; gap:18px; justify-content:center; flex-wrap:wrap;}
+  footer nav a{color:var(--ink-mute); font-size:12px; text-decoration:none;}
+  footer nav a:hover{color:var(--gold-soft);}
+  @media (max-width:720px){ .cards{grid-template-columns:1fr;} main{padding-top:48px;} }
 </style>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4628020597462110" crossorigin="anonymous"></script>
 </head>
@@ -42,24 +64,45 @@
     <a class="card" href="bosconext/index.html">
       <span class="icon">⚽</span>
       <span class="title">BOSCO NEXT</span>
-      <span class="desc">東京のソーシャルフットボールクラブ</span>
+      <span class="desc">東京のソーシャルフットボールクラブ。チーム紹介・試合日程・大会情報</span>
     </a>
     <a class="card" href="vinyl/index.html">
       <span class="icon">🎵</span>
       <span class="title">レコード棚</span>
-      <span class="desc">買ったレコードを1枚ずつ解説する音楽ブログ</span>
+      <span class="desc">買ったレコードを1枚ずつ、購入店・価格つきで解説する音楽ブログ</span>
     </a>
     <a class="card" href="smartwatch/index.html">
       <span class="icon">⌚</span>
       <span class="title">スマートウォッチの選び方</span>
-      <span class="desc">使う人のタイプ別に選ぶ、買い方ガイド</span>
+      <span class="desc">使う人のタイプ別に選ぶ、比較表とQ&amp;Aつきの買い方ガイド</span>
     </a>
     <a class="card" href="kounin/index.html">
       <span class="icon">🧠</span>
       <span class="title">公認心理師 CBT模擬問題</span>
-      <span class="desc">放送大学の選考試験を想定した練習問題集</span>
+      <span class="desc">放送大学の選考試験を想定した練習問題集。22科目・83問、復習モード対応</span>
     </a>
   </div>
+
+  <section class="news">
+    <h2>更新情報</h2>
+    <ul class="news-list">
+      <li><time datetime="2026-07-08">2026.07.08</time><span class="t"><a href="kounin/index.html">公認心理師 CBT模擬問題</a>を拡充。83問に増量、ランダム出題・間違えた問題だけの復習モードに対応しました。</span></li>
+      <li><time datetime="2026-07-08">2026.07.08</time><span class="t"><a href="smartwatch/index.html">スマートウォッチの選び方</a>を公開。使う人のタイプ別に、比較表とQ&amp;Aつきで解説しています。</span></li>
+      <li><time datetime="2026-07-06">2026.07.06</time><span class="t"><a href="vinyl/guides.html">レコード棚の音楽入門</a>に「The Laboratory」シリーズを全5ジャンルに拡大しました。</span></li>
+      <li><time datetime="2026-07-05">2026.07.05</time><span class="t"><a href="vinyl/index.html">レコード棚</a>を深夜のジャズ喫茶をイメージしたデザインにリニューアルしました。</span></li>
+    </ul>
+  </section>
 </main>
+
+<footer>
+  <div class="brand">weekendclub</div>
+  <nav>
+    <a href="bosconext/index.html">BOSCO NEXT</a>
+    <a href="vinyl/index.html">レコード棚</a>
+    <a href="smartwatch/index.html">スマートウォッチの選び方</a>
+    <a href="kounin/index.html">公認心理師 CBT模擬問題</a>
+    <a href="vinyl/privacy.html">プライバシーポリシー</a>
+  </nav>
+</footer>
 </body>
 </html>

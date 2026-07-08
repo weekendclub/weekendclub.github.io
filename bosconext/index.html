@@ -9,6 +9,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<link rel="canonical" href="https://weekendclub.github.io/bosconext/">
+<meta property="og:url" content="https://weekendclub.github.io/bosconext/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SportsTeam","name":"BOSCO NEXT","sport":"Futsal","description":"東京近辺で活動するソーシャルフットボールのクラブチーム。","url":"https://weekendclub.github.io/bosconext/"}</script>
 </head>
 <body>
 
@@ -239,7 +242,7 @@ function renderNewsCard(n){
 }
 /* お知らせは news.json（CMSで編集）を読み込んで表示します。
    読み込めない場合（例：パソコンでファイルを直接ひらいたプレビュー時）は、上の PAGE.news を表示します。 */
-fetch('news.json', {cache:'no-store'})
+fetch('news.json')
   .then(function(r){ if(!r.ok) throw 0; return r.json(); })
   .then(function(data){
     var items = (data && data.items && data.items.length) ? data.items : PAGE.news;
