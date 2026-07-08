@@ -34,6 +34,28 @@ function renderArticle(r, all){
   document.getElementById("ogDescTag").setAttribute("content", desc);
   document.getElementById("crumbTitle").textContent = r.title;
 
+  // canonical / og:url / 構造化データ（記事ごとに動的に設定）
+  var canonicalUrl = "https://weekendclub.github.io/vinyl/post.html?id=" + encodeURIComponent(r.id);
+  var link = document.createElement("link");
+  link.rel = "canonical"; link.href = canonicalUrl;
+  document.head.appendChild(link);
+  var ogUrl = document.createElement("meta");
+  ogUrl.setAttribute("property", "og:url"); ogUrl.setAttribute("content", canonicalUrl);
+  document.head.appendChild(ogUrl);
+  var ld = document.createElement("script");
+  ld.type = "application/ld+json";
+  ld.textContent = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": r.title + "／" + r.artist,
+    "description": desc,
+    "inLanguage": "ja",
+    "mainEntityOfPage": canonicalUrl,
+    "author": {"@type": "Person", "name": "weekendclub"},
+    "publisher": {"@type": "Organization", "name": "レコード棚（weekendclub）"}
+  });
+  document.head.appendChild(ld);
+
   var metaBits = [];
   if(r.year) metaBits.push(r.year + "年");
   if(r.label) metaBits.push(r.label);

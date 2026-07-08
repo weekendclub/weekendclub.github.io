@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://weekendclub.github.io/sitemap.xml

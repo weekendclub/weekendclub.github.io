@@ -45,7 +45,7 @@ function genreTheme(genre){
 
 /* records.json を読み込み、各レコードに導出情報（テーマ色など）を付与する */
 function loadRecords(cb){
-  fetch("records.json", {cache:"no-store"})
+  fetch("records.json")
     .then(function(r){ if(!r.ok) throw 0; return r.json(); })
     .then(function(d){
       var list = (d && d.records) || [];
@@ -113,7 +113,7 @@ function renderFooter(){
         '<strong>'+escHtml(SITE.name)+'</strong>' +
         '<span>'+escHtml(SITE.tagline)+'</span>' +
       '</div>' +
-      '<nav>' + SITE.nav.map(function(n){ return '<a href="'+escHtml(n.url)+'">'+escHtml(n.label)+'</a>'; }).join("") + '<a href="privacy.html">プライバシーポリシー</a></nav>' +
+      '<nav>' + SITE.nav.map(function(n){ return '<a href="'+escHtml(n.url)+'">'+escHtml(n.label)+'</a>'; }).join("") + '<a href="privacy.html">プライバシーポリシー</a><a href="../index.html">weekendclub（ホーム）</a></nav>' +
       '<p class="foot-note">ここに載っているレコードは、すべて実際に店で手に取って買った盤です。</p>' +
     '</div>';
 }
