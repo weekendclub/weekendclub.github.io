@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>公認心理師 選考試験 CBT模擬問題｜放送大学 心理演習・心理実習 2027年度 選考対策</title>
-<meta name="description" content="放送大学 公認心理師学部段階カリキュラム『心理演習』『心理実習』受講のための選考試験（第1次選考・CBT試験）を想定した、非公式の模擬問題集。国家試験の出題傾向をふまえ、CBT対象22科目から全38問。学習モードと本番想定の試験モードで、その場で採点・解説が読めます。">
+<meta name="description" content="放送大学 公認心理師学部段階カリキュラム『心理演習』『心理実習』受講のための選考試験（第1次選考・CBT試験）を想定した、非公式の模擬問題集。CBT対象22科目から全83問。ランダム出題・出題数の選択・間違えた問題だけを集めた復習モードに対応し、その場で採点・解説が読めます。">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="weekendclub">
 <meta property="og:title" content="公認心理師 選考試験 CBT模擬問題｜放送大学 2027年度 選考対策">
-<meta property="og:description" content="放送大学『心理演習』『心理実習』選考試験（CBT）を想定した非公式の模擬問題。CBT対象22科目・全38問、その場で採点と解説。">
+<meta property="og:description" content="放送大学『心理演習』『心理実習』選考試験（CBT）を想定した非公式の模擬問題。CBT対象22科目・全83問、ランダム出題や復習モードにも対応。">
 <meta name="twitter:card" content="summary">
 <meta name="robots" content="index,follow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,98 +25,93 @@
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
-  body{
-    background:var(--bg); color:var(--ink);
-    font-family:"Zen Kaku Gothic New","Hiragino Sans",sans-serif;
-    line-height:1.75; -webkit-font-smoothing:antialiased;
-  }
+  body{background:var(--bg); color:var(--ink); font-family:"Zen Kaku Gothic New","Hiragino Sans",sans-serif; line-height:1.75; -webkit-font-smoothing:antialiased;}
   a{color:var(--gold-soft);}
   .wrap{max-width:820px; width:100%; margin:0 auto; padding:0 20px;}
   .serif{font-family:"Shippori Mincho B1",serif;}
 
-  /* header */
   header.site{border-bottom:1px solid var(--border); background:linear-gradient(180deg,#181410,#14110e);}
   header.site .wrap{padding-top:34px; padding-bottom:34px;}
   .kicker{font-size:12px; letter-spacing:.24em; text-transform:uppercase; color:var(--gold); font-weight:700; margin:0 0 12px;}
   h1{font-size:26px; line-height:1.5; margin:0 0 12px; font-weight:800;}
-  h1 .sub{display:block; font-size:15px; color:var(--ink-dim); font-weight:400; margin-top:8px; letter-spacing:.01em;}
+  h1 .sub{display:block; font-size:15px; color:var(--ink-dim); font-weight:400; margin-top:8px;}
   .lede{color:var(--ink-dim); font-size:14.5px; margin:0;}
 
   main .wrap{padding-top:34px; padding-bottom:64px;}
+  .panel{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:24px 22px; margin:0 0 20px;}
+  .panel h2{font-size:16px; margin:0 0 16px; color:var(--gold-soft); font-weight:700; letter-spacing:.02em;}
+  .panel h2 .step{display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:50%; background:var(--gold); color:#221a0d; font-size:12px; margin-right:8px; vertical-align:middle;}
 
-  /* generic card */
-  .panel{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:26px 24px; margin:0 0 22px;}
-  .panel h2{font-size:17px; margin:0 0 14px; color:var(--gold-soft); font-weight:700; letter-spacing:.02em;}
-
-  .specs{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:4px 0 0;}
-  .spec{background:var(--card2); border:1px solid var(--border); border-radius:12px; padding:14px 14px;}
+  .specs{display:grid; grid-template-columns:repeat(3,1fr); gap:12px;}
+  .spec{background:var(--card2); border:1px solid var(--border); border-radius:12px; padding:14px;}
   .spec .k{font-size:11.5px; color:var(--ink-mute); letter-spacing:.08em; margin-bottom:5px;}
-  .spec .v{font-size:16px; font-weight:700; color:var(--ink);}
+  .spec .v{font-size:16px; font-weight:700;}
   .spec .v small{font-weight:400; font-size:12px; color:var(--ink-dim);}
-
-  .notice{background:var(--bg2); border:1px solid var(--border); border-left:3px solid var(--gold); border-radius:10px; padding:14px 16px; font-size:13px; color:var(--ink-dim); margin:18px 0 0;}
+  .notice{background:var(--bg2); border:1px solid var(--border); border-left:3px solid var(--gold); border-radius:10px; padding:14px 16px; font-size:13px; color:var(--ink-dim); margin:16px 0 0;}
   .notice strong{color:var(--gold-soft);}
 
-  /* buttons */
-  .btn{
-    display:inline-flex; align-items:center; justify-content:center; gap:8px;
-    font-family:inherit; font-size:15px; font-weight:700; cursor:pointer;
-    padding:14px 22px; border-radius:12px; border:1px solid var(--border2);
-    background:var(--card2); color:var(--ink); text-decoration:none; transition:all .15s ease;
-  }
+  .btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; font-family:inherit; font-size:15px; font-weight:700; cursor:pointer; padding:14px 22px; border-radius:12px; border:1px solid var(--border2); background:var(--card2); color:var(--ink); text-decoration:none; transition:all .15s ease;}
   .btn:hover{border-color:var(--gold); transform:translateY(-1px);}
   .btn.gold{background:linear-gradient(180deg,#d9a94f,#c8933a); color:#221a0d; border-color:#e0b25c;}
   .btn.gold:hover{filter:brightness(1.06);}
   .btn.ghost{background:transparent;}
   .btn:disabled{opacity:.4; cursor:default; transform:none; border-color:var(--border);}
-  .btn small{font-weight:400; font-size:12px; opacity:.85;}
+  .btn.block{width:100%; padding:16px; font-size:16px;}
 
-  .mode-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:6px;}
-  .mode-card{background:var(--card2); border:1px solid var(--border2); border-radius:14px; padding:22px 20px; text-align:left; cursor:pointer; transition:all .15s ease; color:inherit; font-family:inherit;}
-  .mode-card:hover{border-color:var(--gold); transform:translateY(-2px);}
-  .mode-card .ic{font-size:26px; display:block; margin-bottom:10px;}
-  .mode-card .t{font-size:16px; font-weight:800; margin-bottom:6px;}
-  .mode-card .d{font-size:12.5px; color:var(--ink-dim); line-height:1.65;}
+  .mode-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px;}
+  .mode-card{background:var(--card2); border:1px solid var(--border2); border-radius:14px; padding:18px 16px; text-align:left; cursor:pointer; transition:all .15s ease; color:inherit; font-family:inherit;}
+  .mode-card:hover{border-color:var(--gold);}
+  .mode-card.sel{border-color:var(--gold); background:#241c12; box-shadow:0 0 0 1px var(--gold) inset;}
+  .mode-card .ic{font-size:24px; display:block; margin-bottom:8px;}
+  .mode-card .t{font-size:15px; font-weight:800; margin-bottom:5px;}
+  .mode-card .d{font-size:12px; color:var(--ink-dim); line-height:1.6;}
+  .mode-card .cnt{display:inline-block; margin-top:8px; font-size:11.5px; color:var(--gold-soft); background:var(--bg2); border:1px solid var(--border2); border-radius:99px; padding:2px 10px;}
+  .mode-card:disabled{opacity:.5; cursor:default;}
 
-  /* quiz */
-  #quiz{display:none;}
+  .setrow{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:16px;}
+  .setrow:last-child{margin-bottom:0;}
+  .setrow > .lab{width:96px; flex:0 0 96px; font-size:13px; color:var(--ink-mute);}
+  select{font-family:inherit; font-size:14px; background:var(--card2); color:var(--ink); border:1px solid var(--border2); border-radius:10px; padding:10px 12px; flex:1; min-width:180px;}
+  .seg{display:inline-flex; flex-wrap:wrap; gap:6px;}
+  .seg button{font-family:inherit; font-size:13.5px; font-weight:700; cursor:pointer; padding:9px 14px; border-radius:9px; border:1px solid var(--border2); background:var(--card2); color:var(--ink-dim); transition:all .12s ease;}
+  .seg button:hover{border-color:var(--gold);}
+  .seg button.on{background:var(--gold); color:#221a0d; border-color:var(--gold);}
+
+  .statline{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; font-size:13px; color:var(--ink-dim); margin:2px 0 18px;}
+  .statline b{color:var(--gold-soft);}
+  .linklike{background:none; border:none; color:var(--ink-mute); font-family:inherit; font-size:12.5px; text-decoration:underline; cursor:pointer; padding:0;}
+  .linklike:hover{color:var(--ng);}
+
+  #quiz{display:none;} #result{display:none;}
   .quizbar{position:sticky; top:0; z-index:20; background:rgba(20,17,14,.92); backdrop-filter:blur(6px); border-bottom:1px solid var(--border); padding:12px 0;}
-  .quizbar .wrap{display:flex; align-items:center; gap:14px; padding-top:0; padding-bottom:0;}
-  .qmeta{font-size:12.5px; color:var(--ink-dim); white-space:nowrap;}
-  .qmeta b{color:var(--ink); font-size:14px;}
+  .quizbar .wrap{display:flex; align-items:center; gap:14px;}
+  .qmeta{font-size:12.5px; color:var(--ink-dim); white-space:nowrap;} .qmeta b{color:var(--ink); font-size:14px;}
   .progress{flex:1; height:6px; background:var(--border); border-radius:99px; overflow:hidden;}
   .progress > i{display:block; height:100%; width:0; background:linear-gradient(90deg,var(--gold),var(--gold-soft)); transition:width .25s ease;}
   .timer{font-variant-numeric:tabular-nums; font-weight:700; font-size:14px; color:var(--gold-soft); white-space:nowrap;}
   .timer.warn{color:var(--ng);}
+  .modechip{font-size:11px; color:var(--gold); border:1px solid var(--border2); background:var(--bg2); border-radius:99px; padding:2px 10px; white-space:nowrap;}
 
   .subjtag{display:inline-block; font-size:11.5px; letter-spacing:.06em; color:var(--gold); border:1px solid var(--border2); background:var(--bg2); border-radius:99px; padding:3px 12px; margin-bottom:14px;}
   .qtext{font-size:17px; line-height:1.8; font-weight:500; margin:0 0 20px;}
   .qtext .case{display:block; background:var(--card2); border:1px solid var(--border); border-radius:10px; padding:12px 14px; font-size:14.5px; color:var(--ink-dim); margin-bottom:14px; font-weight:400;}
-
   .options{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px;}
   .opt{display:flex; gap:12px; align-items:flex-start; padding:14px 16px; border:1px solid var(--border2); border-radius:12px; background:var(--card2); cursor:pointer; transition:all .12s ease; font-size:15px;}
   .opt:hover{border-color:var(--gold);}
   .opt .num{flex:0 0 26px; height:26px; border-radius:50%; border:1px solid var(--border2); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:var(--ink-dim); background:var(--bg2);}
-  .opt.sel{border-color:var(--gold); background:#241c12;}
-  .opt.sel .num{background:var(--gold); color:#221a0d; border-color:var(--gold);}
-  .opt.correct{border-color:var(--ok-border); background:var(--ok-bg);}
-  .opt.correct .num{background:var(--ok); color:#0d1f14; border-color:var(--ok);}
-  .opt.wrong{border-color:var(--ng-border); background:var(--ng-bg);}
-  .opt.wrong .num{background:var(--ng); color:#2a1210; border-color:var(--ng);}
-  .opt.locked{cursor:default;}
-  .opt .txt{flex:1;}
-
-  .explain{margin-top:18px; border:1px solid var(--border); border-radius:12px; padding:0; overflow:hidden; display:none;}
+  .opt.sel{border-color:var(--gold); background:#241c12;} .opt.sel .num{background:var(--gold); color:#221a0d; border-color:var(--gold);}
+  .opt.correct{border-color:var(--ok-border); background:var(--ok-bg);} .opt.correct .num{background:var(--ok); color:#0d1f14; border-color:var(--ok);}
+  .opt.wrong{border-color:var(--ng-border); background:var(--ng-bg);} .opt.wrong .num{background:var(--ng); color:#2a1210; border-color:var(--ng);}
+  .opt.locked{cursor:default;} .opt .txt{flex:1;}
+  .explain{margin-top:18px; border:1px solid var(--border); border-radius:12px; overflow:hidden; display:none;}
   .explain.show{display:block;}
-  .explain .head{padding:10px 16px; font-size:13px; font-weight:700; display:flex; align-items:center; gap:8px;}
+  .explain .head{padding:10px 16px; font-size:13px; font-weight:700;}
   .explain.is-ok .head{background:var(--ok-bg); color:var(--ok); border-bottom:1px solid var(--ok-border);}
   .explain.is-ng .head{background:var(--ng-bg); color:var(--ng); border-bottom:1px solid var(--ng-border);}
-  .explain .body{padding:14px 16px; font-size:13.5px; color:var(--ink-dim); line-height:1.85;}
-  .explain .body b{color:var(--ink);}
+  .explain .body{padding:14px 16px; font-size:13.5px; color:var(--ink-dim); line-height:1.85;} .explain .body b{color:var(--ink);}
 
   .navrow{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:24px;}
   .navrow .spacer{flex:1;}
-
   .palette{margin-top:26px; border-top:1px solid var(--border); padding-top:18px;}
   .palette .lbl{font-size:12px; color:var(--ink-mute); letter-spacing:.06em; margin-bottom:10px;}
   .pal-grid{display:flex; flex-wrap:wrap; gap:7px;}
@@ -126,14 +121,9 @@
   .pal.current{outline:2px solid var(--gold); outline-offset:1px;}
   .pal.pcorrect{background:var(--ok-bg); color:var(--ok); border-color:var(--ok-border);}
   .pal.pwrong{background:var(--ng-bg); color:var(--ng); border-color:var(--ng-border);}
+  .endrow{display:flex; gap:12px; flex-wrap:wrap; margin-top:22px;}
 
-  .studybar{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:20px;}
-  .studybar label{font-size:12.5px; color:var(--ink-mute);}
-  select{font-family:inherit; font-size:14px; background:var(--card2); color:var(--ink); border:1px solid var(--border2); border-radius:10px; padding:9px 12px;}
-
-  /* result */
-  #result{display:none;}
-  .score-hero{text-align:center; padding:30px 20px 24px;}
+  .score-hero{text-align:center; padding:28px 20px 22px;}
   .score-num{font-size:56px; font-weight:800; line-height:1; font-family:"Shippori Mincho B1",serif;}
   .score-num small{font-size:22px; color:var(--ink-dim); font-weight:400;}
   .score-pct{font-size:15px; color:var(--ink-dim); margin-top:10px;}
@@ -141,42 +131,30 @@
   .verdict.pass{background:var(--ok-bg); color:var(--ok); border:1px solid var(--ok-border);}
   .verdict.near{background:#2a2412; color:var(--gold-soft); border:1px solid #5a4526;}
   .verdict.more{background:var(--ng-bg); color:var(--ng); border:1px solid var(--ng-border);}
-
-  table.subj{width:100%; border-collapse:collapse; font-size:13.5px; margin-top:4px;}
+  table.subj{width:100%; border-collapse:collapse; font-size:13.5px;}
   table.subj th,table.subj td{text-align:left; padding:9px 8px; border-bottom:1px solid var(--border);}
-  table.subj th{color:var(--ink-mute); font-weight:500; font-size:12px; letter-spacing:.04em;}
+  table.subj th{color:var(--ink-mute); font-weight:500; font-size:12px;}
   table.subj td.n{text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap;}
-  .bar{display:inline-block; height:7px; border-radius:99px; background:var(--gold); vertical-align:middle;}
   .bar-wrap{display:inline-block; width:90px; height:7px; background:var(--border); border-radius:99px; overflow:hidden; vertical-align:middle; margin-right:8px;}
-
+  .bar{display:inline-block; height:7px; border-radius:99px; background:var(--gold); vertical-align:middle;}
   .review-q{border:1px solid var(--border); border-radius:12px; padding:16px 18px; margin-bottom:14px; background:var(--card);}
   .review-q .rhead{display:flex; align-items:center; gap:10px; margin-bottom:10px;}
-  .review-q .badge{font-size:11px; font-weight:800; padding:2px 9px; border-radius:99px;}
+  .badge{font-size:11px; font-weight:800; padding:2px 9px; border-radius:99px;}
   .badge.ok{background:var(--ok-bg); color:var(--ok); border:1px solid var(--ok-border);}
   .badge.ng{background:var(--ng-bg); color:var(--ng); border:1px solid var(--ng-border);}
   .review-q .rq{font-size:14.5px; font-weight:500; margin:0 0 10px;}
-  .review-q .ra{font-size:13px; color:var(--ink-dim); margin:2px 0;}
-  .review-q .ra .c{color:var(--ok);}
-  .review-q .ra .w{color:var(--ng);}
-  .review-q .rexp{font-size:13px; color:var(--ink-dim); margin-top:10px; padding-top:10px; border-top:1px dashed var(--border2); line-height:1.8;}
-  .review-q .rexp b{color:var(--ink);}
-
-  .disclaimer{font-size:12px; color:var(--ink-mute); background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:14px 16px; line-height:1.8; margin-top:24px;}
+  .review-q .ra{font-size:13px; color:var(--ink-dim); margin:2px 0;} .review-q .ra .c{color:var(--ok);} .review-q .ra .w{color:var(--ng);}
+  .review-q .rexp{font-size:13px; color:var(--ink-dim); margin-top:10px; padding-top:10px; border-top:1px dashed var(--border2); line-height:1.8;} .review-q .rexp b{color:var(--ink);}
+  .disclaimer{font-size:12px; color:var(--ink-mute); background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:14px 16px; line-height:1.8; margin-top:22px;}
 
   footer{border-top:1px solid var(--border); margin-top:56px; padding:34px 0; background:var(--bg2);}
-  footer .wrap{padding-top:0; padding-bottom:0; display:flex; flex-wrap:wrap; gap:16px; justify-content:space-between; align-items:center;}
-  footer strong{color:var(--gold-soft); font-size:15px;}
-  footer span{color:var(--ink-mute); font-size:12.5px; margin-left:10px;}
-  footer nav{display:flex; gap:18px; flex-wrap:wrap;}
-  footer nav a{font-size:13px; color:var(--ink-dim); text-decoration:none;}
-  footer nav a:hover{color:var(--gold-soft);}
+  footer .wrap{display:flex; flex-wrap:wrap; gap:16px; justify-content:space-between; align-items:center;}
+  footer strong{color:var(--gold-soft); font-size:15px;} footer span{color:var(--ink-mute); font-size:12.5px; margin-left:10px;}
+  footer nav{display:flex; gap:18px; flex-wrap:wrap;} footer nav a{font-size:13px; color:var(--ink-dim); text-decoration:none;} footer nav a:hover{color:var(--gold-soft);}
 
   @media (max-width:600px){
-    h1{font-size:21px;}
-    .specs{grid-template-columns:1fr;}
-    .mode-grid{grid-template-columns:1fr;}
-    .score-num{font-size:44px;}
-    .qtext{font-size:16px;}
+    h1{font-size:21px;} .specs{grid-template-columns:1fr;} .mode-grid{grid-template-columns:1fr;}
+    .score-num{font-size:44px;} .qtext{font-size:16px;} .setrow > .lab{width:100%; flex-basis:100%;}
   }
 </style>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4628020597462110" crossorigin="anonymous"></script>
@@ -187,124 +165,137 @@
   <div class="wrap">
     <p class="kicker">放送大学 公認心理師学部段階カリキュラム</p>
     <h1 class="serif">「心理演習」「心理実習」選考試験<br>第1次選考（CBT）模擬問題
-      <span class="sub">2027年度 選考対策｜CBT対象22科目・全38問（非公式の練習問題）</span>
+      <span class="sub">2027年度 選考対策｜CBT対象22科目・収録<span id="hdrCount">83</span>問（非公式の練習問題）</span>
     </h1>
-    <p class="lede">パソコンで解く選択式（CBT）を想定した、その場で採点・解説つきの模擬試験です。国家試験の出題傾向をふまえ、CBTの出題範囲である22科目から出題します。</p>
+    <p class="lede">パソコンで解く選択式（CBT）を想定した、その場で採点・解説つきの模擬試験です。ランダム出題・出題数の選択・間違えた問題だけの復習にも対応しています。</p>
   </div>
 </header>
 
 <main>
 <div class="wrap">
 
-  <!-- ===== START SCREEN ===== -->
+  <!-- ===== START ===== -->
   <section id="start">
     <div class="panel">
       <h2>この模擬試験について</h2>
       <div class="specs">
         <div class="spec"><div class="k">試験方式</div><div class="v">CBT<small>（選択式）</small></div></div>
         <div class="spec"><div class="k">出題範囲</div><div class="v">22<small> 科目</small></div></div>
-        <div class="spec"><div class="k">問題数</div><div class="v">38<small> 問</small></div></div>
+        <div class="spec"><div class="k">収録問題</div><div class="v"><span id="bankCount">83</span><small> 問</small></div></div>
       </div>
-      <div class="notice">
-        <strong>出題範囲について：</strong>実際の第1次選考（CBT）は試験時間<strong>60分</strong>・選択式で、「大学における必要な科目」のうち <strong>6「心理学実験」・24「心理演習」・25「心理実習」を除く22科目</strong>から出題されます。本模試もこの22科目に沿って作成しています。
+      <div class="notice"><strong>出題範囲について：</strong>実際の第1次選考（CBT）は試験時間<strong>60分</strong>・選択式で、「大学における必要な科目」のうち <strong>6「心理学実験」・24「心理演習」・25「心理実習」を除く22科目</strong>から出題されます。本模試もこの22科目に沿って作成しています（問題数は本模試独自のもので、実際の出題数は非公開です）。</div>
+    </div>
+
+    <div class="panel">
+      <h2><span class="step">1</span>モードを選ぶ</h2>
+      <div class="mode-grid">
+        <button class="mode-card sel" data-mode="exam" onclick="setMode('exam')">
+          <span class="ic">📝</span><span class="t">試験モード</span>
+          <span class="d">通しで解いて最後にまとめて採点。60分のタイマーつきで、科目別の正答率と全問解説を表示。</span>
+        </button>
+        <button class="mode-card" data-mode="study" onclick="setMode('study')">
+          <span class="ic">📖</span><span class="t">学習モード</span>
+          <span class="d">1問ごとに正誤と解説をその場で表示。じっくり読み込みながら進められます。タイマーなし。</span>
+        </button>
+        <button class="mode-card" data-mode="review" id="cardReview" onclick="setMode('review')">
+          <span class="ic">🔁</span><span class="t">復習モード</span>
+          <span class="d">これまでに間違えた問題だけを出題。正解できた問題は自動でリストから外れます。</span>
+          <span class="cnt" id="revCount">現在 0 問</span>
+        </button>
       </div>
     </div>
 
     <div class="panel">
-      <h2>モードを選ぶ</h2>
-      <div class="mode-grid">
-        <button class="mode-card" onclick="startExam('exam')">
-          <span class="ic">📝</span>
-          <span class="t">試験モード</span>
-          <span class="d">本番想定。60分のタイマーつきで全38問を通しで解き、最後にまとめて採点。科目別の正答率と全問解説を確認できます。</span>
-        </button>
-        <button class="mode-card" onclick="startExam('study')">
-          <span class="ic">📖</span>
-          <span class="t">学習モード</span>
-          <span class="d">1問ごとに正誤と解説をその場で表示。科目でしぼり込んで、苦手分野を集中的に復習できます。タイマーなし。</span>
-        </button>
+      <h2><span class="step">2</span>出題を設定する</h2>
+      <div class="setrow">
+        <span class="lab">科目</span>
+        <select id="subjSel" onchange="cfg.subj=this.value"></select>
+      </div>
+      <div class="setrow">
+        <span class="lab">出題順</span>
+        <div class="seg" id="segOrder">
+          <button class="on" data-order="seq" onclick="setOrder('seq')">順番どおり</button>
+          <button data-order="rand" onclick="setOrder('rand')">ランダム</button>
+        </div>
+      </div>
+      <div class="setrow">
+        <span class="lab">出題数</span>
+        <div class="seg" id="segCount">
+          <button class="on" data-count="all" onclick="setCount('all')">全問</button>
+          <button data-count="10" onclick="setCount('10')">10問</button>
+          <button data-count="20" onclick="setCount('20')">20問</button>
+          <button data-count="30" onclick="setCount('30')">30問</button>
+          <button data-count="50" onclick="setCount('50')">50問</button>
+        </div>
       </div>
     </div>
 
+    <div class="statline">
+      <span>復習リスト（間違えた問題）：<b id="wrongStat">0</b> 問</span>
+      <button class="linklike" onclick="clearWrong()">復習リストを消去</button>
+    </div>
+
+    <button class="btn gold block" onclick="beginQuiz()">スタート ▶</button>
+
     <div class="disclaimer">
-      ※ 本ページは、放送大学 公認心理師学部段階カリキュラム「心理演習」「心理実習」受講のための選考試験（第1次選考・CBT試験）を想定した<strong>非公式の学習用模擬問題</strong>です。放送大学および試験実施団体とは一切関係がありません。選考試験要項に記載のとおり、実際の選考試験の<strong>出題問題（過去問題を含む）および正答は公開されていません</strong>。本問題は公認心理師（国家試験）の一般的な出題範囲・傾向をふまえて独自に作成したもので、実際の出題内容・難易度・配点・合格基準を示すものではありません。制度・法令・診断基準等は改定されることがあります。学習にあたっては各科目の放送教材・公式資料および最新の一次情報を必ずご確認ください。
+      ※ 本ページは、放送大学 公認心理師学部段階カリキュラム「心理演習」「心理実習」受講のための選考試験（第1次選考・CBT試験）を想定した<strong>非公式の学習用模擬問題</strong>です。放送大学および試験実施団体とは一切関係がありません。選考試験要項に記載のとおり、実際の選考試験の<strong>出題問題（過去問題を含む）および正答は公開されていません</strong>。本問題は公認心理師（国家試験）の一般的な出題範囲・傾向をふまえて独自に作成したもので、実際の出題内容・問題数・難易度・配点・合格基準を示すものではありません。制度・法令・診断基準等は改定されることがあります。学習にあたっては各科目の放送教材・公式資料および最新の一次情報を必ずご確認ください。なお、復習リストはご利用中のブラウザ内（localStorage）にのみ保存され、外部には送信されません。
     </div>
   </section>
 
-  <!-- ===== QUIZ SCREEN ===== -->
+  <!-- ===== QUIZ ===== -->
   <section id="quiz">
     <div class="quizbar">
       <div class="wrap">
-        <span class="qmeta">問 <b id="qNow">1</b> / <span id="qTotal">38</span></span>
+        <span class="modechip" id="modeChip">試験モード</span>
+        <span class="qmeta">問 <b id="qNow">1</b> / <span id="qTotal">83</span></span>
         <div class="progress"><i id="progBar"></i></div>
         <span class="timer" id="timer" style="display:none">60:00</span>
       </div>
     </div>
-
     <div class="wrap" style="padding-top:26px;">
-      <div class="studybar" id="studyBar" style="display:none;">
-        <label for="subjSel">科目でしぼり込む</label>
-        <select id="subjSel" onchange="onFilterChange()"></select>
-      </div>
-
       <span class="subjtag" id="qSubj">科目</span>
       <div class="qtext" id="qBody"></div>
       <ul class="options" id="qOpts"></ul>
-
-      <div class="explain" id="explain">
-        <div class="head" id="explainHead"></div>
-        <div class="body" id="explainBody"></div>
-      </div>
-
+      <div class="explain" id="explain"><div class="head" id="explainHead"></div><div class="body" id="explainBody"></div></div>
       <div class="navrow">
         <button class="btn ghost" id="btnPrev" onclick="go(-1)">← 前へ</button>
         <div class="spacer"></div>
         <button class="btn" id="btnNext" onclick="go(1)">次へ →</button>
-        <button class="btn gold" id="btnSubmit" onclick="grade()" style="display:none;">採点する</button>
       </div>
-
       <div class="palette">
         <div class="lbl" id="palLbl">解答状況（クリックで移動）</div>
         <div class="pal-grid" id="palGrid"></div>
       </div>
-
-      <div style="margin-top:22px;">
-        <button class="btn ghost" onclick="confirmQuit()" style="font-size:13px; padding:9px 16px;">中断してトップへ</button>
+      <div class="endrow">
+        <button class="btn gold" id="btnSubmit" onclick="grade()">採点する</button>
+        <button class="btn ghost" onclick="confirmQuit()" style="font-size:13px;">中断して設定に戻る</button>
       </div>
     </div>
   </section>
 
-  <!-- ===== RESULT SCREEN ===== -->
+  <!-- ===== RESULT ===== -->
   <section id="result">
     <div class="panel">
       <div class="score-hero">
-        <div class="score-num"><span id="scoreN">0</span><small> / 38</small></div>
+        <div class="score-num"><span id="scoreN">0</span><small> / <span id="scoreT">0</span></small></div>
         <div class="score-pct" id="scorePct">正答率 0%</div>
         <div id="verdict"></div>
       </div>
     </div>
-
+    <div style="display:flex; gap:12px; flex-wrap:wrap; margin:0 0 22px;">
+      <button class="btn gold" id="btnReview" onclick="reviewMistakes()" style="display:none;">🔁 間違えた問題を復習する（<span id="btnReviewN">0</span>問）</button>
+      <button class="btn" onclick="restart()">同じ設定でもう一度</button>
+      <button class="btn ghost" onclick="backToStart()">設定に戻る</button>
+    </div>
     <div class="panel">
       <h2>科目別の正答状況</h2>
-      <table class="subj">
-        <thead><tr><th>科目</th><th style="width:130px;">達成度</th><th class="n">正答</th></tr></thead>
-        <tbody id="subjTable"></tbody>
-      </table>
+      <table class="subj"><thead><tr><th>科目</th><th style="width:130px;">達成度</th><th class="n">正答</th></tr></thead><tbody id="subjTable"></tbody></table>
     </div>
-
-    <div style="display:flex; gap:12px; flex-wrap:wrap; margin:0 0 26px;">
-      <button class="btn gold" onclick="restart()">もう一度挑戦する</button>
-      <button class="btn ghost" onclick="location.reload()">モード選択に戻る</button>
-    </div>
-
     <div class="panel">
       <h2>全問の解説</h2>
       <div id="reviewList"></div>
     </div>
-
-    <div class="disclaimer">
-      ※ 本模試の得点・「合格ライン」表示は学習の目安であり、実際の選考試験の合格基準とは一切関係ありません。実際の選考は第1次選考（CBT）と第2次選考（面接）の結果に基づいて決定されます。最新かつ正確な情報は、放送大学 公認心理師ウェブサイトおよび選考試験要項をご確認ください。
-    </div>
+    <div class="disclaimer">※ 本模試の得点・「合格ライン」表示は学習の目安であり、実際の選考試験の合格基準とは一切関係ありません。実際の選考は第1次選考（CBT）と第2次選考（面接）の結果に基づいて決定されます。最新かつ正確な情報は、放送大学 公認心理師ウェブサイトおよび選考試験要項をご確認ください。</div>
   </section>
 
 </div>
@@ -312,9 +303,7 @@
 
 <footer>
   <div class="wrap">
-    <div>
-      <strong>weekendclub</strong><span>週末の、あれこれ。</span>
-    </div>
+    <div><strong>weekendclub</strong><span>週末の、あれこれ。</span></div>
     <nav>
       <a href="../index.html">トップへ戻る</a>
       <a href="https://www.ouj.ac.jp/reasons-to-choose-us/qualification/psychologist3/" target="_blank" rel="noopener">放送大学 公認心理師（公式）</a>
@@ -322,687 +311,235 @@
   </div>
 </footer>
 
+<script src="questions.js"></script>
 <script>
-/* =========================================================================
-   問題バンク
-   subj: 「大学における必要な科目」の科目名（CBT対象22科目）
-   opts: 選択肢（5択）  ans: 正答の 0 始まりインデックス  exp: 解説
-   ※ 国家試験の一般的な出題範囲・傾向をふまえた独自作成のオリジナル問題。
-     実際の選考試験の過去問ではありません。
-   ========================================================================= */
-const QUESTIONS = [
-/* 1. 公認心理師の職責 --------------------------------------------------- */
-{subj:"公認心理師の職責", q:"公認心理師法に定める公認心理師の義務等について、最も適切なものを1つ選べ。",
- opts:[
-  "公認心理師でなくなった後は、業務上知り得た秘密を守る義務を負わない。",
-  "支援を要する者に当該支援に係る主治の医師があるときは、その指示を受けなければならない。",
-  "公認心理師は、その名称を独占するとともに、心理支援業務そのものを独占する資格である。",
-  "秘密保持義務に違反しても、罰則が科されることはない。",
-  "知識・技能の向上に努めることは、公認心理師の義務とはされていない。"],
- ans:1,
- exp:"正答は2。<b>第42条第2項</b>で、主治の医師があるときはその指示を受けることが定められています。1は誤りで、<b>第41条</b>の秘密保持義務は「公認心理師でなくなった後においても、同様とする」。3は誤りで、公認心理師は<b>名称独占</b>であり業務独占ではありません。4は誤りで、秘密保持義務違反には罰則（第46条）があります。5は誤りで、<b>第43条</b>に資質向上の責務が定められています。"},
-
-{subj:"公認心理師の職責", q:"次の事例における公認心理師の初期対応として、最も適切なものを1つ選べ。",
- caseText:"15歳の男子A（中学生）。スクールカウンセラーである公認心理師との面接中に「本当に死にたい。今日、家に帰ったら実行する」と述べ、具体的な手段や計画も語った。",
- opts:[
-  "秘密保持義務があるため、Aの許可が得られるまで誰にも伝えず、面接内で見守る。",
-  "自傷他害の切迫した危険があるため、守秘義務の例外として関係者と連携し、安全の確保を最優先する。",
-  "面接記録を破棄し、相談の事実がなかったものとして扱う。",
-  "「気の持ちようだ」と励まし、いつもどおり帰宅させる。",
-  "保護者に知られると信頼を失うため、対応は次回の面接まで見送る。"],
- ans:1,
- exp:"正答は2。秘密保持義務は絶対ではなく、<b>自傷他害の切迫した危険</b>がある場合などは例外として、本人の安全確保のために必要な関係者（保護者・管理職・医療機関等）と連携します。危機介入では<b>安全の確保が最優先</b>であり、1・4・5のように危険を放置する対応、3のような記録の隠蔽は不適切です。"},
-
-{subj:"公認心理師の職責", q:"多職種連携・チームアプローチに関する記述として、最も適切なものを1つ選べ。",
- opts:[
-  "公認心理師法第42条第1項は、関係者等との連携を保つよう努める旨を定めている。",
-  "他職種と見立てを共有すると守秘義務違反になるため、心理職の所見は共有してはならない。",
-  "リファー（他機関への紹介）は支援者の力量不足を示すため、原則として避けるべきである。",
-  "連携においては、クライエントの情報を本人の同意なく無制限に共有してよい。",
-  "主治医がいる場合でも、その指示や治療方針を考慮する必要はない。"],
- ans:0,
- exp:"正答は1。<b>第42条第1項</b>は、その業務を行うにあたり関係者等との連携を保つことを求めています（連携等）。2は誤りで、必要な範囲での情報共有はチーム支援に不可欠です。3は誤りで、リファーは適切な支援のための重要な選択肢。4は誤りで、共有は必要最小限・本人同意を原則とします。5は誤りで、第42条第2項により主治医の指示を受ける必要があります。"},
-
-/* 2. 心理学概論 --------------------------------------------------------- */
-{subj:"心理学概論", q:"心理学の歴史に関する記述として、最も適切なものを1つ選べ。",
- opts:[
-  "W.Wundtは、1879年にライプツィヒ大学に世界初の心理学実験室を開設した。",
-  "J.B.Watsonは、内観法を中心とする構成主義（構成心理学）を提唱した。",
-  "ゲシュタルト心理学は、意識を要素に分解して理解しようとする立場である。",
-  "S.Freudは、行動主義心理学の創始者として知られる。",
-  "機能主義心理学は、主にドイツで発展した学派である。"],
- ans:0,
- exp:"正答は1。Wundtは1879年にライプツィヒ大学に実験室を開き、実験心理学の祖とされます。2は誤りでWatsonは<b>行動主義</b>の提唱者。3は誤りで、ゲシュタルト心理学は「全体は部分の総和以上」とし、要素分解に反対しました。4は誤りでFreudは<b>精神分析</b>の創始者。5は誤りで、機能主義（James ら）は主に<b>アメリカ</b>で発展しました。"},
-
-/* 3. 臨床心理学概論 ----------------------------------------------------- */
-{subj:"臨床心理学概論", q:"臨床心理学の成り立ちや基本概念に関する記述として、最も適切なものを1つ選べ。",
- opts:[
-  "L.Witmerは、1896年に世界初の心理クリニックを開設し「臨床心理学」の語を用いた。",
-  "エビデンスに基づく実践（EBP）では、研究知見のみを重視し、患者の価値観は考慮しない。",
-  "インフォームド・コンセントとは、支援者が方針を一方的に決定して通告することである。",
-  "心理アセスメントは、支援がすべて終結してから初めて実施するものである。",
-  "スクリーニングとは、確定的な医学的診断を下すことを指す。"],
- ans:0,
- exp:"正答は1。Witmerはペンシルベニア大学に世界初の心理クリニックを設け、clinical psychology の語を提唱しました。2は誤りで、EBPは<b>最良の研究知見・臨床技能・患者の価値観</b>の統合を重視します。3は誤りで、ICは十分な説明にもとづく合意です。4は誤りで、アセスメントは支援の初期から継続的に行います。5は誤りで、スクリーニングは<b>ふるい分け</b>であり確定診断ではありません。"},
-
-{subj:"臨床心理学概論", q:"心理療法の主要な理論的立場に関する記述として、最も適切なものを1つ選べ。",
- opts:[
-  "精神力動的アプローチは、無意識や過去の対人関係が現在に影響すると考える。",
-  "行動論的アプローチは、観察できない無意識のみを対象とする。",
-  "人間性心理学は、人間を機械論的・決定論的にのみとらえる立場である。",
-  "認知的アプローチは、思考や信念を治療の対象としない。",
-  "統合的・折衷的アプローチは、複数の技法を組み合わせることを認めない。"],
- ans:0,
- exp:"正答は1。精神力動的アプローチ（精神分析を含む）は無意識・early experience を重視します。2は誤りで、行動論は<b>観察可能な行動</b>を対象とします。3は誤りで、人間性心理学（Rogers・Maslow ら）は自己実現に向かう主体としての人間観を重視。4は誤りで、認知的アプローチは<b>認知の修正</b>が中核。5は誤りで、統合的立場は複数技法の統合を積極的に用います。"},
-
-/* 4. 心理学研究法 ------------------------------------------------------- */
-{subj:"心理学研究法", q:"心理学の研究法に関する記述として、最も適切なものを1つ選べ。",
- opts:[
-  "実験法では、独立変数を操作し、それが従属変数に与える影響を検討する。",
-  "相関研究の結果からは、変数間の因果関係を直接証明できる。",
-  "無作為割り当て（ランダム化）は、自然観察法に特徴的な手続きである。",
-  "二重盲検法は、実験者だけが条件を知らされない方法である。",
-  "参加観察法では、観察者は対象集団に一切関与しない。"],
- ans:0,
- exp:"正答は1。実験法の核心は独立変数の操作と従属変数の測定、剰余変数の統制です。2は誤りで、相関は関連を示すが<b>因果は示さない</b>。3は誤りで、ランダム化は実験法の要件。4は誤りで、二重盲検は<b>被験者と実験者の双方</b>が条件を知りません。5は誤りで、参加観察は観察者が集団に加わって観察します。"},
-
-{subj:"心理学研究法", q:"心理学研究の倫理に関する記述として、最も適切なものを1つ選べ。",
- opts:[
-  "インフォームド・コンセントでは、参加は自由意思によるもので、途中で撤回できることを説明する。",
-  "教示上の欺瞞（ディセプション）を用いた場合でも、デブリーフィングは不要である。",
-  "研究参加者の個人情報は、匿名化せず実名で公表するのが原則である。",
-  "倫理審査は、研究がすべて終了した後に受ければよい。",
-  "一度同意を得た参加者には、以後の撤回を認めない。"],
- ans:0,
- exp:"正答は1。研究倫理では、自由意思による参加・<b>撤回の自由</b>・不利益がないことの説明が求められます。2は誤りで、欺瞞を用いた場合は事後に<b>デブリーフィング（説明・原状回復）</b>が必要。3は誤りで匿名化が原則。4は誤りで倫理審査は<b>実施前</b>。5は誤りで、参加者はいつでも撤回できます。"},
-
-/* 5. 心理学統計法 ------------------------------------------------------- */
-{subj:"心理学統計法", q:"統計的仮説検定に関する記述として、最も適切なものを1つ選べ。",
- opts:[
-  "第1種の誤り（タイプⅠエラー）とは、帰無仮説が正しいのに棄却してしまう誤りである。",
-  "有意水準5%とは、対立仮説が正しい確率が5%であることを意味する。",
-  "p値が大きいほど、統計的に有意であるといえる。",
-  "効果量は、標本サイズが大きくなるほど必ず大きくなる。",
-  "相関係数は、常に0から1の範囲の値をとる。"],
- ans:0,
- exp:"正答は1。第1種の誤りは<b>本当は差がない（帰無仮説が真）のに差があると判断</b>してしまう誤り。2は誤りで、有意水準は帰無仮説が正しいときに棄却してしまう確率の上限。3は誤りで、<b>p値が小さいほど</b>有意。4は誤りで、効果量は標本サイズにあまり依存しない指標。5は誤りで、相関係数は<b>−1〜+1</b>の値をとります。"},
-
-/* 7. 知覚・認知心理学 --------------------------------------------------- */
-{subj:"知覚・認知心理学", q:"知覚に関する記述として、最も適切なものを1つ選べ。",
- opts:[
-  "大きさの恒常性とは、対象までの距離が変わっても、知覚される大きさがある程度一定に保たれることである。",
-  "暗順応は、明所から暗所へ移動した直後にほぼ完了する速い過程である。",
-  "錐体は主に暗所で働き、色の識別には関与しない。",
-  "両眼視差は、片眼だけで奥行きを知覚するための手がかりである。",
-  "カクテルパーティ効果は、視覚的注意に関する現象である。"],
- ans:0,
- exp:"正答は1。恒常性は網膜像が変化しても対象の性質を安定して知覚する働きです。2は誤りで、<b>暗順応</b>は数十分かけて進む遅い過程（速いのは明順応）。3は誤りで、錐体は<b>明所視・色覚</b>を担い、暗所視は桿体。4は誤りで、両眼視差は<b>両眼</b>手がかり。5は誤りで、カクテルパーティ効果は<b>聴覚的</b>な選択的注意の現象です。"},
-
-{subj:"知覚・認知心理学", q:"記憶に関する記述として、最も適切なものを1つ選べ。",
- opts:[
-  "短期記憶の容量は、G.Millerによればおよそ7±2チャンクとされる。",
-  "エピソード記憶とは、言葉の意味や一般的知識に関する記憶である。",
-  "手続き記憶は、意識的に想起できる宣言的記憶の一種である。",
-  "感覚記憶は、数十分にわたって情報を保持する長期的な記憶である。",
-  "ワーキングメモリとは、長期記憶の永続的な貯蔵庫を指す。"],
- ans:0,
- exp:"正答は1。Millerの「マジカルナンバー7±2」です。2は誤りで、意味・知識は<b>意味記憶</b>、出来事の記憶がエピソード記憶。3は誤りで、手続き記憶は技能などの<b>非宣言的（潜在）記憶</b>。4は誤りで、感覚記憶は<b>ごく短時間</b>の保持。5は誤りで、ワーキングメモリは情報を一時的に保持・操作する作業空間です。"},
-
-/* 8. 学習・言語心理学 --------------------------------------------------- */
-{subj:"学習・言語心理学", q:"オペラント条件づけに関する記述として、最も適切なものを1つ選べ。",
- opts:[
-  "負の強化とは、嫌悪的な刺激を除去することで、その行動が増加することである。",
-  "正の罰とは、快をもたらす刺激を与えて、その行動を増加させることである。",
-  "古典的（レスポンデント）条件づけを体系化したのはB.F.Skinnerである。",
-  "部分（間欠）強化は、連続強化よりも消去が起こりやすい。",
-  "シェイピングとは、すでに完成した行動を消去する手続きである。"],
- ans:0,
- exp:"正答は1。強化は行動の増加、罰は行動の減少を指し、「正/負」は刺激の<b>付与/除去</b>を表します。2は誤りで、正の罰は嫌悪刺激の付与により行動を<b>減少</b>。3は誤りで、古典的条件づけは<b>Pavlov</b>（Skinnerはオペラント）。4は誤りで、部分強化は<b>消去抵抗が強い</b>（消去しにくい）。5は誤りで、シェイピングは段階的に新しい行動を<b>形成</b>する手続きです。"},
-
-{subj:"学習・言語心理学", q:"言語の獲得・発達に関する記述として、最も適切なものを1つ選べ。",
- opts:[
-  "N.Chomskyは、生得的な言語獲得装置（LAD）の存在を主張した。",
-  "語彙爆発（語彙の急増）は、通常、生後2〜3か月頃にみられる。",
-  "喃語（なんご）とは、意味のある単語を文法に従って組み合わせた発話である。",
-  "B.F.Skinnerは、言語獲得を完全に生得的な過程とみなした。",
-  "一語文は、通常10歳頃になって初めて出現する。"],
- ans:0,
- exp:"正答は1。Chomskyは生得的なLAD・普遍文法を主張しました。2は誤りで、語彙爆発は<b>1歳半〜2歳頃</b>。3は誤りで、喃語は意味を伴わない反復的な音声。4は誤りで、Skinnerは<b>環境・強化による学習</b>を重視（生得説はChomsky）。5は誤りで、一語文は<b>1歳前後</b>に出現します。"},
-
-/* 9. 感情・人格心理学 --------------------------------------------------- */
-{subj:"感情・人格心理学", q:"パーソナリティの理論に関する記述として、最も適切なものを1つ選べ。",
- opts:[
-  "ビッグ・ファイブ（5因子モデル）には、神経症傾向・外向性・開放性・協調性・誠実性が含まれる。",
-  "類型論は、パーソナリティを連続的な次元として量的にとらえる立場である。",
-  "特性論は、いくつかの典型的なタイプに分類してとらえる立場である。",
-  "矢田部ギルフォード（Y-G）性格検査は、代表的な投影法の検査である。",
-  "気質は、生得的な要因の影響をまったく受けないとされる。"],
- ans:0,
- exp:"正答は1。ビッグ・ファイブの5因子です。2・3は説明が逆で、<b>類型論はタイプ分類</b>、<b>特性論は次元的</b>にとらえます。4は誤りで、Y-G性格検査は<b>質問紙法</b>。5は誤りで、気質は生得的・体質的な基盤を持つとされます。"},
-
-{subj:"感情・人格心理学", q:"情動に関する古典的理論についての記述として、最も適切なものを1つ選べ。",
- opts:[
-  "James-Lange説は、身体的変化の知覚が情動体験を生じさせると主張する。",
-  "Cannon-Bard説は、情動体験は身体的変化が生じた後に遅れて生じるとする。",
-  "Schachter-Singerの2要因説は、生理的喚起をまったく重視しない。",
-  "表情フィードバック仮説は、表情が情動体験に一切影響しないとする。",
-  "情動は大脳皮質のみで処理され、皮質下の構造は関与しない。"],
- ans:0,
- exp:"正答は1。James-Lange説は「泣くから悲しい」——末梢の身体反応の知覚が情動体験を生むとします。2は誤りで、Cannon-Bard説は身体反応と情動体験が<b>ほぼ同時</b>に生じるとする立場。3は誤りで、2要因説は<b>生理的喚起＋認知的ラベリング</b>を重視。4は誤りで、表情フィードバック仮説は表情が情動に影響しうるとする。5は誤りで、<b>扁桃体</b>など皮質下も情動に関与します。"},
-
-/* 10. 神経・生理心理学 -------------------------------------------------- */
-{subj:"神経・生理心理学", q:"脳の構造と機能に関する記述として、最も適切なものを1つ選べ。",
- opts:[
-  "扁桃体は、恐怖などの情動の処理に関与する。",
-  "海馬は、主に運動の協調とバランスの制御を担う。",
-  "ブローカ野の損傷では、主に言葉の理解が障害される。",
-  "交感神経系が優位になると、心拍数は低下する。",
-  "副交感神経の節後線維から放出される主要な伝達物質はドーパミンである。"],
- ans:0,
- exp:"正答は1。扁桃体は情動、とくに恐怖・不安の中枢です。2は誤りで、海馬は<b>記憶</b>に関与（運動協調は小脳）。3は誤りで、ブローカ野損傷は<b>発話（運動性失語）</b>が中心（理解障害はウェルニッケ野）。4は誤りで、交感神経優位では心拍は<b>上昇</b>。5は誤りで、副交感神経の伝達物質は<b>アセチルコリン</b>です。"},
-
-{subj:"神経・生理心理学", q:"神経伝達物質に関する記述として、最も適切なものを1つ選べ。",
- opts:[
-  "ドーパミンは報酬や運動の制御に関与し、その過剰は統合失調症の陽性症状と関連するとされる。",
-  "セロトニンの過剰は、統合失調症の陽性症状の直接の原因とされる。",
-  "GABAは、中枢神経系の主要な興奮性神経伝達物質である。",
-  "アセチルコリンは、神経筋接合部ではまったく働かない。",
-  "ノルアドレナリンは、副交感神経の節後線維から放出される主要な伝達物質である。"],
- ans:0,
- exp:"正答は1。ドーパミン過剰仮説は統合失調症の陽性症状（幻覚・妄想）と関連づけられます。2は誤りで、陽性症状に関わるのは主にドーパミン系。3は誤りで、GABAは代表的な<b>抑制性</b>伝達物質（興奮性はグルタミン酸）。4は誤りで、アセチルコリンは<b>神経筋接合部</b>の主要伝達物質。5は誤りで、副交感神経節後線維の伝達物質は<b>アセチルコリン</b>です。"},
-
-/* 11. 社会・集団・家族心理学 -------------------------------------------- */
-{subj:"社会・集団・家族心理学", q:"社会心理学の概念に関する記述として、最も適切なものを1つ選べ。",
- opts:[
-  "傍観者効果とは、周囲に他者が多いほど、援助行動が抑制されやすくなる現象である。",
-  "基本的な帰属の誤りとは、他者の行動を状況要因に過度に帰属する傾向である。",
-  "社会的手抜き（リンゲルマン効果）とは、集団作業で1人あたりの努力が増加する現象である。",
-  "同調は、集団からの圧力がまったく存在しない状況でのみ生じる。",
-  "認知的不協和の低減は、態度と行動が完全に一致しているときに最も強く生じる。"],
- ans:0,
- exp:"正答は1。傍観者効果はDarley & Latané の研究で知られ、責任の分散などにより生じます。2は誤りで、基本的帰属の誤りは他者の行動を<b>内的（性格）要因に過大帰属</b>する傾向。3は誤りで、社会的手抜きは1人あたりの努力が<b>減少</b>する現象。4は誤りで、同調は集団圧力のもとで生じます。5は誤りで、不協和低減は態度と行動が<b>矛盾</b>したときに生じます。"},
-
-{subj:"社会・集団・家族心理学", q:"家族療法・家族システムに関する記述として、最も適切なものを1つ選べ。",
- opts:[
-  "家族システム理論では、家族を相互に影響し合う一つのシステムとしてとらえる。",
-  "IP（Identified Patient）とは、家族の中で唯一、問題の原因である人物を指す。",
-  "円環的因果律とは、原因と結果を一方向の直線的な関係でとらえる考え方である。",
-  "ジェノグラムは、家族の経済状況のみを図示するための技法である。",
-  "家族療法では、個人の内的葛藤だけを治療の対象とする。"],
- ans:0,
- exp:"正答は1。家族療法は個人ではなく<b>関係性・システム</b>に注目します。2は誤りで、IPは症状を呈している人を指すが「原因」とはみなしません。3は誤りで、円環的因果律は<b>相互に循環する</b>因果のとらえ方（直線的因果と対比）。4は誤りで、ジェノグラムは<b>三世代程度の家族関係図</b>。5は誤りで、家族療法は関係システム全体を扱います。"},
-
-/* 12. 発達心理学 -------------------------------------------------------- */
-{subj:"発達心理学", q:"J.Piagetの認知発達理論における発達段階の順序として、最も適切なものを1つ選べ。",
- opts:[
-  "感覚運動期 → 前操作期 → 具体的操作期 → 形式的操作期",
-  "前操作期 → 感覚運動期 → 形式的操作期 → 具体的操作期",
-  "具体的操作期 → 前操作期 → 感覚運動期 → 形式的操作期",
-  "感覚運動期 → 具体的操作期 → 前操作期 → 形式的操作期",
-  "形式的操作期 → 具体的操作期 → 前操作期 → 感覚運動期"],
- ans:0,
- exp:"正答は1。Piagetの段階は<b>感覚運動期（0〜2歳）→前操作期（2〜7歳）→具体的操作期（7〜11歳）→形式的操作期（11歳〜）</b>の順に進みます。前操作期には自己中心性や保存の未成立、具体的操作期に保存概念の獲得、形式的操作期に抽象的・仮説演繹的思考が可能になります。"},
-
-{subj:"発達心理学", q:"愛着（アタッチメント）理論に関する記述として、最も適切なものを1つ選べ。",
- opts:[
-  "M.Ainsworthのストレンジ・シチュエーション法は、乳児の愛着の型を分類するための観察法である。",
-  "回避型の愛着を示す乳児は、養育者との分離時に強い抵抗と混乱を示す。",
-  "愛着は生後すぐに完成し、その後は生涯を通じて変化しない。",
-  "安定型の乳児は、養育者を安全基地として利用しない。",
-  "愛着理論は、H.Harlowのアカゲザル研究の知見を否定する形で提唱された。"],
- ans:0,
- exp:"正答は1。ストレンジ・シチュエーション法は分離・再会場面から安定型（B）・回避型（A）・抵抗（アンビバレント）型（C）などに分類します。2は誤りで、強い抵抗と混乱を示すのは<b>抵抗（アンビバレント）型</b>（回避型は再会時に無関心・回避的）。3は誤りで、愛着は関係の中で発達・変化しうる。4は誤りで、安定型は養育者を<b>安全基地</b>として探索します。5は誤りで、Harlowの研究は愛着理論を<b>支持</b>する知見です。"},
-
-/* 13. 障害者・障害児心理学 --------------------------------------------- */
-{subj:"障害者・障害児心理学", q:"発達障害に関する記述として、最も適切なものを1つ選べ。",
- opts:[
-  "自閉スペクトラム症（ASD）の中核的特徴は、社会的コミュニケーションの困難と、限定・反復的な行動様式である。",
-  "注意欠如・多動症（ADHD）の症状は、成人期には必ず消失する。",
-  "限局性学習症（SLD）は、全般的な知的発達の遅れによって説明される。",
-  "発達障害者支援法における「発達障害」には、統合失調症が含まれる。",
-  "知的能力障害（知的発達症）の診断は、知能検査の結果のみによって行われる。"],
- ans:0,
- exp:"正答は1。DSM-5でASDは「社会的コミュニケーションの持続的欠陥」と「限定された反復的な行動・興味」の2領域で規定されます。2は誤りで、ADHDは<b>成人期にも症状が残存</b>しうる。3は誤りで、SLDは全般的知的遅れでは説明されない特異的な学習の困難。4は誤りで、発達障害者支援法の対象は自閉症・ADHD・LD 等で、統合失調症は含まれません。5は誤りで、知的能力障害は<b>知的機能と適応機能の両面</b>から評価します。"},
-
-/* 14. 心理的アセスメント ------------------------------------------------ */
-{subj:"心理的アセスメント", q:"心理検査に関する記述として、最も適切なものを1つ選べ。",
- opts:[
-  "WAIS-Ⅳは、成人を対象とした個別式の知能検査である。",
-  "ロールシャッハ・テストは、代表的な質問紙法の検査である。",
-  "バウムテスト（樹木画）は、知能を測定するための検査である。",
-  "MMSEは、パーソナリティを測定する投影法の検査である。",
-  "WISCは、乳幼児の発達の程度を評価するための検査である。"],
- ans:0,
- exp:"正答は1。WAISは成人用の個別式知能検査（WAIS-Ⅳ／WAIS-Ⅴ）です。2は誤りで、ロールシャッハは<b>投影法</b>。3は誤りで、バウムテストは<b>投影法（人格）</b>で知能検査ではありません。4は誤りで、MMSEは<b>認知症のスクリーニング</b>検査。5は誤りで、WISCは<b>児童（およそ5〜16歳）</b>用の知能検査です。"},
-
-{subj:"心理的アセスメント", q:"心理検査の信頼性・妥当性に関する記述として、最も適切なものを1つ選べ。",
- opts:[
-  "信頼性は測定の一貫性・安定性を、妥当性は測定したいものを測れているかを表す。",
-  "再検査信頼性は、検査の内容的妥当性を評価するための指標である。",
-  "妥当性さえ高ければ、信頼性は必ずしも必要ではない。",
-  "クロンバックのα係数は、妥当性の高さを表す代表的な指標である。",
-  "標準化とは、実施のたびに採点基準を変えて柔軟に運用することである。"],
- ans:0,
- exp:"正答は1。信頼性は「安定して測れているか」、妥当性は「測りたいものを測れているか」です。2は誤りで、再検査信頼性は<b>信頼性</b>の指標。3は誤りで、妥当性の前提として<b>信頼性は必要</b>。4は誤りで、α係数は内的整合性（<b>信頼性</b>）の指標。5は誤りで、標準化は実施・採点・解釈の手続きと基準を<b>一定にそろえる</b>ことです。"},
-
-/* 15. 心理学的支援法 ---------------------------------------------------- */
-{subj:"心理学的支援法", q:"心理療法・カウンセリングに関する記述として、最も適切なものを1つ選べ。",
- opts:[
-  "C.Rogersの来談者中心療法では、共感的理解・無条件の肯定的関心・自己一致が重視される。",
-  "精神分析療法では、クライエントの無意識をまったく扱わない。",
-  "系統的脱感作は、精神分析の代表的な技法である。",
-  "認知行動療法では、非機能的な認知の修正を治療の対象としない。",
-  "動機づけ面接では、クライエントを対決的に説得することを基本とする。"],
- ans:0,
- exp:"正答は1。Rogersは<b>共感的理解・無条件の肯定的関心・自己一致</b>を治療者の中核条件としました。2は誤りで、精神分析は無意識を中心的に扱う。3は誤りで、系統的脱感作はWolpeによる<b>行動療法</b>の技法。4は誤りで、認知行動療法は<b>認知の修正</b>が中核。5は誤りで、動機づけ面接は<b>非対決的・協働的</b>にアンビバレンスを扱います。"},
-
-/* 16. 健康・医療心理学 -------------------------------------------------- */
-{subj:"健康・医療心理学", q:"ストレスに関する記述として、最も適切なものを1つ選べ。",
- opts:[
-  "R.Lazarusらの心理的ストレスモデルでは、認知的評価とコーピングが重視される。",
-  "H.Selyeの汎適応症候群は、疲憊期 → 抵抗期 → 警告反応期の順に進行する。",
-  "問題焦点型コーピングとは、感情を鎮めることのみに焦点を当てる方略である。",
-  "タイプA行動パターンは、うつ病の発症と最も強く関連するとされる。",
-  "ソーシャルサポートは、一般にストレス反応を増悪させる要因である。"],
- ans:0,
- exp:"正答は1。Lazarusらは、ストレッサーへの<b>一次的・二次的評価</b>を経てコーピングが選択されるとしました。2は誤りで、汎適応症候群は<b>警告反応期 → 抵抗期 → 疲憊期</b>の順。3は誤りで、感情の調整に焦点を当てるのは<b>情動焦点型</b>（問題焦点型は問題そのものへの対処）。4は誤りで、タイプAは主に<b>冠動脈疾患</b>と関連。5は誤りで、ソーシャルサポートはストレスを<b>緩衝</b>します。"},
-
-/* 17. 福祉心理学 -------------------------------------------------------- */
-{subj:"福祉心理学", q:"児童虐待に関する記述として、最も適切なものを1つ選べ。",
- opts:[
-  "児童虐待防止法では、身体的虐待・性的虐待・ネグレクト・心理的虐待の4類型が定められている。",
-  "児童虐待を受けたと思われる児童を発見しても、通告する義務はない。",
-  "子どもの面前での配偶者間暴力（面前DV）は、児童虐待には含まれない。",
-  "虐待の通告は、確実な証拠が得られてからでなければ行ってはならない。",
-  "児童相談所は、虐待通告に対して立入調査を行う権限を持たない。"],
- ans:0,
- exp:"正答は1。児童虐待防止法は4類型を定めています。2は誤りで、<b>通告義務</b>があります（「受けたと思われる」段階で足りる）。3は誤りで、面前DVは<b>心理的虐待</b>に該当。4は誤りで、確証がなくても<b>疑われる段階で通告</b>します。5は誤りで、児童相談所は<b>立入調査</b>等の権限を持ちます。"},
-
-/* 18. 教育・学校心理学 -------------------------------------------------- */
-{subj:"教育・学校心理学", q:"いじめ防止対策推進法における「いじめ」の定義等について、最も適切なものを1つ選べ。",
- opts:[
-  "一定の人的関係にある児童等が行う心理的・物理的影響を与える行為で、対象の児童等が心身の苦痛を感じているものをいう。",
-  "いじめは、行為が学校の敷地内で行われた場合に限って該当する。",
-  "インターネットを通じて行われる行為は、いじめには含まれない。",
-  "重大事態が発生しても、学校は事実関係を調査する義務を負わない。",
-  "いじめの成立には、加害者に「相手を害する意図」があることが必須である。"],
- ans:0,
- exp:"正答は1。同法の定義は、一定の人的関係にある児童生徒による心理的・物理的な影響を与える行為で、対象児童生徒が<b>心身の苦痛を感じているもの</b>とされます。2は誤りで、場所は限定されません。3は誤りで、<b>ネットいじめ</b>も含まれます。4は誤りで、重大事態には<b>調査義務</b>があります。5は誤りで、加害の<b>意図は要件ではありません</b>。"},
-
-{subj:"教育・学校心理学", q:"次の事例におけるスクールカウンセラー（公認心理師）の対応として、最も適切なものを1つ選べ。",
- caseText:"中学2年の女子B。3週間ほど前から欠席が続いている。担任からスクールカウンセラーに相談があった。",
- opts:[
-  "ただちに医療機関への受診を強制する。",
-  "本人・保護者・担任等と連携しながら、背景要因を多面的にアセスメントする。",
-  "「怠けている」とみなし、登校を強く督促する。",
-  "本人の同意を得ないまま、クラス全員に欠席の理由を説明する。",
-  "不登校は必ず精神疾患の表れであると決めつけて対応する。"],
- ans:1,
- exp:"正答は2。不登校の背景は多様であり、まずは本人・家庭・学校と連携して<b>多面的にアセスメント</b>し、支援方針を立てることが適切です。1の受診強制、3の一方的な督促、4の同意なき情報開示、5の決めつけはいずれも不適切です。"},
-
-/* 19. 司法・犯罪心理学 -------------------------------------------------- */
-{subj:"司法・犯罪心理学", q:"少年司法に関する記述として、最も適切なものを1つ選べ。",
- opts:[
-  "家庭裁判所は、少年事件について家庭裁判所調査官による社会調査を行う。",
-  "少年法では、20歳以上の者を「少年」と定義している。",
-  "少年鑑別所は、有罪判決を受けた少年が刑を執行される施設である。",
-  "すべての少年事件は、成人と同様に地方裁判所で審理される。",
-  "医療観察法は、少年の非行に対する処遇を定めた法律である。"],
- ans:0,
- exp:"正答は1。家庭裁判所調査官が非行の背景等を調べる<b>社会調査</b>を行います。2は誤りで、少年法上の少年は<b>20歳未満</b>。3は誤りで、少年鑑別所は<b>鑑別・観護</b>を行う施設（矯正教育を行う少年院とは別）。4は誤りで、少年事件は原則<b>全件家庭裁判所送致</b>。5は誤りで、医療観察法は心神喪失等で重大な他害行為をした者の処遇に関する法律です。"},
-
-{subj:"司法・犯罪心理学", q:"心神喪失者等医療観察法（医療観察法）に関する記述として、最も適切なものを1つ選べ。",
- opts:[
-  "重大な他害行為を行い、心神喪失または心神耗弱と認められた者に対する処遇を定めた法律である。",
-  "対象となるのは、あらゆる軽微な財産犯すべてである。",
-  "処遇の要否は、警察官のみの判断によって決定される。",
-  "本法に基づく処遇には、通院による処遇は含まれない。",
-  "社会復帰調整官は、精神保健観察には一切関与しない。"],
- ans:0,
- exp:"正答は1。医療観察法は、心神喪失等の状態で<b>重大な他害行為</b>（殺人・放火・強盗・強制性交等・傷害など）を行った者の医療と社会復帰を目的とします。2は誤り。3は誤りで、処遇は<b>裁判官と精神保健審判員の合議</b>で決定。4は誤りで、<b>入院・通院</b>の処遇があります。5は誤りで、社会復帰調整官が<b>精神保健観察</b>等を担います。"},
-
-/* 20. 産業・組織心理学 -------------------------------------------------- */
-{subj:"産業・組織心理学", q:"労働者のメンタルヘルスに関する記述として、最も適切なものを1つ選べ。",
- opts:[
-  "労働安全衛生法に基づくストレスチェック制度は、常時50人以上の労働者を使用する事業場に実施が義務づけられている。",
-  "ストレスチェックの結果は、事業者が本人の同意なく自由に閲覧できる。",
-  "F.Herzbergの二要因理論では、給与は代表的な「動機づけ要因」に分類される。",
-  "ワーク・エンゲイジメントは、燃え尽き（バーンアウト）と同義の概念である。",
-  "職場復帰支援は、主治医の関与なしに人事担当者のみで進めるのが原則である。"],
- ans:0,
- exp:"正答は1。ストレスチェックは常時50人以上の事業場で年1回の実施が義務です。2は誤りで、結果は<b>本人の同意なく事業者は把握できません</b>。3は誤りで、給与は<b>衛生要因</b>（動機づけ要因は達成・承認など）。4は誤りで、ワーク・エンゲイジメントはバーンアウトの<b>対極</b>に位置づく肯定的概念。5は誤りで、復職支援は<b>主治医・産業医等との連携</b>のもとで進めます。"},
-
-{subj:"産業・組織心理学", q:"働く人の動機づけ・キャリアに関する記述として、最も適切なものを1つ選べ。",
- opts:[
-  "E.Deciらの自己決定理論では、内発的動機づけに自律性・有能感・関係性が関与するとされる。",
-  "外発的動機づけは、常に内発的動機づけよりも効果が高い。",
-  "D.Superのキャリア発達理論は、職業選択を一度きりの出来事としてとらえる。",
-  "ワーク・ライフ・バランスとは、労働時間を最大化することを意味する。",
-  "アンダーマイニング効果とは、報酬を与えることで内発的動機づけが高まる現象である。"],
- ans:0,
- exp:"正答は1。自己決定理論は<b>自律性・有能感・関係性</b>の充足が内発的動機づけを支えるとします。2は誤りで一概にはいえません。3は誤りで、Superはキャリアを<b>生涯にわたる発達</b>としてとらえます。4は誤りで、WLBは仕事と生活の調和。5は誤りで、アンダーマイニング効果は報酬により内発的動機づけが<b>低下</b>する現象です。"},
-
-/* 21. 人体の構造と機能及び疾病 ----------------------------------------- */
-{subj:"人体の構造と機能及び疾病", q:"人体の構造と機能に関する記述として、最も適切なものを1つ選べ。",
- opts:[
-  "インスリンは膵臓のランゲルハンス島から分泌され、血糖値を低下させる。",
-  "赤血球は、体内で免疫応答の中心的な役割を担う。",
-  "心臓の左心室は、全身から戻ってくる静脈血を最初に受け取る部屋である。",
-  "肝臓は、酸素の取り込みと二酸化炭素の排出（ガス交換）を行う器官である。",
-  "交感神経が優位になると、消化管の運動は促進される。"],
- ans:0,
- exp:"正答は1。インスリンは膵ランゲルハンス島β細胞から分泌され、血糖を下げます。2は誤りで、免疫を担うのは主に<b>白血球</b>（赤血球は酸素運搬）。3は誤りで、全身からの静脈血を受けるのは<b>右心房</b>（左心室は全身へ動脈血を送り出す）。4は誤りで、ガス交換は<b>肺</b>。5は誤りで、交感神経優位では消化管運動は<b>抑制</b>されます。"},
-
-/* 22. 精神疾患とその治療 ------------------------------------------------ */
-{subj:"精神疾患とその治療", q:"精神疾患とその治療に関する記述として、最も適切なものを1つ選べ。",
- opts:[
-  "選択的セロトニン再取り込み阻害薬（SSRI）は、うつ病や不安症の治療に用いられる。",
-  "統合失調症の陽性症状には、感情の平板化や意欲の低下が含まれる。",
-  "双極性障害の気分安定に、抗コリン薬が第一選択として用いられる。",
-  "神経性やせ症（拒食症）では、過食と排出行動が診断に必須の要件である。",
-  "アルツハイマー型認知症では、初期から片麻痺などの運動麻痺が主症状となる。"],
- ans:0,
- exp:"正答は1。SSRIはうつ病・不安症などに広く用いられます。2は誤りで、感情平板化・意欲低下は<b>陰性症状</b>（陽性症状は幻覚・妄想）。3は誤りで、気分安定薬は<b>リチウム・バルプロ酸</b>等（抗コリン薬ではない）。4は誤りで、過食・排出は<b>神経性過食症</b>の特徴。5は誤りで、アルツハイマー型は<b>記憶障害</b>が中心で運動麻痺が主症状ではありません。"},
-
-{subj:"精神疾患とその治療", q:"向精神薬に関する記述として、最も適切なものを1つ選べ。",
- opts:[
-  "定型抗精神病薬は、主にドーパミンD2受容体を遮断することで抗精神病作用を示す。",
-  "ベンゾジアゼピン系薬は、長期使用しても依存を形成しない。",
-  "抗うつ薬は、投与直後から数時間で抗うつ効果が最大化する。",
-  "リチウムは安全域（治療域）が広く、血中濃度の測定は不要である。",
-  "SSRIの主な作用は、ドーパミンの再取り込みを阻害することである。"],
- ans:0,
- exp:"正答は1。定型抗精神病薬はD2受容体遮断が主作用です。2は誤りで、ベンゾジアゼピンは<b>依存・耐性</b>を生じ得ます。3は誤りで、抗うつ薬の効果発現には通常<b>2〜4週間</b>を要します。4は誤りで、リチウムは<b>安全域が狭く、血中濃度モニタリングが必須</b>。5は誤りで、SSRIは<b>セロトニン</b>の再取り込みを阻害します。"},
-
-/* 23. 関係行政論 -------------------------------------------------------- */
-{subj:"関係行政論", q:"精神保健福祉法に基づく入院形態に関する記述として、最も適切なものを1つ選べ。",
- opts:[
-  "措置入院は、自傷他害のおそれがあり、精神保健指定医2名の診断が一致した場合に、都道府県知事の権限で行われる。",
-  "医療保護入院は、本人の同意に基づいて行われる入院である。",
-  "任意入院では、常に精神保健指定医の診察が必須である。",
-  "応急入院は、必ず家族等の同意を得たうえで行われる。",
-  "措置入院は、市町村長の権限によって決定される。"],
- ans:0,
- exp:"正答は1。措置入院は自傷他害のおそれがあり、<b>指定医2名の一致</b>により<b>都道府県知事</b>の権限で行われます。2は誤りで、本人同意による入院は<b>任意入院</b>（医療保護入院は家族等の同意による）。3は誤りで、任意入院は本人同意が基本。4は誤りで、応急入院は<b>家族等の同意が得られない場合</b>に指定医の診察で72時間以内に限り行うもの。5は誤りで、措置は都道府県知事の権限です。"},
-
-{subj:"関係行政論", q:"公認心理師が関わる法制度に関する記述として、最も適切なものを1つ選べ。",
- opts:[
-  "障害者差別解消法は、行政機関等および事業者に対し、合理的配慮の提供を求めている。",
-  "介護保険制度の第1号被保険者は、40歳以上65歳未満の医療保険加入者である。",
-  "生活保護制度は、厚生労働省ではなく法務省が所管している。",
-  "発達障害者支援センターは、法務省の管轄下に置かれている。",
-  "労働基準法は、公認心理師の名称独占について定めている。"],
- ans:0,
- exp:"正答は1。障害者差別解消法は不当な差別的取扱いの禁止と<b>合理的配慮の提供</b>を求め、事業者による提供も義務化されています。2は誤りで、<b>第1号被保険者は65歳以上</b>（40〜64歳が第2号）。3は誤りで、生活保護は<b>厚生労働省</b>所管。4は誤りで、発達障害者支援センターは福祉分野の機関で法務省の管轄ではありません。5は誤りで、名称独占を定めるのは<b>公認心理師法</b>です。"}
-];
-
-/* =========================================================================
-   状態管理・描画
-   ========================================================================= */
-var mode = null;           // 'exam' | 'study'
-var order = [];            // 表示順（QUESTIONS への添字の配列）
-var idx = 0;               // order 内の現在位置
-var answers = {};          // qIndex -> 選択した選択肢の添字
-var submitted = false;     // 試験モードで採点済みか
-var timerId = null;
-var remaining = 60 * 60;   // 秒
-
 var $ = function(id){ return document.getElementById(id); };
-var NUMERALS = ["①","②","③","④","⑤","⑥"];
+var NUM = ["①","②","③","④","⑤"];
+var MODE_LABEL = {exam:"試験モード", study:"学習モード", review:"復習モード"};
+var LS_WRONG = "kounin_wrong_v1";
 
-function startExam(m){
-  mode = m;
-  submitted = false;
-  answers = {};
-  idx = 0;
-  buildOrder("all");
-  // 学習モード用の科目セレクタを準備
-  if(mode === "study"){
-    $("studyBar").style.display = "flex";
-    buildSubjectFilter();
-    $("timer").style.display = "none";
-    $("btnSubmit").style.display = "none";
-    stopTimer();
-  } else {
-    $("studyBar").style.display = "none";
-    $("timer").style.display = "inline";
-    remaining = 60 * 60;
-    startTimer();
+var cfg = { mode:"exam", subj:"all", order:"seq", count:"all" };
+var mode="exam", order=[], idx=0, answers={}, submitted=false, timerId=null, remaining=3600;
+
+/* ---- localStorage（復習リスト） ---- */
+function loadWrong(){ try{ return JSON.parse(localStorage.getItem(LS_WRONG)||"[]"); }catch(e){ return []; } }
+function saveWrong(a){ try{ localStorage.setItem(LS_WRONG, JSON.stringify(a)); }catch(e){} }
+function recordResult(id, correct){
+  var w = loadWrong(), i = w.indexOf(id);
+  if(correct){ if(i>=0){ w.splice(i,1); saveWrong(w); } }
+  else { if(i<0){ w.push(id); saveWrong(w); } }
+}
+function clearWrong(){
+  if(loadWrong().length===0){ return; }
+  if(confirm("復習リスト（間違えた問題）をすべて消去しますか？")){ saveWrong([]); refreshStart(); }
+}
+
+/* ---- 起動 ---- */
+document.addEventListener("DOMContentLoaded", function(){
+  $("bankCount").textContent = QUESTIONS.length;
+  $("hdrCount").textContent = QUESTIONS.length;
+  var subs=[]; QUESTIONS.forEach(function(q){ if(subs.indexOf(q.subj)===-1) subs.push(q.subj); });
+  var sel=$("subjSel");
+  sel.innerHTML="<option value='all'>すべての科目（全"+QUESTIONS.length+"問）</option>";
+  subs.forEach(function(s){
+    var n=QUESTIONS.filter(function(q){return q.subj===s;}).length;
+    var o=document.createElement("option"); o.value=s; o.textContent=s+"（"+n+"問）"; sel.appendChild(o);
+  });
+  refreshStart();
+});
+
+function refreshStart(){
+  var w=loadWrong();
+  $("wrongStat").textContent = w.length;
+  $("revCount").textContent = "現在 "+w.length+" 問";
+}
+
+/* ---- 設定操作 ---- */
+function setMode(m){
+  cfg.mode=m;
+  var cards=document.querySelectorAll(".mode-card");
+  for(var i=0;i<cards.length;i++){ cards[i].classList.toggle("sel", cards[i].getAttribute("data-mode")===m); }
+}
+function setOrder(o){ cfg.order=o; toggleSeg("segOrder","data-order",o); }
+function setCount(c){ cfg.count=c; toggleSeg("segCount","data-count",c); }
+function toggleSeg(wrapId, attr, val){
+  var bs=$(wrapId).querySelectorAll("button");
+  for(var i=0;i<bs.length;i++){ bs[i].classList.toggle("on", bs[i].getAttribute(attr)===val); }
+}
+
+/* ---- 出題セット構築 ---- */
+function shuffle(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } }
+function buildWorkingSet(){
+  var pool;
+  if(cfg.mode==="review"){ var w=loadWrong(); pool=function(q){ return w.indexOf(q.id)!==-1; }; }
+  else { pool=function(){ return true; }; }
+  var idxs=[];
+  QUESTIONS.forEach(function(q,i){
+    if(!pool(q)) return;
+    if(cfg.subj!=="all" && q.subj!==cfg.subj) return;
+    idxs.push(i);
+  });
+  if(cfg.order==="rand") shuffle(idxs);
+  if(cfg.count!=="all"){ idxs=idxs.slice(0, parseInt(cfg.count,10)); }
+  return idxs;
+}
+
+/* ---- 開始 ---- */
+function beginQuiz(){
+  order = buildWorkingSet();
+  if(order.length===0){
+    if(cfg.mode==="review") alert("復習リストが空です。まず試験・学習モードで問題を解くと、間違えた問題がここに貯まります。");
+    else alert("選択した条件に合う問題がありません。設定を見直してください。");
+    return;
   }
-  $("start").style.display = "none";
-  $("result").style.display = "none";
-  $("quiz").style.display = "block";
+  mode=cfg.mode; answers={}; submitted=false; idx=0;
+  $("modeChip").textContent = MODE_LABEL[mode];
+  $("start").style.display="none"; $("result").style.display="none"; $("quiz").style.display="block";
+  if(mode==="exam"){
+    $("timer").style.display="inline";
+    remaining=Math.min(3600, Math.max(300, order.length*75));
+    startTimer();
+    $("btnSubmit").textContent="採点する";
+  } else {
+    $("timer").style.display="none"; stopTimer();
+    $("btnSubmit").textContent="結果を見る";
+  }
   window.scrollTo(0,0);
   render();
 }
 
-function buildOrder(filterSubj){
-  order = [];
-  for(var i=0;i<QUESTIONS.length;i++){
-    if(filterSubj === "all" || QUESTIONS[i].subj === filterSubj) order.push(i);
-  }
-  if(idx >= order.length) idx = 0;
-}
-
-function buildSubjectFilter(){
-  var seen = [];
-  for(var i=0;i<QUESTIONS.length;i++){
-    if(seen.indexOf(QUESTIONS[i].subj) === -1) seen.push(QUESTIONS[i].subj);
-  }
-  var sel = $("subjSel");
-  sel.innerHTML = "";
-  var optAll = document.createElement("option");
-  optAll.value = "all"; optAll.textContent = "すべての科目（全" + QUESTIONS.length + "問）";
-  sel.appendChild(optAll);
-  seen.forEach(function(s){
-    var n = QUESTIONS.filter(function(q){return q.subj===s;}).length;
-    var o = document.createElement("option");
-    o.value = s; o.textContent = s + "（" + n + "問）";
-    sel.appendChild(o);
-  });
-}
-
-function onFilterChange(){
-  buildOrder($("subjSel").value);
-  idx = 0;
-  render();
-}
-
+/* ---- 描画 ---- */
 function render(){
-  var q = QUESTIONS[order[idx]];
-  var qi = order[idx];
+  var qi=order[idx], q=QUESTIONS[qi];
+  $("qTotal").textContent=order.length;
+  $("qNow").textContent=idx+1;
+  $("progBar").style.width=((idx+1)/order.length*100)+"%";
+  $("qSubj").textContent=q.subj;
+  var body=""; if(q.caseText) body+='<span class="case">【事例】'+q.caseText+'</span>'; body+=q.q;
+  $("qBody").innerHTML=body;
 
-  $("qTotal").textContent = order.length;
-  $("qNow").textContent = idx + 1;
-  $("progBar").style.width = ((idx+1)/order.length*100) + "%";
-  $("qSubj").textContent = q.subj;
-
-  // 問題文（事例つきの場合は case ブロックを添える）
-  var body = "";
-  if(q.caseText){ body += '<span class="case">【事例】' + q.caseText + '</span>'; }
-  body += q.q;
-  $("qBody").innerHTML = body;
-
-  // 選択肢
-  var reveal = (mode === "study" && answers[qi] !== undefined) || (mode === "exam" && submitted);
-  var ul = $("qOpts");
-  ul.innerHTML = "";
-  q.opts.forEach(function(text, i){
-    var li = document.createElement("li");
-    li.className = "opt";
-    if(answers[qi] === i) li.className += " sel";
+  var reveal=((mode==="study"||mode==="review") && answers[qi]!==undefined) || (mode==="exam" && submitted);
+  var ul=$("qOpts"); ul.innerHTML="";
+  q.opts.forEach(function(text,i){
+    var li=document.createElement("li"); li.className="opt";
+    if(answers[qi]===i) li.className+=" sel";
     if(reveal){
-      li.className += " locked";
-      if(i === q.ans) li.className = li.className.replace("sel","") + " correct";
-      else if(answers[qi] === i) li.className += " wrong";
+      li.className+=" locked";
+      if(i===q.ans) li.className=li.className.replace("sel","")+" correct";
+      else if(answers[qi]===i) li.className+=" wrong";
     }
-    li.innerHTML = '<span class="num">' + NUMERALS[i] + '</span><span class="txt">' + text + '</span>';
-    if(!reveal){ li.onclick = (function(k){ return function(){ selectOption(k); }; })(i); }
+    li.innerHTML='<span class="num">'+NUM[i]+'</span><span class="txt">'+text+'</span>';
+    if(!reveal) li.onclick=(function(k){ return function(){ selectOption(k); }; })(i);
     ul.appendChild(li);
   });
 
-  // 解説
-  var exp = $("explain");
+  var exp=$("explain");
   if(reveal){
-    var correct = answers[qi] === q.ans;
-    exp.className = "explain show " + (correct ? "is-ok" : "is-ng");
-    $("explainHead").innerHTML = correct
-      ? "◎ 正解　正答は " + NUMERALS[q.ans]
-      : "× 不正解　正答は " + NUMERALS[q.ans] + (answers[qi]===undefined ? "（未解答）" : "");
-    $("explainBody").innerHTML = q.exp;
-  } else {
-    exp.className = "explain";
-  }
+    var ok=answers[qi]===q.ans;
+    exp.className="explain show "+(ok?"is-ok":"is-ng");
+    $("explainHead").innerHTML=ok ? "◎ 正解　正答は "+NUM[q.ans] : "× 不正解　正答は "+NUM[q.ans]+(answers[qi]===undefined?"（未解答）":"");
+    $("explainBody").innerHTML=q.exp;
+  } else { exp.className="explain"; }
 
-  // ナビゲーション
-  $("btnPrev").disabled = (idx === 0);
-  var last = (idx === order.length - 1);
-  if(mode === "exam" && !submitted){
-    $("btnNext").style.display = last ? "none" : "inline-flex";
-    $("btnSubmit").style.display = last ? "inline-flex" : "none";
-  } else {
-    $("btnNext").style.display = last ? "none" : "inline-flex";
-    $("btnSubmit").style.display = "none";
-  }
-
+  $("btnPrev").disabled=(idx===0);
+  $("btnNext").style.display=(idx===order.length-1)?"none":"inline-flex";
   renderPalette();
   window.scrollTo({top:0, behavior:"smooth"});
 }
 
 function selectOption(k){
-  var qi = order[idx];
-  answers[qi] = k;
-  if(mode === "study"){
-    render(); // 即時フィードバック
-  } else {
-    render();
-  }
-}
-
-function renderPalette(){
-  var grid = $("palGrid");
-  grid.innerHTML = "";
-  $("palLbl").textContent = (mode==="exam" && submitted) ? "解答状況（緑=正答／赤=誤答）" : "解答状況（クリックで移動）";
-  order.forEach(function(qi, pos){
-    var b = document.createElement("button");
-    b.className = "pal";
-    b.textContent = pos + 1;
-    if(answers[qi] !== undefined) b.className += " answered";
-    if(pos === idx) b.className += " current";
-    if((mode==="exam" && submitted) || (mode==="study" && answers[qi]!==undefined)){
-      if(answers[qi] === QUESTIONS[qi].ans) b.className = b.className.replace("answered","") + " pcorrect";
-      else if(answers[qi] !== undefined) b.className = b.className.replace("answered","") + " pwrong";
-    }
-    b.onclick = (function(p){ return function(){ idx = p; render(); }; })(pos);
-    grid.appendChild(b);
-  });
-}
-
-function go(dir){
-  var n = idx + dir;
-  if(n < 0 || n >= order.length) return;
-  idx = n;
+  var qi=order[idx];
+  if(answers[qi]!==undefined && (mode==="study"||mode==="review")) return;
+  answers[qi]=k;
+  if(mode==="study"||mode==="review") recordResult(QUESTIONS[qi].id, k===QUESTIONS[qi].ans);
   render();
 }
 
-/* ---- タイマー（試験モード） ---- */
-function startTimer(){
-  stopTimer();
-  updateTimerLabel();
-  timerId = setInterval(function(){
-    remaining--;
-    if(remaining <= 0){ remaining = 0; updateTimerLabel(); stopTimer(); grade(); return; }
-    updateTimerLabel();
-  }, 1000);
-}
-function stopTimer(){ if(timerId){ clearInterval(timerId); timerId = null; } }
-function updateTimerLabel(){
-  var m = Math.floor(remaining/60), s = remaining % 60;
-  var t = $("timer");
-  t.textContent = (m<10?"0":"")+m + ":" + (s<10?"0":"")+s;
-  if(remaining <= 60) t.className = "timer warn"; else t.className = "timer";
-}
-
-/* ---- 採点（試験モード） ---- */
-function grade(){
-  submitted = true;
-  stopTimer();
-  var correct = 0;
-  var bySubj = {};
-  QUESTIONS.forEach(function(q, i){
-    if(!bySubj[q.subj]) bySubj[q.subj] = {c:0, n:0};
-    bySubj[q.subj].n++;
-    if(answers[i] === q.ans){ correct++; bySubj[q.subj].c++; }
+function renderPalette(){
+  var grid=$("palGrid"); grid.innerHTML="";
+  $("palLbl").textContent=(mode==="exam"&&submitted)?"解答状況（緑=正答／赤=誤答）":"解答状況（クリックで移動）";
+  order.forEach(function(qi,pos){
+    var b=document.createElement("button"); b.className="pal"; b.textContent=pos+1;
+    if(answers[qi]!==undefined) b.className+=" answered";
+    if(pos===idx) b.className+=" current";
+    if((mode==="exam"&&submitted)||((mode==="study"||mode==="review")&&answers[qi]!==undefined)){
+      if(answers[qi]===QUESTIONS[qi].ans) b.className=b.className.replace("answered","")+" pcorrect";
+      else if(answers[qi]!==undefined) b.className=b.className.replace("answered","")+" pwrong";
+    }
+    b.onclick=(function(p){ return function(){ idx=p; render(); }; })(pos);
+    grid.appendChild(b);
   });
-  var total = QUESTIONS.length;
-  var pct = Math.round(correct/total*100);
+}
+function go(d){ var n=idx+d; if(n<0||n>=order.length) return; idx=n; render(); }
 
-  $("scoreN").textContent = correct;
-  $("scorePct").textContent = "正答率 " + pct + "％（" + correct + " / " + total + " 問）";
+/* ---- タイマー ---- */
+function startTimer(){ stopTimer(); updateTimerLabel(); timerId=setInterval(function(){ remaining--; if(remaining<=0){ remaining=0; updateTimerLabel(); stopTimer(); grade(); return; } updateTimerLabel(); },1000); }
+function stopTimer(){ if(timerId){ clearInterval(timerId); timerId=null; } }
+function updateTimerLabel(){ var m=Math.floor(remaining/60), s=remaining%60; var t=$("timer"); t.textContent=(m<10?"0":"")+m+":"+(s<10?"0":"")+s; t.className=(remaining<=60)?"timer warn":"timer"; }
 
-  var v = $("verdict");
-  if(pct >= 70){ v.className = "verdict pass"; v.innerHTML = "目安ライン到達 ── この調子で仕上げましょう"; }
-  else if(pct >= 55){ v.className = "verdict near"; v.innerHTML = "あと一歩 ── 誤答分野を重点的に復習を"; }
-  else { v.className = "verdict more"; v.innerHTML = "基礎の再確認を ── 科目別の弱点をチェック"; }
+/* ---- 採点 ---- */
+function grade(){
+  submitted=true; stopTimer();
+  var correct=0, bySubj={};
+  order.forEach(function(qi){
+    var q=QUESTIONS[qi];
+    if(!bySubj[q.subj]) bySubj[q.subj]={c:0,n:0};
+    bySubj[q.subj].n++;
+    var isC=answers[qi]===q.ans;
+    if(answers[qi]!==undefined && mode==="exam") recordResult(q.id, isC);
+    if(isC){ correct++; bySubj[q.subj].c++; }
+  });
+  var total=order.length, pct=Math.round(correct/total*100);
+  $("scoreN").textContent=correct; $("scoreT").textContent=total;
+  $("scorePct").textContent="正答率 "+pct+"％（"+correct+" / "+total+" 問）";
+  var v=$("verdict");
+  if(pct>=70){ v.className="verdict pass"; v.innerHTML="目安ライン到達 ── この調子で仕上げましょう"; }
+  else if(pct>=55){ v.className="verdict near"; v.innerHTML="あと一歩 ── 誤答分野を重点的に復習を"; }
+  else { v.className="verdict more"; v.innerHTML="基礎の再確認を ── 科目別の弱点をチェック"; }
 
-  // 科目別テーブル
-  var tb = $("subjTable");
-  tb.innerHTML = "";
+  var tb=$("subjTable"); tb.innerHTML="";
   Object.keys(bySubj).forEach(function(s){
-    var d = bySubj[s];
-    var r = Math.round(d.c/d.n*100);
-    var tr = document.createElement("tr");
-    tr.innerHTML = "<td>" + s + "</td>"
-      + '<td><span class="bar-wrap"><span class="bar" style="width:' + r + '%"></span></span><span style="font-size:12px;color:var(--ink-mute)">' + r + '%</span></td>'
-      + '<td class="n">' + d.c + " / " + d.n + "</td>";
+    var d=bySubj[s], r=Math.round(d.c/d.n*100);
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td>"+s+"</td><td><span class='bar-wrap'><span class='bar' style='width:"+r+"%'></span></span><span style='font-size:12px;color:var(--ink-mute)'>"+r+"%</span></td><td class='n'>"+d.c+" / "+d.n+"</td>";
     tb.appendChild(tr);
   });
 
-  // 全問レビュー
-  var rl = $("reviewList");
-  rl.innerHTML = "";
-  QUESTIONS.forEach(function(q, i){
-    var ok = answers[i] === q.ans;
-    var your = (answers[i] === undefined) ? "未解答" : (NUMERALS[answers[i]] + " " + q.opts[answers[i]]);
-    var div = document.createElement("div");
-    div.className = "review-q";
-    var head = '<div class="rhead"><span class="badge ' + (ok?"ok":"ng") + '">' + (ok?"正解":"不正解")
-      + '</span><span class="subjtag" style="margin:0">' + q.subj + '</span></div>';
-    var qtxt = '<div class="rq">問' + (i+1) + '　' + (q.caseText ? "【事例】" + q.caseText + "<br>" : "") + q.q + '</div>';
-    var ans = '<div class="ra">あなたの解答：<span class="' + (ok?"c":"w") + '">' + your + '</span></div>'
-      + '<div class="ra">正答：<span class="c">' + NUMERALS[q.ans] + " " + q.opts[q.ans] + '</span></div>';
-    var expl = '<div class="rexp">' + q.exp + '</div>';
-    div.innerHTML = head + qtxt + ans + expl;
+  var rl=$("reviewList"); rl.innerHTML="";
+  order.forEach(function(qi,pos){
+    var q=QUESTIONS[qi], ok=answers[qi]===q.ans;
+    var your=(answers[qi]===undefined)?"未解答":(NUM[answers[qi]]+" "+q.opts[answers[qi]]);
+    var div=document.createElement("div"); div.className="review-q";
+    div.innerHTML="<div class='rhead'><span class='badge "+(ok?"ok":"ng")+"'>"+(ok?"正解":"不正解")+"</span><span class='subjtag' style='margin:0'>"+q.subj+"</span></div>"
+      +"<div class='rq'>問"+(pos+1)+"　"+(q.caseText?"【事例】"+q.caseText+"<br>":"")+q.q+"</div>"
+      +"<div class='ra'>あなたの解答：<span class='"+(ok?"c":"w")+"'>"+your+"</span></div>"
+      +"<div class='ra'>正答：<span class='c'>"+NUM[q.ans]+" "+q.opts[q.ans]+"</span></div>"
+      +"<div class='rexp'>"+q.exp+"</div>";
     rl.appendChild(div);
   });
 
-  $("quiz").style.display = "none";
-  $("result").style.display = "block";
-  window.scrollTo(0,0);
+  var wrongN=loadWrong().length;
+  var br=$("btnReview");
+  if(wrongN>0){ br.style.display="inline-flex"; $("btnReviewN").textContent=wrongN; }
+  else { br.style.display="none"; }
+
+  $("quiz").style.display="none"; $("result").style.display="block"; window.scrollTo(0,0);
 }
 
-function restart(){
-  answers = {}; submitted = false; idx = 0;
-  startExam(mode);
-}
+/* ---- 遷移 ---- */
+function reviewMistakes(){ setMode("review"); cfg.subj="all"; cfg.count="all"; $("subjSel").value="all"; toggleSeg("segCount","data-count","all"); beginQuiz(); }
+function restart(){ beginQuiz(); }
+function backToStart(){ stopTimer(); $("result").style.display="none"; $("quiz").style.display="none"; $("start").style.display="block"; refreshStart(); window.scrollTo(0,0); }
+function confirmQuit(){ if(confirm("中断して設定画面に戻りますか？　現在の解答状況は保存されません（※間違えた問題の記録は残ります）。")){ backToStart(); } }
 
-function confirmQuit(){
-  if(confirm("中断してトップ（モード選択）に戻りますか？　解答状況は保存されません。")){
-    stopTimer();
-    location.reload();
-  }
-}
-
-/* キーボード操作（左右で移動、1〜5で選択） */
 document.addEventListener("keydown", function(e){
-  if($("quiz").style.display !== "block") return;
-  if(e.key === "ArrowLeft") go(-1);
-  else if(e.key === "ArrowRight") go(1);
-  else if(["1","2","3","4","5"].indexOf(e.key) !== -1){
-    var k = parseInt(e.key,10) - 1;
-    var q = QUESTIONS[order[idx]];
-    if(k < q.opts.length){
-      var reveal = (mode === "study" && answers[order[idx]] !== undefined) || (mode === "exam" && submitted);
+  if($("quiz").style.display!=="block") return;
+  if(e.key==="ArrowLeft") go(-1);
+  else if(e.key==="ArrowRight") go(1);
+  else if(["1","2","3","4","5"].indexOf(e.key)!==-1){
+    var k=parseInt(e.key,10)-1, q=QUESTIONS[order[idx]];
+    if(k<q.opts.length){
+      var reveal=((mode==="study"||mode==="review")&&answers[order[idx]]!==undefined)||(mode==="exam"&&submitted);
       if(!reveal) selectOption(k);
     }
   }
