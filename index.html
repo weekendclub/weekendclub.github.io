@@ -21,7 +21,7 @@
   main{max-width:640px; width:100%; text-align:center;}
   h1{font-size:14px; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); margin:0 0 8px; font-weight:700;}
   p.lede{color:var(--ink-dim); margin:0 0 40px; font-size:14px;}
-  .cards{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
+  .cards{display:grid; grid-template-columns:repeat(3,1fr); gap:18px;}
   a.card{
     display:block; background:var(--card); border:1px solid var(--border); border-radius:16px;
     padding:32px 20px; text-decoration:none; color:var(--ink); transition:transform .15s ease, border-color .15s ease;
@@ -30,14 +30,14 @@
   a.card .icon{font-size:32px; display:block; margin-bottom:14px;}
   a.card .title{display:block; font-size:17px; font-weight:700; margin-bottom:6px;}
   a.card .desc{display:block; font-size:12.5px; color:var(--ink-dim); line-height:1.6;}
-  @media (max-width:480px){ .cards{grid-template-columns:1fr;} }
+  @media (max-width:720px){ .cards{grid-template-columns:1fr;} }
 </style>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4628020597462110" crossorigin="anonymous"></script>
 </head>
 <body>
 <main>
   <h1>weekendclub</h1>
-  <p class="lede">週末に打ち込んでいるもの、2つ。</p>
+  <p class="lede">週末の、あれこれ。</p>
   <div class="cards">
     <a class="card" href="bosconext/index.html">
       <span class="icon">⚽</span>
@@ -48,6 +48,11 @@
       <span class="icon">🎵</span>
       <span class="title">レコード棚</span>
       <span class="desc">買ったレコードを1枚ずつ解説する音楽ブログ</span>
+    </a>
+    <a class="card" href="smartwatch/index.html">
+      <span class="icon">⌚</span>
+      <span class="title">スマートウォッチの選び方</span>
+      <span class="desc">使う人のタイプ別に選ぶ、買い方ガイド</span>
     </a>
   </div>
 </main>
