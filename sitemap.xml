@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://weekendclub.github.io/</loc><lastmod>2026-07-08</lastmod></url>
+  <url><loc>https://weekendclub.github.io/</loc><lastmod>2026-10-03</lastmod></url>
 
   <!-- レコード棚 -->
   <url><loc>https://weekendclub.github.io/vinyl/</loc><lastmod>2026-07-08</lastmod></url>
@@ -37,6 +37,8 @@
 
   <!-- 公認心理師 CBT模擬問題 -->
   <url><loc>https://weekendclub.github.io/kounin/</loc><lastmod>2026-07-08</lastmod></url>
+  <!-- 社会福祉士 国試ドリル -->
+  <url><loc>https://weekendclub.github.io/shakaifukushi/</loc><lastmod>2026-10-03</lastmod></url>
   <!-- 羊文学の隣にある音楽 -->
   <url><loc>https://weekendclub.github.io/hitsujibungaku/</loc><lastmod>2026-08-23</lastmod></url>
 </urlset>
