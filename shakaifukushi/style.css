@@ -87,6 +87,7 @@ mark{background:var(--mark); color:inherit; border-radius:3px; padding:0 1px;}
 .tabbar a.on{color:var(--accent-ink); font-weight:700;}
 @media (min-width:900px){ .tabbar{display:none;} }
 body.focus .tabbar, body.focus .topnav{display:none;}
+body.focus .theme-toggle{margin-left:auto;}
 
 /* ---------- layout ---------- */
 .view{max-width:1080px; margin:0 auto; padding:20px 16px 48px;}
@@ -171,6 +172,9 @@ textarea.inp{min-height:96px; line-height:1.6; resize:vertical;}
 .banner{display:flex; gap:12px; align-items:center; padding:12px 16px; border-radius:var(--radius); border:1px solid var(--warn-line); background:var(--warn-bg); color:var(--ink); margin:0 0 14px; font-size:.9em;}
 .banner.info{border-color:var(--line2); background:var(--surface2);}
 .banner .spacer{flex:1;}
+.banner .bi{flex:0 0 22px; color:var(--warn); display:flex;}
+.banner.info .bi{color:var(--accent-ink);}
+.banner .bi svg{width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round;}
 .modes{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px;}
 @media (max-width:760px){ .modes{grid-template-columns:repeat(2,minmax(0,1fr));} }
 .mode{display:flex; flex-direction:column; gap:4px; text-align:left; padding:16px; border-radius:var(--radius); border:1px solid var(--line); background:var(--surface); box-shadow:var(--shadow); cursor:pointer; text-decoration:none; color:var(--ink); transition:border-color .12s, transform .08s; min-height:118px;}
@@ -256,6 +260,7 @@ textarea.inp{min-height:96px; line-height:1.6; resize:vertical;}
 .tool[aria-pressed="true"] svg{fill:currentColor;}
 .tool.review[aria-pressed="true"]{border-color:var(--accent); color:var(--accent-ink); background:var(--accent-soft);}
 .result-box{margin:16px 0 0; border-radius:12px; padding:14px 16px; border:1.5px solid;}
+.result-box:focus{outline:none;}
 .result-box.ok{border-color:var(--ok-line); background:var(--ok-bg);}
 .result-box.ng{border-color:var(--ng-line); background:var(--ng-bg);}
 .result-box .verdict{display:flex; align-items:center; gap:10px; font-weight:800; font-size:1.15em;}

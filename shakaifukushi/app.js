@@ -94,7 +94,10 @@
       search: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/>',
       print: '<path d="M6 9V3h12v6M6 18H4v-7h16v7h-2M8 14h8v7H8z"/>',
       grid: '<path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/>',
-      book: '<path d="M4 4h6a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H4zM20 4h-6a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h7z"/>'
+      book: '<path d="M4 4h6a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H4zM20 4h-6a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h7z"/>',
+      mail: '<path d="M3 6h18v12H3z"/><path d="M3 7l9 6 9-6"/>',
+      alert: '<path d="M12 3l9.5 17h-19z"/><path d="M12 10v4M12 17.5h.01"/>',
+      pause: '<circle cx="12" cy="12" r="9"/><path d="M10 9v6M14 9v6"/>'
     };
     return '<svg viewBox="0 0 24 24" aria-hidden="true">' + (P[name] || '') + '</svg>';
   }
@@ -467,14 +470,14 @@
 
     if (today <= META.exam.applyUntil) {
       var dl = daysBetween(today, META.exam.applyUntil);
-      html += '<div class="banner"><span>📮</span><span><b>第39回の受験申込は ' + jaDate(META.exam.applyUntil).replace(/^\d+年/, '') + ' まで</b>' +
+      html += '<div class="banner"><span class="bi">' + icon('mail') + '</span><span><b>第39回の受験申込は ' + jaDate(META.exam.applyUntil).replace(/^\d+年/, '') + ' まで</b>' +
         (dl === 0 ? '（<b>本日締切</b>・インターネット申込は23:59まで）' : '（あと' + dl + '日）') +
         '。手続きは社会福祉振興・試験センターの公式サイトで。</span></div>';
     }
-    if (!canStore) html += '<div class="banner"><span>⚠️</span><span>この環境ではブラウザに保存できないため、ページを閉じると学習記録が消えます（プライベートブラウズ等）。</span></div>';
+    if (!canStore) html += '<div class="banner"><span class="bi">' + icon('alert') + '</span><span>この環境ではブラウザに保存できないため、ページを閉じると学習記録が消えます（プライベートブラウズ等）。</span></div>';
     if (cur) {
       var n = Object.keys(cur.kind === 'mock' ? cur.pick : cur.ans).length;
-      html += '<div class="banner info"><span>⏸</span><span><b>続きから再開できます</b><br><span class="small muted">' + esc(cur.title) + '　' + n + '/' + cur.ids.length + '問' +
+      html += '<div class="banner info"><span class="bi">' + icon('pause') + '</span><span><b>続きから再開できます</b><br><span class="small muted">' + esc(cur.title) + '　' + n + '/' + cur.ids.length + '問' +
         (cur.kind === 'mock' ? '　残り ' + fmtDur(cur.mock.limit * 1000 - cur.elapsed) : '') + '</span></span><span class="spacer"></span>' +
         '<a class="btn primary small" href="' + (cur.kind === 'ox' ? '#/oxplay' : '#/play') + '">再開</a></div>';
     }
@@ -486,7 +489,7 @@
       '<div class="d small" style="margin-top:6px">129問・225分（午前140分／午後85分）・6科目群すべてで得点が必要</div></div>' +
       '<div class="card today"><div class="row between"><b>今日の学習</b><a class="small" href="#/stats">記録を見る</a></div>' +
       '<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="' + goal + '" aria-valuenow="' + td.n + '"><i style="width:' + Math.min(100, td.n / goal * 100) + '%"></i></div>' +
-      '<div class="small"><b class="num">' + td.n + '</b> / ' + goal + '問' + (td.n >= goal ? '　🎉 目標達成' : '') + '</div>' +
+      '<div class="small"><b class="num">' + td.n + '</b> / ' + goal + '問' + (td.n >= goal ? '　<span class="chip ok">目標達成</span>' : '') + '</div>' +
       '<div class="kpis"><div class="kpi"><div class="k">今日の正答率</div><div class="v num">' + (td.n ? pct(td.c, td.n) + '<small>%</small>' : '–') + '</div></div>' +
       '<div class="kpi"><div class="k">連続学習</div><div class="v num">' + streak() + '<small>日</small></div></div>' +
       '<div class="kpi"><div class="k">復習待ち</div><div class="v num">' + due + '<small>問</small></div></div></div></div>' +
@@ -665,8 +668,8 @@
       (q.topic ? '<span class="chip">' + esc(q.topic) + '</span>' : '') +
       (q.src !== 'b' ? '<span class="chip warn">取込: ' + esc(q.label || q.pack) + '</span>' : '') +
       (store.flags[q.id] ? '<span class="chip flag">付箋</span>' : '') + '</div>';
-    if (q.case) html += '<div class="qcase"><span class="k">事例</span>' + fmt(q.case) + '</div>';
     html += '<p class="qtext">' + emphasize(q.q) + '</p>';
+    if (q.case) html += '<div class="qcase"><span class="k">事例</span>' + fmt(q.case) + '</div>';
     if (need > 1 && !answered) html += '<div class="multi-hint">' + need + 'つ選んでください（' + pick.length + '/' + need + '）</div>';
 
     html += '<ol class="opts" role="list">';
@@ -1151,7 +1154,7 @@
     ids.forEach(function (id, i) {
       var q = BYID[id];
       h += '<div class="pq"><div class="h">問' + (i + 1) + '　<span style="font-weight:normal;font-size:9pt">［' + esc(subjName(q)) + '］</span></div>' +
-        (q.case ? '<div class="pcase">' + esc(plain(q.case)) + '</div>' : '') + '<div>' + esc(plain(q.q)) + '</div><ol class="po">' +
+        '<div>' + esc(plain(q.q)) + '</div>' + (q.case ? '<div class="pcase">' + esc(plain(q.case)) + '</div>' : '') + '<ol class="po">' +
         q.opts.map(function (o) { return '<li>' + esc(plain(o)) + '</li>'; }).join('') + '</ol></div>';
     });
     h += '<div class="pans"><h1>解答・解説</h1>';
@@ -1655,7 +1658,7 @@
     oxSource: function () {
       var s = S(), it = oxParse(s.ids[s.i]), q = it.q;
       openModal({
-        title: qLabel(q), html: (q.case ? '<div class="qcase">' + fmt(q.case) + '</div>' : '') + '<p>' + fmt(q.q) + '</p><ul class="oe">' + q.opts.map(function (o, i) {
+        title: qLabel(q), html: '<p>' + fmt(q.q) + '</p>' + (q.case ? '<div class="qcase">' + fmt(q.case) + '</div>' : '') + '<ul class="oe">' + q.opts.map(function (o, i) {
           var isA = q.ans.indexOf(i) >= 0;
           return '<li class="' + (isA ? 'is-ans' : '') + '"><span class="tf ' + (oxTruth(q, i) ? 't' : 'f') + '">' + (oxTruth(q, i) ? '○' : '×') + '</span><span class="b"><span class="o">' + (i + 1) + '. ' + fmt(o) + (isA ? '　<span class="chip ok">正答</span>' : '') + '</span>' + fmt(q.oe[i] || '') + '</span></li>';
         }).join('') + '</ul>' + (q.exp ? '<div class="exp"><h4>ポイント</h4><div class="point">' + fmt(q.exp) + '</div></div>' : '')
@@ -1780,7 +1783,7 @@
     if (speechSynthesis.speaking) { stopSpeech(); return; }
     var s = S(), q = curQ(); if (!q) return;
     var order = optOrder(s, q);
-    var text = (q.case ? '事例。' + plain(q.case) + '。' : '') + plain(q.q) + '。' + order.map(function (oi, k) { return (k + 1) + '。' + plain(q.opts[oi]); }).join('。');
+    var text = plain(q.q) + '。' + (q.case ? '事例。' + plain(q.case) + '。' : '') + order.map(function (oi, k) { return (k + 1) + '。' + plain(q.opts[oi]); }).join('。');
     var a = s.ans[q.id];
     if (a && s.kind !== 'mock') text += '。正答は' + q.ans.map(function (oi) { return order.indexOf(oi) + 1; }).join('と') + '。' + plain(q.exp || '');
     var u = new SpeechSynthesisUtterance(text);
