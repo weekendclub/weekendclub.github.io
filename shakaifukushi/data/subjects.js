@@ -66,13 +66,15 @@ var SW_META = {
      ans    正答の添字（0始まり）の配列。「2つ選びなさい」は2要素
      neg    true＝「誤っているもの／適切でないもの」を選ぶ問題
      ox     false＝選択肢が単独の文として正誤判定できない（事例・語句選択など）
+     set    問題セット（第1回＝1、第2回＝2 …）。各セットが本番と同じ科目別出題数になっている
      oe     選択肢ごとの解説（opts と同じ並び）
      exp    全体の解説（ポイント）
 */
 var SW_BANK = [];
-function SW_ADD(subj, list) {
+function SW_ADD(subj, list, set) {
   for (var i = 0; i < list.length; i++) {
     list[i].subj = subj;
+    list[i].set = set || 1;
     SW_BANK.push(list[i]);
   }
 }

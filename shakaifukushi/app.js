@@ -10,7 +10,7 @@
   var BUILTIN = window.SW_BANK || [];
   var LS_KEY = 'swdrill.v1';
   var LS_CUSTOM = 'swdrill.custom.v1';
-  var APP_VERSION = '1.0.0';
+  var APP_VERSION = '1.1.0';
 
   /* ---------------------------------------------------------------------
      科目
@@ -153,9 +153,9 @@
   /* ---------------------------------------------------------------------
      問題バンク
      --------------------------------------------------------------------- */
-  var BANK = [], BYID = {}, BUILTIN_IDS = [];
+  var BANK = [], BYID = {}, BUILTIN_IDS = [], SETS = [];
   function buildBank() {
-    BANK = []; BYID = {}; BUILTIN_IDS = [];
+    BANK = []; BYID = {}; BUILTIN_IDS = []; SETS = [];
     var cnt = {};
     BUILTIN.forEach(function (src) {
       var q = Object.assign({}, src);
@@ -163,14 +163,18 @@
       cnt[q.subj] = (cnt[q.subj] || 0) + 1;
       q.no = cnt[q.subj];
       q.ox = q.ox !== false;
+      q.set = q.set || 1;
+      if (SETS.indexOf(q.set) < 0) SETS.push(q.set);
       BANK.push(q); BYID[q.id] = q; BUILTIN_IDS.push(q.id);
     });
-    // 本番と同じ並び（科目順）の通し番号
+    SETS.sort();
+    // セットごとに本番と同じ並び（科目順）の通し番号（問題1〜129）
     var ordered = BUILTIN_IDS.slice().sort(function (a, b) {
       var A = BYID[a], B = BYID[b];
-      return (SUBJ[A.subj].order - SUBJ[B.subj].order) || (A.no - B.no);
+      return (A.set - B.set) || (SUBJ[A.subj].order - SUBJ[B.subj].order) || (A.no - B.no);
     });
-    ordered.forEach(function (id, i) { BYID[id].gno = i + 1; });
+    var seq = {};
+    ordered.forEach(function (id) { var q = BYID[id]; seq[q.set] = (seq[q.set] || 0) + 1; q.gno = seq[q.set]; });
     BUILTIN_IDS = ordered;
     custom.packs.forEach(function (p) {
       if (p.enabled === false) return;
@@ -447,7 +451,7 @@
     return ids.slice().sort(function (a, b) {
       var A = BYID[a], B = BYID[b];
       if (A.src !== B.src) return A.src === 'b' ? -1 : B.src === 'b' ? 1 : (A.src < B.src ? -1 : 1);
-      if (A.src === 'b') return A.gno - B.gno;
+      if (A.src === 'b') return (A.set - B.set) || (A.gno - B.gno);
       return A.no - B.no;
     });
   }
@@ -517,7 +521,7 @@
       }).join('') + '</div>';
     }
 
-    html += '<div class="notice" style="margin-top:24px"><strong>収録問題について：</strong>本アプリの問題は、社会福祉士国家試験の出題基準（19科目）と出題形式に沿って<strong>独自に作成した練習問題</strong>です（実際の過去問ではありません）。本番の出題数（科目ごとに6問または9問・計129問）と同じ構成で収録しています。お持ちの過去問データは「設定 → 問題データの取り込み」から、<strong>この端末の中だけ</strong>に追加して使えます。</div>';
+    html += '<div class="notice" style="margin-top:24px"><strong>収録問題について：</strong>本アプリの問題は、社会福祉士国家試験の出題基準（19科目）と出題形式に沿って<strong>独自に作成した練習問題</strong>です（実際の過去問ではありません）。本番と同じ構成（科目ごとに6問または9問・計129問）のセットを' + SETS.length + '回分（' + BUILTIN.length + '問）収録しています。お持ちの過去問データは「設定 → 問題データの取り込み」から、<strong>この端末の中だけ</strong>に追加して使えます。</div>';
     html += footer() + '</div>';
     setView(html);
   };
@@ -548,7 +552,7 @@
      画面：出題設定（演習）
      ===================================================================== */
   function defaultSetup() {
-    return { subjects: META.subjects.map(function (s) { return s.id; }), status: 'all', order: 'seq', count: 'all', src: 'b' };
+    return { subjects: META.subjects.map(function (s) { return s.id; }), status: 'all', order: 'seq', count: 'all', src: 'b', qset: 'all' };
   }
   VIEWS.setup = function (p) {
     var cfg = Object.assign(defaultSetup(), store.setup || {});
@@ -563,6 +567,10 @@
         segBtn('src', 'b', '収録問題', cfg.src) + custom.packs.map(function (pk) { return segBtn('src', pk.id, pk.name, cfg.src); }).join('') + segBtn('src', 'all', 'すべて', cfg.src) + '</div></div>';
     }
 
+    if (SETS.length > 1 && (cfg.src === 'b' || cfg.src === 'all')) {
+      html += '<div class="field"><span class="lab">問題セット</span><div class="seg">' + segBtn('qset', 'all', 'すべて', cfg.qset) +
+        SETS.map(function (n) { return segBtn('qset', String(n), '第' + n + '回', cfg.qset); }).join('') + '</div></div>';
+    }
     html += '<div class="field"><span class="lab">科目（複数選択可）</span><div class="row" style="margin-bottom:8px">' +
       '<button class="btn small" data-act="subjAll" data-v="1">すべて選択</button><button class="btn small" data-act="subjAll" data-v="0">すべて解除</button>' +
       '<button class="btn small" data-act="subjCat" data-v="共通">共通科目</button><button class="btn small" data-act="subjCat" data-v="専門">専門科目</button></div>' +
@@ -608,7 +616,12 @@
   function setupMatches() {
     var cfg = store.setup, set = {};
     cfg.subjects.forEach(function (s) { set[s] = 1; });
-    return orderedIds(sourceIds(cfg.src).filter(function (id) { return set[BYID[id].subj] && matchStatus(id, cfg.status); }));
+    var qs = cfg.qset || 'all';
+    return orderedIds(sourceIds(cfg.src).filter(function (id) {
+      var q = BYID[id];
+      if (qs !== 'all' && q.src === 'b' && q.set !== +qs) return false;
+      return set[q.subj] && matchStatus(id, cfg.status);
+    }));
   }
   function updateSetupCount() {
     var cfg = store.setup;
@@ -663,7 +676,7 @@
     html += '<div class="progress" aria-hidden="true"><i style="width:' + (nAns / s.ids.length * 100) + '%"></i></div>';
 
     html += '<article class="qcard" id="qcard" aria-labelledby="qh">';
-    html += '<div class="qmeta"><span class="qno" id="qh">' + (isMock && q.gno && s.mock && s.mock.global ? '問題 ' + q.gno : '第' + (s.i + 1) + '問') + '</span>' +
+    html += '<div class="qmeta"><span class="qno" id="qh">' + (isMock && s.mock && s.mock.offset != null ? '問題 ' + (s.mock.offset + s.i + 1) : isMock && q.gno && s.mock && s.mock.global ? '問題 ' + q.gno : '第' + (s.i + 1) + '問') + '</span>' +
       '<span class="chip acc">' + esc(subjName(q)) + '</span>' +
       (q.topic ? '<span class="chip">' + esc(q.topic) + '</span>' : '') +
       (q.src !== 'b' ? '<span class="chip warn">取込: ' + esc(q.label || q.pack) + '</span>' : '') +
@@ -859,6 +872,13 @@
   ];
   VIEWS.mock = function () {
     var html = '<div class="wrap"><h1 class="page">模擬試験</h1><p class="lead">本番と同じく、最後にまとめて採点します。途中で解答を変えたり「見直し」印を付けたりできます。中断中は時間が止まります。</p>';
+    var ms = mockSetValue();
+    if (SETS.length > 1) {
+      html += '<div class="field"><span class="lab">問題セット</span><div class="seg">' +
+        SETS.map(function (n) { return segBtn('mockset', String(n), '第' + n + '回', ms); }).join('') +
+        segBtn('mockset', 'mix', 'ランダム組合せ', ms) + '</div>' +
+        '<p class="small muted" style="margin:8px 0 0">' + (ms === 'mix' ? '全' + SETS.length + '回分の問題から、本番と同じ科目別の出題数で毎回ランダムに組み合わせます。' : '第' + ms + '回の問題（本番と同じ129問の構成）で受験します。') + '</p></div>';
+    }
     html += '<div class="grid g2">' + MOCK_SCOPES.map(function (m) {
       return '<button class="mode" data-act="mockStart" data-scope="' + m.id + '"><span class="ic">' + icon('clock') + '</span><span class="t">' + m.t + '</span><span class="d">' + m.d + '</span><span class="n">' + m.min + '分</span></button>';
     }).join('') + '</div>';
@@ -894,28 +914,38 @@
     ms.forEach(function (m, i) { svg += '<circle cx="' + x(i) + '" cy="' + y(m.score) + '" r="4.5" fill="var(--accent)"/><text x="' + x(i) + '" y="' + (y(m.score) - 9) + '" font-size="11" text-anchor="middle" fill="currentColor">' + m.score + '</text>'; });
     return svg + '</svg>';
   }
-  function mockIds(scope, packId) {
+  function mockSetValue() {
+    var v = store.mockSet || String(SETS[0] || 1);
+    if (v !== 'mix' && SETS.indexOf(+v) < 0) v = String(SETS[0] || 1);
+    return v;
+  }
+  // set: '1' '2' … または 'mix'（全セットから本番の科目別出題数で抽出）
+  function mockIds(scope, packId, set) {
     if (scope === 'pack') return sourceIds(packId);
-    var ids = BUILTIN_IDS.slice();
-    if (scope === 'am') return ids.filter(function (id) { return SUBJ[BYID[id].subj].session === 'am'; });
-    if (scope === 'pm') return ids.filter(function (id) { return SUBJ[BYID[id].subj].session === 'pm'; });
-    if (scope === 'mini') {
-      var out = [];
-      META.subjects.forEach(function (sj) {
-        var pool = ids.filter(function (id) { return BYID[id].subj === sj.id; });
-        out = out.concat(shuffle(pool).slice(0, 2).sort(function (a, b) { return BYID[a].gno - BYID[b].gno; }));
-      });
-      return out;
-    }
-    return ids;
+    var pool = BUILTIN_IDS.filter(function (id) { return set === 'mix' || BYID[id].set === +set; });
+    var bySubj = function (sj, n) {
+      var p = pool.filter(function (id) { return BYID[id].subj === sj.id; });
+      if (set === 'mix' || n < p.length) p = shuffle(p).slice(0, n);
+      return p.sort(function (a, b) { return (BYID[a].set - BYID[b].set) || (BYID[a].gno - BYID[b].gno); });
+    };
+    var out = [];
+    META.subjects.forEach(function (sj) {
+      if (scope === 'am' && sj.session !== 'am') return;
+      if (scope === 'pm' && sj.session !== 'pm') return;
+      out = out.concat(bySubj(sj, scope === 'mini' ? 2 : sj.count));
+    });
+    return out;
   }
   function startMock(scope, packId) {
-    var ids = mockIds(scope, packId);
+    var set = mockSetValue();
+    var ids = mockIds(scope, packId, set);
     var sc = MOCK_SCOPES.filter(function (m) { return m.id === scope; })[0];
     var pack = custom.packs.filter(function (p) { return p.id === packId; })[0];
     var min = sc ? sc.min : Math.max(5, Math.round(ids.length * 225 / 129));
-    var label = sc ? sc.t : '取込: ' + (pack ? pack.name : '');
-    startSession({ kind: 'mock', title: '模擬試験｜' + label, ids: ids, shuffle: false, mock: { scope: scope, pack: packId || null, limit: min * 60, label: label, global: scope !== 'pack' } });
+    var label = sc ? sc.t + (SETS.length > 1 ? '・' + (set === 'mix' ? 'ランダム組合せ' : '第' + set + '回') : '') : '取込: ' + (pack ? pack.name : '');
+    // 「問題N」の通し番号：全科目・午前は1から、午後は85から（本番と同じ）
+    var offset = scope === 'full' || scope === 'am' ? 0 : scope === 'pm' ? 84 : null;
+    startSession({ kind: 'mock', title: '模擬試験｜' + label, ids: ids, shuffle: false, mock: { scope: scope, set: scope === 'pack' ? null : set, pack: packId || null, limit: min * 60, label: label, offset: offset } });
   }
   function gradeMock(auto) {
     var s = S(); if (!s || s.kind !== 'mock') return;
@@ -930,7 +960,7 @@
       sel[id] = p;
       if (p.length) recordAnswer(id, ok, null);
     });
-    var rec = { ts: Date.now(), scope: s.mock.scope, pack: s.mock.pack, label: s.mock.label, total: s.ids.length, score: score, dur: Math.min(s.elapsed, s.mock.limit * 1000), limit: s.mock.limit, bySubj: bySubj, ids: s.ids.slice(), sel: sel, auto: !!auto };
+    var rec = { ts: Date.now(), scope: s.mock.scope, set: s.mock.set || null, offset: s.mock.offset != null ? s.mock.offset : null, pack: s.mock.pack, label: s.mock.label, total: s.ids.length, score: score, dur: Math.min(s.elapsed, s.mock.limit * 1000), limit: s.mock.limit, bySubj: bySubj, ids: s.ids.slice(), sel: sel, auto: !!auto };
     store.mocks.push(rec);
     if (store.mocks.length > 30) store.mocks = store.mocks.slice(-30);
     s.done = true;
@@ -980,7 +1010,7 @@
       var q = BYID[id]; if (!q) return '';
       var sel = m.sel[id] || [], ok = sel.length && sameSet(sel, q.ans);
       return '<li><span class="mk ' + (!sel.length ? 'n' : ok ? 'o' : 'x') + '">' + (!sel.length ? '－' : ok ? '○' : '×') + '</span><button class="b" data-act="mockReview" data-i="' + p.i + '" data-at="' + i + '">' +
-        '<span class="muted tiny">' + (q.gno && m.scope !== 'pack' ? '問題' + q.gno + '｜' : '') + esc(subjName(q)) + (q.topic ? '｜' + esc(q.topic) : '') + '</span><span class="t">' + esc(plain(q.q)) + '</span></button></li>';
+        '<span class="muted tiny">' + (m.offset != null ? '問題' + (m.offset + i + 1) + '｜' : (q.gno && m.scope !== 'pack' && !m.set ? '問題' + q.gno + '｜' : '')) + esc(subjName(q)) + (q.topic ? '｜' + esc(q.topic) : '') + '</span><span class="t">' + esc(plain(q.q)) + '</span></button></li>';
     }).join('') + '</ul></div>';
     html += footer() + '</div>';
     setView(html);
@@ -1534,7 +1564,9 @@
         store.setup[k] = v;
         if (k === 'src') { save(); VIEWS.setup({}); return; }
         updateSetupCount();
-      } else if (k === 'oxstatus') { store.oxSetup.status = v; updateOxCount(); }
+      } else if (k === 'qset') { store.setup.qset = v; updateSetupCount(); }
+      else if (k === 'mockset') { store.mockSet = v; save(); VIEWS.mock(); }
+      else if (k === 'oxstatus') { store.oxSetup.status = v; updateOxCount(); }
       else if (k === 'oxcount') { store.oxSetup.count = v; updateOxCount(); }
       else if (k === 'theme' || k === 'font') { store.settings[k] = v; applyLook(); save(); }
     },

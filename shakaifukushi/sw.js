@@ -1,10 +1,11 @@
 /* 社会福祉士 国試ドリル  オフライン用 Service Worker
    同じサイト内のファイルだけをキャッシュする（外部への通信はしない）。
    ファイルを更新したら CACHE の版を上げること。 */
-var CACHE = 'swdrill-v1.0.0';
+var CACHE = 'swdrill-v1.1.0';
 var FILES = [
   './', './index.html', './style.css', './app.js', './manifest.webmanifest',
   './data/subjects.js', './data/g1.js', './data/g2.js', './data/g3.js', './data/g4.js', './data/g5.js', './data/g6.js',
+  './data/s2_g1.js', './data/s2_g2.js', './data/s2_g3.js', './data/s2_g4.js', './data/s2_g5.js', './data/s2_g6.js',
   './icons/icon.svg', './icons/icon-180.png', './icons/icon-192.png', './icons/icon-512.png'
 ];
 self.addEventListener('install', function (e) {
