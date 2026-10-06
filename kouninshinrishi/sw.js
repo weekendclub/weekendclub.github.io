@@ -2,10 +2,12 @@
    同じサイト内のファイルだけをキャッシュする（外部への通信はしない）。
    ファイルを更新したら CACHE の版を上げること。
    キャッシュ名の接頭辞は社会福祉士版（swdrill-）と分け、互いのキャッシュを消さないようにする。 */
-var CACHE = 'cppdrill-v1.0.0';
+var CACHE = 'cppdrill-v1.1.0';
 var FILES = [
   './', './index.html', './theme.css', '../drill/style.css', '../drill/app.js', './manifest.webmanifest',
   './data/subjects.js', './data/k1.js', './data/k2.js', './data/k3.js', './data/k4.js', './data/k5.js', './data/k6.js',
+  './data/s2_k1.js', './data/s2_k2.js', './data/s2_k3.js', './data/s2_k4.js', './data/s2_k5.js', './data/s2_k6.js',
+  './data/s3_k1.js', './data/s3_k2.js', './data/s3_k3.js', './data/s3_k4.js', './data/s3_k5.js', './data/s3_k6.js',
   './icons/icon.svg', './icons/icon-180.png', './icons/icon-192.png', './icons/icon-512.png'
 ];
 self.addEventListener('install', function (e) {

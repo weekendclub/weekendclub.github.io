@@ -198,6 +198,8 @@
     });
   }
   buildBank();
+  // 問題セットの表示名（例：公認心理師の「第2回（本試験レベル）」）。未設定なら「第N回」
+  function setName(n) { return (META.setNames && META.setNames[n]) || ('第' + n + '回'); }
   function qLabel(q) {
     if (q.label) return q.label;
     if (q.src === 'b') return SUBJ[q.subj].name + ' 問' + q.no;
@@ -579,7 +581,7 @@
 
     if (SETS.length > 1 && (cfg.src === 'b' || cfg.src === 'all')) {
       html += '<div class="field"><span class="lab">問題セット</span><div class="seg">' + segBtn('qset', 'all', 'すべて', cfg.qset) +
-        SETS.map(function (n) { return segBtn('qset', String(n), '第' + n + '回', cfg.qset); }).join('') + '</div></div>';
+        SETS.map(function (n) { return segBtn('qset', String(n), setName(n), cfg.qset); }).join('') + '</div></div>';
     }
     html += '<div class="field"><span class="lab">' + SL + '（複数選択可）</span><div class="row" style="margin-bottom:8px">' +
       '<button class="btn small" data-act="subjAll" data-v="1">すべて選択</button><button class="btn small" data-act="subjAll" data-v="0">すべて解除</button>' +
@@ -890,9 +892,9 @@
     var ms = mockSetValue();
     if (SETS.length > 1) {
       html += '<div class="field"><span class="lab">問題セット</span><div class="seg">' +
-        SETS.map(function (n) { return segBtn('mockset', String(n), '第' + n + '回', ms); }).join('') +
+        SETS.map(function (n) { return segBtn('mockset', String(n), setName(n), ms); }).join('') +
         segBtn('mockset', 'mix', 'ランダム組合せ', ms) + '</div>' +
-        '<p class="small muted" style="margin:8px 0 0">' + (ms === 'mix' ? '全' + SETS.length + '回分の問題から、本番と同じ構成で毎回ランダムに組み合わせます。' : '第' + ms + '回の問題（本番と同じ構成）で受験します。') + '</p></div>';
+        '<p class="small muted" style="margin:8px 0 0">' + (ms === 'mix' ? '全' + SETS.length + '回分の問題から、本番と同じ構成で毎回ランダムに組み合わせます。' : setName(ms) + 'の問題（本番と同じ構成）で受験します。' + (META.setNotes && META.setNotes[ms] ? META.setNotes[ms] : '')) + '</p></div>';
     }
     html += '<div class="grid g2">' + MOCK_SCOPES.map(function (m) {
       return '<button class="mode" data-act="mockStart" data-scope="' + m.id + '"><span class="ic">' + icon('clock') + '</span><span class="t">' + m.t + '</span><span class="d">' + m.d + '</span><span class="n">' + m.min + '分</span></button>';
@@ -930,7 +932,7 @@
     return svg + '</svg>';
   }
   function mockSetValue() {
-    var v = store.mockSet || String(SETS[0] || 1);
+    var v = store.mockSet || String(MOCK.defaultSet || SETS[0] || 1);
     if (v !== 'mix' && SETS.indexOf(+v) < 0) v = String(SETS[0] || 1);
     return v;
   }
@@ -958,7 +960,7 @@
     var sc = MOCK_SCOPES.filter(function (m) { return m.id === scope; })[0];
     var pack = custom.packs.filter(function (p) { return p.id === packId; })[0];
     var min = sc ? sc.min : Math.max(5, Math.round(ids.length * MOCK.minPerQ));
-    var label = sc ? sc.t + (SETS.length > 1 ? '・' + (set === 'mix' ? 'ランダム組合せ' : '第' + set + '回') : '') : '取込: ' + (pack ? pack.name : '');
+    var label = sc ? sc.t + (SETS.length > 1 ? '・' + (set === 'mix' ? 'ランダム組合せ' : setName(set)) : '') : '取込: ' + (pack ? pack.name : '');
     // 「問題N」の通し番号（本番と同じ番号。午後のみなら午前の問題数の次から）
     var offset = sc && sc.offset != null ? sc.offset : null;
     startSession({ kind: 'mock', title: '模擬試験｜' + label, ids: ids, shuffle: false, mock: { scope: scope, set: scope === 'pack' ? null : set, pack: packId || null, limit: min * 60, label: label, offset: offset } });
