@@ -1,11 +1,11 @@
-/* 社会福祉士 国試ドリル  オフライン用 Service Worker
+/* 公認心理師 国試ドリル  オフライン用 Service Worker
    同じサイト内のファイルだけをキャッシュする（外部への通信はしない）。
-   ファイルを更新したら CACHE の版を上げること。 */
-var CACHE = 'swdrill-v1.2.0';
+   ファイルを更新したら CACHE の版を上げること。
+   キャッシュ名の接頭辞は社会福祉士版（swdrill-）と分け、互いのキャッシュを消さないようにする。 */
+var CACHE = 'cppdrill-v1.0.0';
 var FILES = [
-  './', './index.html', '../drill/style.css', '../drill/app.js', './manifest.webmanifest',
-  './data/subjects.js', './data/g1.js', './data/g2.js', './data/g3.js', './data/g4.js', './data/g5.js', './data/g6.js',
-  './data/s2_g1.js', './data/s2_g2.js', './data/s2_g3.js', './data/s2_g4.js', './data/s2_g5.js', './data/s2_g6.js',
+  './', './index.html', './theme.css', '../drill/style.css', '../drill/app.js', './manifest.webmanifest',
+  './data/subjects.js', './data/k1.js', './data/k2.js', './data/k3.js', './data/k4.js', './data/k5.js', './data/k6.js',
   './icons/icon.svg', './icons/icon-180.png', './icons/icon-192.png', './icons/icon-512.png'
 ];
 self.addEventListener('install', function (e) {
@@ -13,7 +13,7 @@ self.addEventListener('install', function (e) {
 });
 self.addEventListener('activate', function (e) {
   e.waitUntil(caches.keys().then(function (keys) {
-    return Promise.all(keys.filter(function (k) { return k.indexOf('swdrill-') === 0 && k !== CACHE; }).map(function (k) { return caches.delete(k); }));
+    return Promise.all(keys.filter(function (k) { return k.indexOf('cppdrill-') === 0 && k !== CACHE; }).map(function (k) { return caches.delete(k); }));
   }).then(function () { return self.clients.claim(); }));
 });
 // ネットワーク優先（最新を取得）→ 失敗したらキャッシュ。オフラインでも起動できる。

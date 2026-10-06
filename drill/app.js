@@ -1,5 +1,7 @@
 /* =========================================================================
-   社会福祉士 国試ドリル  app.js
+   国試ドリル 共通エンジン  drill/app.js
+   ・社会福祉士・公認心理師など、試験ごとの違いは各アプリの data/subjects.js の
+     SW_META（app／exam／subjects／groups／mock）で設定する。
    ・広告なし／外部通信なし。学習データはこの端末のブラウザ（localStorage）だけに保存。
    ・画面：ホーム／演習（出題設定→解答）／一問一答／模擬試験／一覧・検索／学習記録／設定／使い方
    ========================================================================= */
@@ -8,16 +10,22 @@
 
   var META = window.SW_META;
   var BUILTIN = window.SW_BANK || [];
-  var LS_KEY = 'swdrill.v1';
-  var LS_CUSTOM = 'swdrill.custom.v1';
-  var APP_VERSION = '1.1.0';
+  var APP = META.app;                      // アプリ名・保存キー・文言
+  var MOCK = META.mock;                    // 模擬試験の構成・配点・判定
+  var APPID = APP.storeKey;                // 書き出しファイルの識別子にも使う
+  var LS_KEY = APPID + '.v1';
+  var LS_CUSTOM = APPID + '.custom.v1';
+  var APP_VERSION = APP.version;
+  var GROUP_LABEL = META.groupLabel || '科目群';
+  var SL = META.subjLabel || '科目';          // 出題の単位の呼び名（公認心理師は「大項目」）
+  function points(q) { return MOCK.points ? MOCK.points(q) : 1; }
 
   /* ---------------------------------------------------------------------
      科目
      --------------------------------------------------------------------- */
   var SUBJ = {};
   META.subjects.forEach(function (s, i) { s.order = i; SUBJ[s.id] = s; });
-  var OTHER = { id: 'other', name: '取り込んだ問題（科目未設定）', short: 'その他', cat: '追加', group: 0, count: 0, session: '', order: 99 };
+  var OTHER = { id: 'other', name: '取り込んだ問題（' + SL + '未設定）', short: 'その他', cat: '追加', group: 0, count: 0, session: '', order: 99 };
   SUBJ.other = OTHER;
   var GROUP_OF = {};
   META.groups.forEach(function (g) { g.subjects.forEach(function (sid) { GROUP_OF[sid] = g.id; }); });
@@ -168,11 +176,13 @@
       BANK.push(q); BYID[q.id] = q; BUILTIN_IDS.push(q.id);
     });
     SETS.sort();
-    // セットごとに本番と同じ並び（科目順）の通し番号（問題1〜129）
+    // セットごとに本番と同じ並びの通し番号（社会福祉士は科目順で問題1〜129）。
+    // 試験ごとに並びが違う場合は META.order(問題の配列) で並べ替える（公認心理師：午前の一般→事例→午後の一般→事例）
     var ordered = BUILTIN_IDS.slice().sort(function (a, b) {
       var A = BYID[a], B = BYID[b];
       return (A.set - B.set) || (SUBJ[A.subj].order - SUBJ[B.subj].order) || (A.no - B.no);
     });
+    if (META.order) ordered = META.order(ordered.map(function (id) { return BYID[id]; })).map(function (q) { return q.id; });
     var seq = {};
     ordered.forEach(function (id) { var q = BYID[id]; seq[q.set] = (seq[q.set] || 0) + 1; q.gno = seq[q.set]; });
     BUILTIN_IDS = ordered;
@@ -360,7 +370,7 @@
   window.addEventListener('hashchange', route);
   function setView(html) { $('#view').innerHTML = html; }
   function footer() {
-    return '<div class="footer">社会福祉士 国試ドリル v' + APP_VERSION + '　｜　広告なし・登録不要・学習データはこの端末にのみ保存<br>' +
+    return '<div class="footer">' + esc(APP.name) + ' v' + APP_VERSION + '　｜　広告なし・登録不要・学習データはこの端末にのみ保存<br>' +
       '収録問題は独自作成の練習問題です（実際の過去問ではありません）。<a href="#/help">使い方・ご注意</a>　<a href="../">weekendclub</a></div>';
   }
 
@@ -462,7 +472,7 @@
   VIEWS.home = function () {
     var set = store.settings, today = dkey();
     var exam = set.examDate || META.exam.date;
-    var left = daysBetween(today, exam);
+    var left = exam ? daysBetween(today, exam) : -1;
     var td = store.days[today] || { n: 0, c: 0 };
     var goal = Math.max(1, +set.dailyGoal || 20);
     var due = dueIds().length;
@@ -472,11 +482,10 @@
     var cur = sessionInProgress();
     var html = '<div class="wrap">';
 
-    if (today <= META.exam.applyUntil) {
+    if (META.exam.applyUntil && today <= META.exam.applyUntil) {
       var dl = daysBetween(today, META.exam.applyUntil);
-      html += '<div class="banner"><span class="bi">' + icon('mail') + '</span><span><b>第39回の受験申込は ' + jaDate(META.exam.applyUntil).replace(/^\d+年/, '') + ' まで</b>' +
-        (dl === 0 ? '（<b>本日締切</b>・インターネット申込は23:59まで）' : '（あと' + dl + '日）') +
-        '。手続きは社会福祉振興・試験センターの公式サイトで。</span></div>';
+      html += '<div class="banner"><span class="bi">' + icon('mail') + '</span><span><b>' + esc(META.exam.applyLabel || '受験申込') + 'は ' + jaDate(META.exam.applyUntil).replace(/^\d+年/, '') + ' まで</b>' +
+        (dl === 0 ? '（<b>本日締切</b>）' : '（あと' + dl + '日）') + (META.exam.applyNote ? '。' + esc(META.exam.applyNote) : '') + '</span></div>';
     }
     if (!canStore) html += '<div class="banner"><span class="bi">' + icon('alert') + '</span><span>この環境ではブラウザに保存できないため、ページを閉じると学習記録が消えます（プライベートブラウズ等）。</span></div>';
     if (cur) {
@@ -488,9 +497,9 @@
 
     html += '<div class="hero">' +
       '<div class="card count-card"><div class="k">' + esc(META.exam.name) + '</div>' +
-      (left >= 0 ? '<div class="big num">あと ' + left + '<small>日</small></div>' : '<div class="big">試験日を設定</div>') +
-      '<div class="d">試験日 ' + jaDate(exam) + (exam !== META.exam.date ? '（設定で変更済み）' : '') + '</div>' +
-      '<div class="d small" style="margin-top:6px">129問・225分（午前140分／午後85分）・6科目群すべてで得点が必要</div></div>' +
+      (exam && left >= 0 ? '<div class="big num">あと ' + left + '<small>日</small></div>' : '<div class="big" style="font-size:1.6em">' + (exam ? '試験日を過ぎました' : '試験日を設定') + '</div>') +
+      '<div class="d">' + (exam ? '試験日 ' + jaDate(exam) + (exam !== META.exam.date ? '（設定で変更済み）' : '') : esc(META.exam.dateNote || '設定で試験日を入力すると、残り日数を表示します')) + '</div>' +
+      '<div class="d small" style="margin-top:6px">' + esc(APP.heroNote) + '</div></div>' +
       '<div class="card today"><div class="row between"><b>今日の学習</b><a class="small" href="#/stats">記録を見る</a></div>' +
       '<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="' + goal + '" aria-valuenow="' + td.n + '"><i style="width:' + Math.min(100, td.n / goal * 100) + '%"></i></div>' +
       '<div class="small"><b class="num">' + td.n + '</b> / ' + goal + '問' + (td.n >= goal ? '　<span class="chip ok">目標達成</span>' : '') + '</div>' +
@@ -501,17 +510,17 @@
 
     html += '<h2 class="sec">学習モード</h2><div class="modes">' +
       modeCard('repeat', '今日の復習', '間違えた・あいまいだった問題を、忘れかけの頃に再出題（間隔反復）。', due ? due + '問が復習時期' : '復習予定はまだありません', 'quick', 'due', due > 0) +
-      modeCard('list', '科目別演習', '科目・出題数・出題順・絞り込みを選んで解く。過去問サイトの「出題範囲を選択」にあたる機能。', BANK.length + '問から選択', 'href', '#/setup') +
-      modeCard('shuffle', 'ランダム10問', '全科目からランダムに10問。すき間時間に。', 'すぐ始める', 'quick', 'rand10') +
+      modeCard('list', SL + '別演習', SL + '・出題数・出題順・絞り込みを選んで解く。過去問サイトの「出題範囲を選択」にあたる機能。', BANK.length + '問から選択', 'href', '#/setup') +
+      modeCard('shuffle', 'ランダム10問', '全' + SL + 'からランダムに10問。すき間時間に。', 'すぐ始める', 'quick', 'rand10') +
       modeCard('ox', '一問一答（○×）', '選択肢を1文ずつ○×で判定。知識の穴が見つかる。', oxAll(null).length + '文', 'href', '#/ox') +
-      modeCard('clock', '模擬試験', '本番どおり129問・225分。6科目群の0点判定つき。ミニ模試・午前のみ・午後のみも。', (store.mocks.length ? '受験 ' + store.mocks.length + '回' : '時間を計って挑戦'), 'href', '#/mock') +
+      modeCard('clock', '模擬試験', esc(APP.mockCard), (store.mocks.length ? '受験 ' + store.mocks.length + '回' : '時間を計って挑戦'), 'href', '#/mock') +
       modeCard('target', '苦手克服', '前回不正解・正答率60%未満・「自信なし」の問題だけ。', weak ? weak + '問' : 'まだありません', 'quick', 'weak', weak > 0) +
       modeCard('flag', '付箋した問題', '付箋を付けた問題だけを解き直す。', flags ? flags + '問' : 'まだありません', 'quick', 'flag', flags > 0) +
       modeCard('star', '未解答の問題から', 'まだ解いていない問題を10問ずつ。', unanswered + '問が未解答', 'quick', 'new', unanswered > 0) +
       modeCard('search', '一覧・検索', 'キーワードで問題と解説を横断検索。印刷用の問題用紙も作れる。', '', 'href', '#/list') +
       '</div>';
 
-    html += '<h2 class="sec">科目別の進み具合 <span class="sub">科目名をタップするとその科目を演習</span></h2><div class="card" style="padding:10px 12px">' + subjTable(BUILTIN_IDS) + '</div>';
+    html += '<h2 class="sec">' + SL + '別の進み具合 <span class="sub">' + SL + '名をタップするとその' + SL + 'を演習</span></h2><div class="card" style="padding:10px 12px">' + subjTable(BUILTIN_IDS) + '</div>';
 
     if (custom.packs.length) {
       html += '<h2 class="sec">取り込んだ問題</h2><div class="card">' + custom.packs.map(function (p) {
@@ -521,7 +530,8 @@
       }).join('') + '</div>';
     }
 
-    html += '<div class="notice" style="margin-top:24px"><strong>収録問題について：</strong>本アプリの問題は、社会福祉士国家試験の出題基準（19科目）と出題形式に沿って<strong>独自に作成した練習問題</strong>です（実際の過去問ではありません）。本番と同じ構成（科目ごとに6問または9問・計129問）のセットを' + SETS.length + '回分（' + BUILTIN.length + '問）収録しています。お持ちの過去問データは「設定 → 問題データの取り込み」から、<strong>この端末の中だけ</strong>に追加して使えます。</div>';
+    html += '<div class="notice" style="margin-top:24px"><strong>収録問題について：</strong>' + APP.notice(SETS.length, BUILTIN.length) + 'お持ちの過去問データは「設定 → 問題データの取り込み」から、<strong>この端末の中だけ</strong>に追加して使えます。</div>';
+    if (APP.homeExtra) html += APP.homeExtra;
     html += footer() + '</div>';
     setView(html);
   };
@@ -533,9 +543,9 @@
   }
   function subjTable(ids) {
     var ss = subjStats(ids);
-    var h = '<table class="subj-table"><thead><tr><th>科目</th><th class="r">解答済</th><th style="width:34%">正答率（累計）</th><th class="r">%</th></tr></thead><tbody>';
+    var h = '<table class="subj-table"><thead><tr><th>' + SL + '</th><th class="r">解答済</th><th style="width:34%">正答率（累計）</th><th class="r">%</th></tr></thead><tbody>';
     META.groups.forEach(function (g) {
-      h += '<tr class="grp"><td colspan="4">' + g.name + '　' + (g.id <= 4 ? '共通科目' : '専門科目') + '</td></tr>';
+      h += '<tr class="grp"><td colspan="4">' + esc(g.name) + (g.note ? '　' + esc(g.note) : '') + '</td></tr>';
       g.subjects.forEach(function (sid) {
         var o = ss[sid] || { total: 0, done: 0, n: 0, c: 0 };
         var p = pct(o.c, o.n);
@@ -552,7 +562,7 @@
      画面：出題設定（演習）
      ===================================================================== */
   function defaultSetup() {
-    return { subjects: META.subjects.map(function (s) { return s.id; }), status: 'all', order: 'seq', count: 'all', src: 'b', qset: 'all' };
+    return { subjects: META.subjects.map(function (s) { return s.id; }), status: 'all', order: 'seq', count: 'all', src: 'b', qset: 'all', kind: 'all' };
   }
   VIEWS.setup = function (p) {
     var cfg = Object.assign(defaultSetup(), store.setup || {});
@@ -560,7 +570,7 @@
     if (p.status) cfg.status = p.status;
     if (cfg.src !== 'b' && cfg.src !== 'all' && !custom.packs.some(function (pk) { return pk.id === cfg.src; })) cfg.src = 'b';
     store.setup = cfg;
-    var html = '<div class="wrap"><h1 class="page">科目別演習</h1><p class="lead">出題範囲と条件を選んで「演習スタート」。1問ごとに正誤と解説が表示されます。</p>';
+    var html = '<div class="wrap"><h1 class="page">' + SL + '別演習</h1><p class="lead">出題範囲と条件を選んで「演習スタート」。1問ごとに正誤と解説が表示されます。</p>';
 
     if (custom.packs.length) {
       html += '<div class="field"><span class="lab">問題の種類</span><div class="seg" id="srcSeg">' +
@@ -571,14 +581,14 @@
       html += '<div class="field"><span class="lab">問題セット</span><div class="seg">' + segBtn('qset', 'all', 'すべて', cfg.qset) +
         SETS.map(function (n) { return segBtn('qset', String(n), '第' + n + '回', cfg.qset); }).join('') + '</div></div>';
     }
-    html += '<div class="field"><span class="lab">科目（複数選択可）</span><div class="row" style="margin-bottom:8px">' +
+    html += '<div class="field"><span class="lab">' + SL + '（複数選択可）</span><div class="row" style="margin-bottom:8px">' +
       '<button class="btn small" data-act="subjAll" data-v="1">すべて選択</button><button class="btn small" data-act="subjAll" data-v="0">すべて解除</button>' +
-      '<button class="btn small" data-act="subjCat" data-v="共通">共通科目</button><button class="btn small" data-act="subjCat" data-v="専門">専門科目</button></div>' +
+      (META.cats || []).map(function (c) { return '<button class="btn small" data-act="subjCat" data-v="' + esc(c[0]) + '">' + esc(c[1]) + '</button>'; }).join('') + '</div>' +
       '<div class="subj-pick">';
     var ss = subjStats(sourceIds(cfg.src));
     META.groups.forEach(function (g) {
-      html += '<div class="grp-box"><div class="grp-head">' + g.name + '<span class="muted" style="font-weight:400">' + (g.id <= 4 ? '共通科目' : '専門科目') + '</span><span class="spacer"></span>' +
-        '<button class="linkbtn" data-act="grpToggle" data-g="' + g.id + '">この群を切替</button></div><div class="grp-items">';
+      html += '<div class="grp-box"><div class="grp-head">' + esc(g.name) + '<span class="muted" style="font-weight:400">' + esc(g.note || '') + '</span><span class="spacer"></span>' +
+        '<button class="linkbtn" data-act="grpToggle" data-g="' + g.id + '">まとめて切替</button></div><div class="grp-items">';
       g.subjects.forEach(function (sid) {
         var o = ss[sid] || { total: 0, done: 0 };
         html += '<label class="chk"><input type="checkbox" name="subj" value="' + sid + '"' + (cfg.subjects.indexOf(sid) >= 0 ? ' checked' : '') + '>' +
@@ -593,6 +603,11 @@
 
     html += '<div class="field"><span class="lab">絞り込み</span><select class="inp" id="statusSel">' +
       STATUS_FILTERS.map(function (f) { return '<option value="' + f[0] + '"' + (cfg.status === f[0] ? ' selected' : '') + '>' + f[1] + '</option>'; }).join('') + '</select></div>';
+    // 一般問題／事例問題（事例問題が収録されている場合だけ表示）
+    if (BANK.some(function (q) { return q.case; })) {
+      html += '<div class="field"><span class="lab">問題の形式</span><div class="seg">' + segBtn('kind', 'all', 'すべて', cfg.kind || 'all') + segBtn('kind', 'gen', '一般問題', cfg.kind) +
+        segBtn('kind', 'case', '事例問題' + (APP.casePoints ? '（' + APP.casePoints + '）' : ''), cfg.kind) + '</div></div>';
+    }
     html += '<div class="grid g2 stack-s"><div class="field"><span class="lab">出題順</span><div class="seg">' +
       segBtn('order', 'seq', '番号順', cfg.order) + segBtn('order', 'rand', 'ランダム', cfg.order) + '</div></div>' +
       '<div class="field"><span class="lab">出題数</span><div class="seg">' +
@@ -620,6 +635,8 @@
     return orderedIds(sourceIds(cfg.src).filter(function (id) {
       var q = BYID[id];
       if (qs !== 'all' && q.src === 'b' && q.set !== +qs) return false;
+      if (cfg.kind === 'gen' && q.case) return false;
+      if (cfg.kind === 'case' && !q.case) return false;
       return set[q.subj] && matchStatus(id, cfg.status);
     }));
   }
@@ -630,7 +647,7 @@
     var ids = setupMatches();
     var n = cfg.count === 'all' ? ids.length : Math.min(ids.length, +cfg.count);
     $('#matchN').textContent = n;
-    $('#matchSub').textContent = '該当 ' + ids.length + '問・' + cfg.subjects.length + '科目';
+    $('#matchSub').textContent = '該当 ' + ids.length + '問・' + cfg.subjects.length + SL;
     $('#goBtn').disabled = n === 0;
     save();
   }
@@ -643,7 +660,7 @@
   function emphasize(text) {
     var h = fmt(text);
     if (!store.settings.emphasize) return h;
-    return h.replace(/(誤っているもの|正しくないもの|適切でないもの|不適切なもの|該当しないもの|含まれないもの|2つ選びなさい|２つ選びなさい)/g, '<span class="key">$1</span>');
+    return h.replace(/(誤っているもの|正しくないもの|適切でないもの|不適切なもの|該当しないもの|含まれないもの|2つ選びなさい|２つ選びなさい|2つ選べ|２つ選べ)/g, '<span class="key">$1</span>');
   }
   VIEWS.play = function () {
     var s = S();
@@ -679,10 +696,13 @@
     html += '<div class="qmeta"><span class="qno" id="qh">' + (isMock && s.mock && s.mock.offset != null ? '問題 ' + (s.mock.offset + s.i + 1) : isMock && q.gno && s.mock && s.mock.global ? '問題 ' + q.gno : '第' + (s.i + 1) + '問') + '</span>' +
       '<span class="chip acc">' + esc(subjName(q)) + '</span>' +
       (q.topic ? '<span class="chip">' + esc(q.topic) + '</span>' : '') +
+      (q.case && APP.casePoints ? '<span class="chip">事例問題・' + esc(APP.casePoints) + '</span>' : '') +
       (q.src !== 'b' ? '<span class="chip warn">取込: ' + esc(q.label || q.pack) + '</span>' : '') +
       (store.flags[q.id] ? '<span class="chip flag">付箋</span>' : '') + '</div>';
-    html += '<p class="qtext">' + emphasize(q.q) + '</p>';
-    if (q.case) html += '<div class="qcase"><span class="k">事例</span>' + fmt(q.case) + '</div>';
+    // 事例の位置：社会福祉士は「問い→事例」、公認心理師は「事例→問い」（APP.caseFirst）
+    var caseHtml = q.case ? '<div class="qcase"><span class="k">事例</span>' + fmt(q.case) + '</div>' : '';
+    if (APP.caseFirst) html += caseHtml + '<p class="qtext">' + emphasize(q.q) + '</p>';
+    else html += '<p class="qtext">' + emphasize(q.q) + '</p>' + caseHtml;
     if (need > 1 && !answered) html += '<div class="multi-hint">' + need + 'つ選んでください（' + pick.length + '/' + need + '）</div>';
 
     html += '<ol class="opts" role="list">';
@@ -808,7 +828,7 @@
       if (isMock) { if (s.pick[id] && s.pick[id].length) cls.push('ans'); if (s.rev[id]) cls.push('rev'); }
       else if (s.ans[id]) cls.push(s.ans[id].ok ? 'o' : 'x');
       if (i === s.i) cls.push('cur');
-      h += '<button class="' + cls.join(' ') + '" data-act="jump" data-i="' + i + '" aria-label=""' + (i + 1) + '問目へ">' + (i + 1) + '</button>';
+      h += '<button class="' + cls.join(' ') + '" data-act="jump" data-i="' + i + '" aria-label="' + (i + 1) + '問目へ">' + (i + 1) + '</button>';
     });
     h += '</div>';
     if (isMock) {
@@ -847,7 +867,7 @@
     ids.forEach(function (id) { var q = BYID[id]; var o = by[q.subj] || (by[q.subj] = { n: 0, c: 0 }); o.n++; if (s.ans[id] && s.ans[id].ok) o.c++; });
     var keys = Object.keys(by).sort(function (a, b) { return SUBJ[a].order - SUBJ[b].order; });
     if (keys.length > 1) {
-      html += '<h2 class="sec">科目別</h2><div class="card"><div class="bars">' + keys.map(function (k) {
+      html += '<h2 class="sec">' + SL + '別</h2><div class="card"><div class="bars">' + keys.map(function (k) {
         var pp = pct(by[k].c, by[k].n);
         return '<div class="brow"><span class="lab">' + esc(SUBJ[k].name) + '</span><div class="meter"><i class="' + (pp >= 60 ? 'ok' : pp >= 40 ? 'warn' : 'ng') + '" style="width:' + pp + '%"></i><span class="line60"></span></div><span class="val">' + by[k].c + '/' + by[k].n + '</span></div>';
       }).join('') + '</div></div>';
@@ -864,12 +884,7 @@
   /* =====================================================================
      画面：模擬試験
      ===================================================================== */
-  var MOCK_SCOPES = [
-    { id: 'full', t: '本番形式（全科目）', d: '129問・225分。午前（共通84問）→午後（専門45問）の順。', min: 225 },
-    { id: 'am', t: '午前のみ（共通科目）', d: '84問・140分。科目群①〜④。', min: 140 },
-    { id: 'pm', t: '午後のみ（専門科目）', d: '45問・85分。科目群⑤⑥。', min: 85 },
-    { id: 'mini', t: 'ミニ模試', d: '各科目2問ずつ・38問・66分（本番と同じ1問あたりの時間）。', min: 66 }
-  ];
+  var MOCK_SCOPES = MOCK.scopes;
   VIEWS.mock = function () {
     var html = '<div class="wrap"><h1 class="page">模擬試験</h1><p class="lead">本番と同じく、最後にまとめて採点します。途中で解答を変えたり「見直し」印を付けたりできます。中断中は時間が止まります。</p>';
     var ms = mockSetValue();
@@ -877,20 +892,20 @@
       html += '<div class="field"><span class="lab">問題セット</span><div class="seg">' +
         SETS.map(function (n) { return segBtn('mockset', String(n), '第' + n + '回', ms); }).join('') +
         segBtn('mockset', 'mix', 'ランダム組合せ', ms) + '</div>' +
-        '<p class="small muted" style="margin:8px 0 0">' + (ms === 'mix' ? '全' + SETS.length + '回分の問題から、本番と同じ科目別の出題数で毎回ランダムに組み合わせます。' : '第' + ms + '回の問題（本番と同じ129問の構成）で受験します。') + '</p></div>';
+        '<p class="small muted" style="margin:8px 0 0">' + (ms === 'mix' ? '全' + SETS.length + '回分の問題から、本番と同じ構成で毎回ランダムに組み合わせます。' : '第' + ms + '回の問題（本番と同じ構成）で受験します。') + '</p></div>';
     }
     html += '<div class="grid g2">' + MOCK_SCOPES.map(function (m) {
       return '<button class="mode" data-act="mockStart" data-scope="' + m.id + '"><span class="ic">' + icon('clock') + '</span><span class="t">' + m.t + '</span><span class="d">' + m.d + '</span><span class="n">' + m.min + '分</span></button>';
     }).join('') + '</div>';
     if (custom.packs.length) {
       html += '<h2 class="sec">取り込んだ問題で模試</h2><div class="grid g2">' + custom.packs.map(function (p) {
-        var min = Math.max(5, Math.round(p.qs.length * 225 / 129));
+        var min = Math.max(5, Math.round(p.qs.length * MOCK.minPerQ));
         return '<button class="mode" data-act="mockStart" data-scope="pack" data-pack="' + esc(p.id) + '"><span class="ic">' + icon('book') + '</span><span class="t">' + esc(p.name) + '</span><span class="d">' + p.qs.length + '問・' + min + '分（本番の1問あたり時間で換算）</span></button>';
       }).join('') + '</div>';
     }
-    html += '<div class="notice" style="margin-top:18px"><strong>採点と合否判定：</strong>本番の合格基準は「総得点の60%程度を基準に、問題の難易度で補正した点数以上」かつ「<strong>6科目群すべてで得点があること</strong>」です。補正後の合格点は第37回が62点（48.1%）、第38回が50点（38.8%）でした。本アプリでは補正前の60%を目安ラインとして判定し、科目群に0点があれば「不合格（0点科目群あり）」と表示します。</div>';
+    html += '<div class="notice" style="margin-top:18px"><strong>採点と合否判定：</strong>' + MOCK.noticeHtml + '</div>';
     if (store.mocks.length) {
-      html += '<h2 class="sec">受験履歴</h2><div class="card" style="padding:6px 14px; overflow-x:auto"><table class="tbl"><thead><tr><th>日時</th><th>種類</th><th class="r">得点</th><th class="r">正答率</th><th class="r">時間</th><th></th></tr></thead><tbody>' +
+      html += '<h2 class="sec">受験履歴</h2><div class="card" style="padding:6px 14px; overflow-x:auto"><table class="tbl"><thead><tr><th>日時</th><th>種類</th><th class="r">得点</th><th class="r">得点率</th><th class="r">時間</th><th></th></tr></thead><tbody>' +
         store.mocks.map(function (m, i) { return { m: m, i: i }; }).reverse().map(function (x) {
           var m = x.m;
           return '<tr><td class="num small">' + fmtDate(m.ts) + '</td><td class="small">' + esc(m.label) + '</td><td class="r num"><b>' + m.score + '</b>/' + m.total + '</td><td class="r num">' + pct(m.score, m.total) + '%</td><td class="r num small">' + fmtDurJa(m.dur) + '</td>' +
@@ -903,11 +918,11 @@
   };
   function mockTrend() {
     var ms = store.mocks.filter(function (m) { return m.scope === 'full'; }).slice(-12);
-    if (ms.length < 1) return '<p class="small muted">本番形式（全科目）を受けると、得点の推移がここに表示されます。</p>';
-    var W = 600, H = 180, pad = 28, max = 129;
+    if (ms.length < 1) return '<p class="small muted">' + esc(MOCK_SCOPES[0].t) + 'を受けると、得点の推移がここに表示されます。</p>';
+    var W = 600, H = 180, pad = 28, max = MOCK.trendMax;
     var x = function (i) { return pad + (ms.length === 1 ? (W - 2 * pad) / 2 : i * (W - 2 * pad) / (ms.length - 1)); };
     var y = function (v) { return H - pad - v / max * (H - 2 * pad); };
-    var lines = [[77, '60%'], [62, '第37回'], [50, '第38回']];
+    var lines = MOCK.refLines || [];
     var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" style="width:100%;height:auto" role="img" aria-label="模擬試験の得点の推移">';
     lines.forEach(function (l) { svg += '<line x1="' + pad + '" x2="' + (W - pad) + '" y1="' + y(l[0]) + '" y2="' + y(l[0]) + '" stroke="currentColor" stroke-opacity=".25" stroke-dasharray="4 4"/><text x="' + (W - pad) + '" y="' + (y(l[0]) - 4) + '" font-size="11" text-anchor="end" fill="currentColor" fill-opacity=".6">' + l[1] + ' ' + l[0] + '点</text>'; });
     svg += '<polyline fill="none" stroke="var(--accent)" stroke-width="2.5" points="' + ms.map(function (m, i) { return x(i) + ',' + y(m.score); }).join(' ') + '"/>';
@@ -923,6 +938,7 @@
   function mockIds(scope, packId, set) {
     if (scope === 'pack') return sourceIds(packId);
     var pool = BUILTIN_IDS.filter(function (id) { return set === 'mix' || BYID[id].set === +set; });
+    if (MOCK.build) return MOCK.build(scope, pool, { BYID: BYID, SUBJ: SUBJ, subjects: META.subjects, shuffle: shuffle, mix: set === 'mix' });
     var bySubj = function (sj, n) {
       var p = pool.filter(function (id) { return BYID[id].subj === sj.id; });
       if (set === 'mix' || n < p.length) p = shuffle(p).slice(0, n);
@@ -941,26 +957,28 @@
     var ids = mockIds(scope, packId, set);
     var sc = MOCK_SCOPES.filter(function (m) { return m.id === scope; })[0];
     var pack = custom.packs.filter(function (p) { return p.id === packId; })[0];
-    var min = sc ? sc.min : Math.max(5, Math.round(ids.length * 225 / 129));
+    var min = sc ? sc.min : Math.max(5, Math.round(ids.length * MOCK.minPerQ));
     var label = sc ? sc.t + (SETS.length > 1 ? '・' + (set === 'mix' ? 'ランダム組合せ' : '第' + set + '回') : '') : '取込: ' + (pack ? pack.name : '');
-    // 「問題N」の通し番号：全科目・午前は1から、午後は85から（本番と同じ）
-    var offset = scope === 'full' || scope === 'am' ? 0 : scope === 'pm' ? 84 : null;
+    // 「問題N」の通し番号（本番と同じ番号。午後のみなら午前の問題数の次から）
+    var offset = sc && sc.offset != null ? sc.offset : null;
     startSession({ kind: 'mock', title: '模擬試験｜' + label, ids: ids, shuffle: false, mock: { scope: scope, set: scope === 'pack' ? null : set, pack: packId || null, limit: min * 60, label: label, offset: offset } });
   }
   function gradeMock(auto) {
     var s = S(); if (!s || s.kind !== 'mock') return;
     tickTimer(); stopTimer();
-    var score = 0, bySubj = {}, sel = {};
+    var score = 0, total = 0, nc = 0, bySubj = {}, sel = {};
     s.ids.forEach(function (id) {
       var q = BYID[id]; if (!q) return;
       var p = s.pick[id] || [];
       var ok = p.length > 0 && sameSet(p, q.ans);
-      if (ok) score++;
+      var pt = points(q);
+      total += pt;
+      if (ok) { score += pt; nc++; }
       var o = bySubj[q.subj] || (bySubj[q.subj] = [0, 0]); o[1]++; if (ok) o[0]++;
       sel[id] = p;
       if (p.length) recordAnswer(id, ok, null);
     });
-    var rec = { ts: Date.now(), scope: s.mock.scope, set: s.mock.set || null, offset: s.mock.offset != null ? s.mock.offset : null, pack: s.mock.pack, label: s.mock.label, total: s.ids.length, score: score, dur: Math.min(s.elapsed, s.mock.limit * 1000), limit: s.mock.limit, bySubj: bySubj, ids: s.ids.slice(), sel: sel, auto: !!auto };
+    var rec = { ts: Date.now(), scope: s.mock.scope, set: s.mock.set || null, offset: s.mock.offset != null ? s.mock.offset : null, pack: s.mock.pack, label: s.mock.label, total: total, score: score, nq: s.ids.length, nc: nc, dur: Math.min(s.elapsed, s.mock.limit * 1000), limit: s.mock.limit, bySubj: bySubj, ids: s.ids.slice(), sel: sel, auto: !!auto };
     store.mocks.push(rec);
     if (store.mocks.length > 30) store.mocks = store.mocks.slice(-30);
     s.done = true;
@@ -980,29 +998,26 @@
     if (!m) { go('#/mock'); return; }
     var rate = pct(m.score, m.total) || 0;
     var gs = groupScores(m);
+    var strict = META.groupRule === 'nonzero';
     var zero = gs.filter(function (x) { return x.c === 0; });
-    var judge, cls;
-    if (zero.length) { judge = '不合格（0点の科目群あり）'; cls = 'fail'; }
-    else if (rate >= 60) { judge = '合格圏（60%以上）'; cls = 'pass'; }
-    else if (rate >= 38.8) { judge = 'ボーダー圏（年度の補正次第）'; cls = 'border'; }
-    else { judge = '要強化（過去の補正後合格点に届かず）'; cls = 'fail'; }
+    var jd = MOCK.judge(m, rate, strict && zero.length > 0), judge = jd.label, cls = jd.cls;
     var r = 62, C = 2 * Math.PI * r;
     var html = '<div class="wrap"><h1 class="page">模擬試験の結果</h1><p class="lead">' + esc(m.label) + '　' + fmtDate(m.ts) + (m.auto ? '（時間切れで自動採点）' : '') + '</p>';
     html += '<div class="card"><div class="score-hero"><div class="ring"><svg viewBox="0 0 150 150"><circle class="bgc" cx="75" cy="75" r="' + r + '"/><circle class="fgc" cx="75" cy="75" r="' + r + '" stroke-dasharray="' + C + '" stroke-dashoffset="' + (C * (1 - rate / 100)) + '"/></svg>' +
       '<div class="lbl"><b class="num">' + m.score + '</b><span>/ ' + m.total + '点</span></div></div><div>' +
-      '<div class="judge ' + cls + '">' + judge + '</div>' +
-      '<p class="small" style="margin:4px 0">正答率 <b>' + rate + '%</b>　所要 ' + fmtDurJa(m.dur) + ' / ' + Math.round(m.limit / 60) + '分</p>' +
-      (m.total === 129 ? '<p class="small muted" style="margin:0">参考：60%＝77点／第37回の合格点 62点／第38回の合格点 50点</p>' : '<p class="small muted" style="margin:0">参考：60%＝' + Math.ceil(m.total * 0.6) + '点</p>') +
+      '<div class="judge ' + cls + '">' + esc(judge) + '</div>' +
+      '<p class="small" style="margin:4px 0">得点率 <b>' + rate + '%</b>' + (m.nq && m.nq !== m.total ? '（正解 ' + m.nc + '/' + m.nq + '問）' : '') + '　所要 ' + fmtDurJa(m.dur) + ' / ' + Math.round(m.limit / 60) + '分</p>' +
+      '<p class="small muted" style="margin:0">' + esc(MOCK.refText(m)) + '</p>' +
       '</div></div>';
     if (gs.length) {
-      html += '<h3 style="margin-top:18px">科目群ごとの得点 <span class="small muted" style="font-weight:400">（1群でも0点なら不合格）</span></h3><div class="groups">' + gs.map(function (x) {
-        return '<div class="gbox' + (x.c === 0 ? ' zero' : '') + '"><div class="k">' + x.g.name + '</div><div class="v num">' + x.c + '/' + x.n + '</div></div>';
+      html += '<h3 style="margin-top:18px">' + esc(GROUP_LABEL) + 'ごとの正解数' + (strict ? ' <span class="small muted" style="font-weight:400">（1群でも0点なら不合格）</span>' : '') + '</h3><div class="groups">' + gs.map(function (x) {
+        return '<div class="gbox' + (strict && x.c === 0 ? ' zero' : '') + '"><div class="k">' + esc(x.g.name) + '</div><div class="v num">' + x.c + '/' + x.n + '</div></div>';
       }).join('') + '</div>';
     }
     html += '<div class="row" style="margin-top:16px"><button class="btn primary" data-act="mockReview" data-i="' + p.i + '">' + icon('eye') + ' 全問の解説を見る</button>' +
       (m.score < m.total ? '<button class="btn" data-act="mockWrong" data-i="' + p.i + '">' + icon('repeat') + ' 間違えた問題を演習</button>' : '') +
       '<a class="btn ghost" href="#/mock">模試トップへ</a></div></div>';
-    html += '<h2 class="sec">科目別の得点</h2><div class="card"><div class="bars">' + Object.keys(m.bySubj).sort(function (a, b) { return (SUBJ[a] || OTHER).order - (SUBJ[b] || OTHER).order; }).map(function (k) {
+    html += '<h2 class="sec">' + SL + '別の正解数</h2><div class="card"><div class="bars">' + Object.keys(m.bySubj).sort(function (a, b) { return (SUBJ[a] || OTHER).order - (SUBJ[b] || OTHER).order; }).map(function (k) {
       var o = m.bySubj[k], pp = pct(o[0], o[1]);
       return '<div class="brow"><span class="lab">' + esc((SUBJ[k] || OTHER).name) + '</span><div class="meter"><i class="' + (pp >= 60 ? 'ok' : pp >= 40 ? 'warn' : 'ng') + '" style="width:' + pp + '%"></i><span class="line60"></span></div><span class="val">' + o[0] + '/' + o[1] + '</span></div>';
     }).join('') + '</div></div>';
@@ -1025,7 +1040,7 @@
     var all = oxAll(null);
     var done = all.filter(function (id) { return store.ox[id] && store.ox[id].n; }).length;
     var html = '<div class="wrap"><h1 class="page">一問一答（○×）</h1><p class="lead">5択問題の選択肢を1文ずつ取り出して、正しい記述か誤った記述かを判定します。全 <b>' + all.length + '</b> 文（回答済み ' + done + '）。</p>';
-    html += '<div class="field"><span class="lab">科目</span><div class="row" style="margin-bottom:8px"><button class="btn small" data-act="subjAll" data-v="1">すべて選択</button><button class="btn small" data-act="subjAll" data-v="0">すべて解除</button></div><div class="subj-pick"><div class="grp-box"><div class="grp-items">';
+    html += '<div class="field"><span class="lab">' + SL + '</span><div class="row" style="margin-bottom:8px"><button class="btn small" data-act="subjAll" data-v="1">すべて選択</button><button class="btn small" data-act="subjAll" data-v="0">すべて解除</button></div><div class="subj-pick"><div class="grp-box"><div class="grp-items">';
     META.subjects.forEach(function (sj) {
       var n = all.filter(function (id) { return oxParse(id).q.subj === sj.id; }).length;
       html += '<label class="chk"><input type="checkbox" name="subj" value="' + sj.id + '"' + (cfg.subjects.indexOf(sj.id) >= 0 ? ' checked' : '') + '><span>' + esc(sj.name) + '</span><span class="c">' + n + '文</span></label>';
@@ -1109,8 +1124,8 @@
   VIEWS.list = function (p) {
     if (p.kw != null) listState.kw = p.kw;
     var html = '<div class="wrap"><h1 class="page">一覧・検索</h1><p class="lead">問題文・選択肢・解説をまとめて検索できます（ひらがな／カタカナ、全角／半角の違いは無視）。</p>';
-    html += '<div class="searchbar"><label class="sr" for="kw">キーワード</label><input class="inp" id="kw" type="search" placeholder="例：成年後見、地域包括支援センター、ラベリング" value="' + esc(listState.kw) + '" autocomplete="off"></div>';
-    html += '<div class="filters"><select class="inp" id="fSubj" aria-label="科目"><option value="all">すべての科目</option>' +
+    html += '<div class="searchbar"><label class="sr" for="kw">キーワード</label><input class="inp" id="kw" type="search" placeholder="' + esc(APP.searchPlaceholder) + '" value="' + esc(listState.kw) + '" autocomplete="off"></div>';
+    html += '<div class="filters"><select class="inp" id="fSubj" aria-label="' + SL + '"><option value="all">すべての' + SL + '</option>' +
       META.subjects.map(function (s) { return '<option value="' + s.id + '"' + (listState.subj === s.id ? ' selected' : '') + '>' + esc(s.name) + '</option>'; }).join('') +
       (BANK.some(function (q) { return q.subj === 'other'; }) ? '<option value="other"' + (listState.subj === 'other' ? ' selected' : '') + '>' + esc(OTHER.name) + '</option>' : '') + '</select>' +
       '<select class="inp" id="fStatus" aria-label="状態">' + STATUS_FILTERS.map(function (f) { return '<option value="' + f[0] + '"' + (listState.status === f[0] ? ' selected' : '') + '>' + f[1] + '</option>'; }).join('') + '</select>' +
@@ -1177,14 +1192,14 @@
         (st && st.n ? '<span class="chip ' + (st.c / st.n >= 0.6 ? 'ok' : 'ng') + '">' + st.c + '/' + st.n + '</span>' : '') +
         (store.flags[id] ? '<span class="chip flag">付箋</span>' : '') + (store.notes[id] ? '<span class="chip">メモ</span>' : '') +
         (q.ans.length > 1 ? '<span class="chip warn">2つ選ぶ</span>' : '') + '</span></span></button></li>';
-    }).join('') + (ids.length > 200 ? '<li class="empty">ほか ' + (ids.length - 200) + '問。キーワードや科目で絞り込んでください。</li>' : '');
+    }).join('') + (ids.length > 200 ? '<li class="empty">ほか ' + (ids.length - 200) + '問。キーワードや' + SL + 'で絞り込んでください。</li>' : '');
   }
   function printQuestions(ids, title) {
-    var h = '<h1>' + esc(title) + '（' + ids.length + '問）</h1><p style="font-size:9pt">社会福祉士 国試ドリル／独自作成の練習問題　印刷日 ' + dkey() + '</p>';
+    var h = '<h1>' + esc(title) + '（' + ids.length + '問）</h1><p style="font-size:9pt">' + esc(APP.name) + '／独自作成の練習問題　印刷日 ' + dkey() + '</p>';
     ids.forEach(function (id, i) {
       var q = BYID[id];
       h += '<div class="pq"><div class="h">問' + (i + 1) + '　<span style="font-weight:normal;font-size:9pt">［' + esc(subjName(q)) + '］</span></div>' +
-        '<div>' + esc(plain(q.q)) + '</div>' + (q.case ? '<div class="pcase">' + esc(plain(q.case)) + '</div>' : '') + '<ol class="po">' +
+        (APP.caseFirst && q.case ? '<div class="pcase">' + esc(plain(q.case)) + '</div><div>' + esc(plain(q.q)) + '</div>' : '<div>' + esc(plain(q.q)) + '</div>' + (q.case ? '<div class="pcase">' + esc(plain(q.case)) + '</div>' : '')) + '<ol class="po">' +
         q.opts.map(function (o) { return '<li>' + esc(plain(o)) + '</li>'; }).join('') + '</ol></div>';
     });
     h += '<div class="pans"><h1>解答・解説</h1>';
@@ -1230,16 +1245,16 @@
 
     // 科目別
     var ss = subjStats(BUILTIN_IDS);
-    html += '<h2 class="sec">科目別の正答率 <span class="sub">縦線は60%</span></h2><div class="card"><div class="bars">' + META.subjects.map(function (sj) {
+    html += '<h2 class="sec">' + SL + '別の正答率 <span class="sub">縦線は60%</span></h2><div class="card"><div class="bars">' + META.subjects.map(function (sj) {
       var o = ss[sj.id] || { n: 0, c: 0, done: 0, total: 0 }, p = pct(o.c, o.n);
       return '<div class="brow"><span class="lab" title="' + esc(sj.name) + '">' + esc(sj.name) + '</span><div class="meter"><i class="' + (p == null ? '' : p >= 60 ? 'ok' : p >= 40 ? 'warn' : 'ng') + '" style="width:' + (p || 0) + '%"></i><span class="line60"></span></div><span class="val">' + (p == null ? '–' : p + '%') + '</span></div>';
     }).join('') + '</div>';
     var weakS = META.subjects.map(function (sj) { var o = ss[sj.id]; return { sj: sj, p: o && o.n >= 3 ? o.c / o.n : null }; }).filter(function (x) { return x.p != null; }).sort(function (a, b) { return a.p - b.p; }).slice(0, 3);
-    if (weakS.length) html += '<div class="row" style="margin-top:14px"><span class="small">苦手な科目：' + weakS.map(function (x) { return '<b>' + esc(x.sj.short) + '</b>（' + Math.round(x.p * 100) + '%）'; }).join('、') + '</span><span class="spacer"></span><button class="btn small primary" data-act="weakSubj" data-v="' + weakS.map(function (x) { return x.sj.id; }).join(',') + '">この科目を集中演習</button></div>';
+    if (weakS.length) html += '<div class="row" style="margin-top:14px"><span class="small">苦手な' + SL + '：' + weakS.map(function (x) { return '<b>' + esc(x.sj.short) + '</b>（' + Math.round(x.p * 100) + '%）'; }).join('、') + '</span><span class="spacer"></span><button class="btn small primary" data-act="weakSubj" data-v="' + weakS.map(function (x) { return x.sj.id; }).join(',') + '">この科目を集中演習</button></div>';
     html += '</div>';
 
-    // 科目群別
-    html += '<h2 class="sec">科目群別</h2><div class="groups">' + META.groups.map(function (g) {
+    // 科目群別（分野別）
+    html += '<h2 class="sec">' + esc(GROUP_LABEL) + '別</h2><div class="groups">' + META.groups.map(function (g) {
       var c = 0, n = 0; g.subjects.forEach(function (sid) { var o = ss[sid]; if (o) { c += o.c; n += o.n; } });
       return '<div class="gbox"><div class="k">' + g.name + '</div><div class="v num">' + (n ? pct(c, n) + '%' : '–') + '</div></div>';
     }).join('') + '</div>';
@@ -1268,9 +1283,9 @@
       '<div class="field"><span class="lab">テーマ</span><div class="seg">' + segBtn('theme', 'auto', '端末に合わせる', st.theme) + segBtn('theme', 'light', 'ライト', st.theme) + segBtn('theme', 'dark', 'ダーク', st.theme) + '</div></div>' +
       '<div class="field" style="margin:0"><span class="lab">文字の大きさ</span><div class="seg">' + segBtn('font', 's', '小', st.font) + segBtn('font', 'm', '標準', st.font) + segBtn('font', 'l', '大', st.font) + segBtn('font', 'xl', '特大', st.font) + '</div></div></div>';
     html += '<h2 class="sec">解き方</h2><div class="card" style="padding:4px 16px">' +
-      switchRow('instant', '選択肢を押したらすぐ採点', '「2つ選びなさい」の問題は、2つ選んでから採点します。', st.instant) +
+      switchRow('instant', '選択肢を押したらすぐ採点', '「2つ選ぶ」問題は、2つ選んでから採点します。', st.instant) +
       switchRow('shuffleOpts', '選択肢の並びをシャッフル', '次に始める演習から反映されます。', st.shuffleOpts) +
-      switchRow('emphasize', '「誤っているもの」「2つ選びなさい」などを強調', '問われ方の読み違いを防ぎます。', st.emphasize) +
+      switchRow('emphasize', '「誤っているもの」「不適切なもの」「2つ選ぶ」などを強調', '問われ方の読み違いを防ぎます。', st.emphasize) +
       switchRow('autoScroll', '解答後に正誤の表示までスクロール', 'スマートフォンで便利です。', st.autoScroll) +
       switchRow('showTimer', '演習中に経過時間を表示', '模擬試験の残り時間は常に表示されます。', st.showTimer) + '</div>';
     html += '<h2 class="sec">目標</h2><div class="card"><div class="grid g2 stack-s">' +
@@ -1284,7 +1299,7 @@
       '<hr class="sep"><div class="row"><button class="btn danger small" data-act="resetHistory">学習記録を消去</button><button class="btn danger small" data-act="resetAll">すべて初期化</button></div></div>';
 
     html += '<h2 class="sec" id="import">問題データの取り込み</h2><div class="card"><p class="small" style="margin-top:0">お手元の問題（市販問題集や公式に公表された過去問を<strong>ご自身で入力したもの</strong>など）を JSON または CSV/TSV で取り込むと、演習・一覧・模試で使えます。取り込んだデータは<strong>この端末の中だけ</strong>に保存され、どこにも送信・公開されません。第三者が権利をもつ問題を、権利者の許諾なく他の人へ配布しないでください。</p>' +
-      '<div class="field"><label class="lab" for="packName">問題集の名前</label><input class="inp" id="packName" placeholder="例：第37回 過去問（自分用）"></div>' +
+      '<div class="field"><label class="lab" for="packName">問題集の名前</label><input class="inp" id="packName" placeholder="' + esc(APP.packPlaceholder) + '"></div>' +
       '<div class="row" style="margin-bottom:10px"><label class="btn">ファイルを選ぶ<input type="file" id="qFile" accept=".json,.csv,.tsv,.txt" hidden></label><button class="btn small" data-act="tplJson">JSONのひな形</button><button class="btn small" data-act="tplCsv">CSVのひな形</button><a class="small" href="#/help">書式の説明</a></div>' +
       '<label class="lab sr" for="qPaste">貼り付け</label><textarea class="inp" id="qPaste" placeholder="ここにJSONまたはCSV/TSVを貼り付けることもできます"></textarea>' +
       '<div class="row" style="margin-top:10px"><button class="btn primary" data-act="importPaste">貼り付けた内容を取り込む</button></div>' +
@@ -1307,17 +1322,19 @@
   }
   function exportData() {
     var withCustom = $('#expCustom') ? $('#expCustom').checked : true;
-    var data = { app: 'swdrill', v: 1, exported: new Date().toISOString(), store: Object.assign({}, store, { session: null }) };
+    var data = { app: APPID, v: 1, exported: new Date().toISOString(), store: Object.assign({}, store, { session: null }) };
     if (withCustom) data.custom = custom;
-    download('swdrill-backup-' + dkey().replace(/-/g, '') + '.json', JSON.stringify(data));
+    download(APPID + '-backup-' + dkey().replace(/-/g, '') + '.json', JSON.stringify(data));
     toast('書き出しました');
   }
+  // 他の試験のドリル（社会福祉士版・公認心理師版など）の書き出しファイルか
+  function otherDrill(d) { return !!(d && typeof d.app === 'string' && /drill$/.test(d.app) && d.app !== APPID && d.store); }
   function importData(text) {
     var d;
     try { d = JSON.parse(text); } catch (e) { toast('ファイルを読み込めませんでした（JSONではありません）'); return; }
-    if (!d || d.app !== 'swdrill' || !d.store) {
+    if (!d || d.app !== APPID || !d.store) {
       if (Array.isArray(d) || (d && (d.questions || d.qs))) { toast('問題データのようです。「問題データの取り込み」から読み込んでください'); return; }
-      toast('このアプリの書き出しファイルではありません'); return;
+      toast(otherDrill(d) ? '別の試験のドリルの書き出しファイルです。そのアプリで読み込んでください' : 'このアプリの書き出しファイルではありません'); return;
     }
     openModal({
       title: '学習データの読み込み',
@@ -1410,14 +1427,8 @@
       var nn = normalize(s.name).replace(/\s|・/g, '');
       if (s.id === v || nn === n || normalize(s.short).replace(/\s|・/g, '') === n) return { id: s.id };
     }
-    // 旧カリキュラム（第36回まで）の科目名 → 対応する新科目
-    var OLD = {
-      '人体の構造と機能及び疾病': 'igaku', '心理学理論と心理的支援': 'shinri', '社会理論と社会システム': 'shakaigaku',
-      '現代社会と福祉': 'genri', '権利擁護と成年後見制度': 'kenri', '地域福祉の理論と方法': 'chiiki', '福祉行財政と福祉計画': 'chiiki',
-      '障害者に対する支援と障害者自立支援制度': 'shogai', '更生保護制度': 'keiji', '相談援助の基盤と専門職': 'swkiban',
-      '相談援助の理論と方法': 'swriron', '社会調査の基礎': 'chosa', '高齢者に対する支援と介護保険制度': 'korei',
-      '児童や家庭に対する支援と児童・家庭福祉制度': 'jido', '低所得者に対する支援と生活保護制度': 'hinkon', '保健医療サービス': 'hoken'
-    };
+    // 別名（旧カリキュラムの科目名など）→ 対応する科目
+    var OLD = APP.aliases || {};
     for (var k in OLD) if (normalize(k).replace(/\s|・/g, '') === n) return { id: OLD[k], name: String(v) };
     return { id: 'other', name: String(v) };
   }
@@ -1438,7 +1449,8 @@
     var items, packName = name;
     if (text[0] === '[' || text[0] === '{') {
       var d; try { d = JSON.parse(text); } catch (e) { toast('JSONの形式に誤りがあります：' + e.message); return; }
-      if (d && d.app === 'swdrill') { importData(text); return; }
+      if (d && d.app === APPID) { importData(text); return; }
+      if (otherDrill(d)) { toast('別の試験のドリルの書き出しファイルです。そのアプリで読み込んでください'); return; }
       items = Array.isArray(d) ? d : (d.questions || d.qs || []);
       if (!packName && d.name) packName = d.name;
     } else items = parseCSV(text);
@@ -1475,7 +1487,7 @@
     var other = ok.filter(function (q) { return q.subj === 'other'; }).length;
     openModal({
       title: '取り込みました', html: '<p><b>' + esc(pack.name) + '</b>：' + ok.length + '問</p>' +
-        (other ? '<p class="small">科目名が一致しなかった問題が ' + other + '問あります（「' + esc(OTHER.name) + '」として扱います）。</p>' : '') +
+        (other ? '<p class="small">' + SL + '名が一致しなかった問題が ' + other + '問あります（「' + esc(OTHER.name) + '」として扱います）。</p>' : '') +
         (errs.length ? '<p class="small">読み飛ばした行：' + errs.length + '件</p><pre class="code">' + esc(errs.slice(0, 20).join('\n')) + '</pre>' : ''),
       actions: [{ label: '閉じる', fn: function () { route(); } }, { label: '演習する', cls: 'primary', fn: function () { packPlay(pid); } }]
     });
@@ -1485,26 +1497,27 @@
     var p = custom.packs.filter(function (x) { return x.id === pid; })[0];
     startSession({ kind: 'practice', title: (p ? p.name : '取り込んだ問題'), ids: ids });
   }
+  var TPL = APP.template;   // ひな形に入れる科目名・問題文の例
   var TPL_JSON = JSON.stringify({
     name: '自分用の問題集',
     questions: [{
-      id: 'q1', subject: '社会保障', label: '練習 問1', topic: '社会保険の種類',
-      question: '日本の社会保険に関する次の記述のうち、正しいものを1つ選びなさい。',
+      id: 'q1', subject: TPL.subj1, label: '練習 問1', topic: TPL.topic1,
+      question: TPL.stem1,
       options: ['選択肢1の文', '選択肢2の文', '選択肢3の文', '選択肢4の文', '選択肢5の文'],
       answer: 3, explanation: '全体の解説', optionExplanations: ['1の解説', '2の解説', '3の解説', '4の解説', '5の解説']
     }, {
-      id: 'q2', subject: '障害者福祉', question: '…適切なものを2つ選びなさい。', options: ['A', 'B', 'C', 'D', 'E'], answer: [2, 5], explanation: '「2つ選べ」は answer を配列にします'
+      id: 'q2', subject: TPL.subj2, question: TPL.stem2, options: ['A', 'B', 'C', 'D', 'E'], answer: [2, 5], explanation: '「2つ選ぶ」問題は answer を配列にします'
     }]
   }, null, 2);
   var TPL_CSV = 'id,科目,問題番号,問題文,事例,選択肢1,選択肢2,選択肢3,選択肢4,選択肢5,正答,解説,解説1,解説2,解説3,解説4,解説5\n' +
-    'q1,社会保障,練習 問1,"日本の社会保険に関する次の記述のうち、正しいものを1つ選びなさい。",,"選択肢1の文","選択肢2の文","選択肢3の文","選択肢4の文","選択肢5の文",3,"全体の解説","1の解説","2の解説","3の解説","4の解説","5の解説"\n' +
-    'q2,障害者福祉,練習 問2,"…適切なものを2つ選びなさい。",,A,B,C,D,E,"2,5","「2つ選べ」は正答を 2,5 のように書きます",,,,,\n';
+    'q1,' + TPL.subj1 + ',練習 問1,"' + TPL.stem1 + '",,"選択肢1の文","選択肢2の文","選択肢3の文","選択肢4の文","選択肢5の文",3,"全体の解説","1の解説","2の解説","3の解説","4の解説","5の解説"\n' +
+    'q2,' + TPL.subj2 + ',練習 問2,"' + TPL.stem2 + '",,A,B,C,D,E,"2,5","「2つ選ぶ」問題は正答を 2,5 のように書きます",,,,,\n';
 
   /* =====================================================================
      画面：メニュー（スマホ）・使い方
      ===================================================================== */
   VIEWS.more = function () {
-    var items = [['#/mock', 'clock', '模擬試験', '本番形式129問・ミニ模試'], ['#/stats', 'chart', '学習記録', '科目別正答率・カレンダー・模試の推移'], ['#/settings', 'gear', '設定・データ', 'テーマ・文字サイズ・書き出し・問題の取り込み'], ['#/help', 'help', '使い方・ご注意', 'ショートカット・合格基準・取り込みの書式']];
+    var items = [['#/mock', 'clock', '模擬試験', APP.moreMock], ['#/stats', 'chart', '学習記録', SL + '別正答率・カレンダー・模試の推移'], ['#/settings', 'gear', '設定・データ', 'テーマ・文字サイズ・書き出し・問題の取り込み'], ['#/help', 'help', '使い方・ご注意', 'ショートカット・合格基準・取り込みの書式']];
     setView('<div class="wrap"><h1 class="page">メニュー</h1><ul class="morelist">' + items.map(function (x) {
       return '<li><a href="' + x[0] + '"><span class="ic">' + icon(x[1]) + '</span><span>' + x[2] + '<span class="d">' + x[3] + '</span></span></a></li>';
     }).join('') + '</ul>' + footer() + '</div>');
@@ -1512,23 +1525,21 @@
   VIEWS.help = function () {
     var html = '<div class="wrap prose"><h1 class="page">使い方・ご注意</h1>' +
       '<h3>このアプリでできること</h3><ul>' +
-      '<li><b>科目別演習</b>：科目（複数可）・絞り込み（未解答／前回まちがえた／苦手／付箋／メモ）・出題順・出題数を選んで解きます。1問ごとに正誤と、選択肢ごとの○×解説が表示されます。</li>' +
+      '<li><b>' + SL + '別演習</b>：' + SL + '（複数可）・絞り込み（未解答／前回まちがえた／苦手／付箋／メモ）・出題順・出題数を選んで解きます。1問ごとに正誤と、選択肢ごとの○×解説が表示されます。</li>' +
       '<li><b>一問一答（○×）</b>：選択肢を1文ずつ取り出して正誤を判定。5択の「なんとなく正解」を防げます。</li>' +
-      '<li><b>模擬試験</b>：本番と同じ129問・225分（午前140分／午後85分）。提出後に総得点と<b>6科目群の0点判定</b>を表示。ミニ模試（38問）もあります。</li>' +
+      '<li><b>模擬試験</b>：' + APP.helpMock + '</li>' +
       '<li><b>今日の復習（間隔反復）</b>：間違えた問題は翌日、「自信あり」で正解した問題は3日→7日→14日→30日→60日と間隔をあけて再出題します。「あいまい」「勘で当たった」を押すと早めに出題されます。</li>' +
       '<li><b>付箋・メモ</b>：問題ごとに付箋とメモ（自動保存）。メモも検索対象です。</li>' +
       '<li><b>消去法</b>：選択肢右側の × で、選択肢に取り消し線を引けます。</li>' +
       '<li><b>読み上げ</b>：問題文と選択肢を音声で読み上げます（端末の音声合成を使用）。</li>' +
       '<li><b>一覧・検索・印刷</b>：問題文・選択肢・解説・メモを横断検索。表示中の問題を問題用紙＋解答解説の形で印刷できます。</li>' +
-      '<li><b>学習記録</b>：直近30日の解答数、学習カレンダー、科目別・科目群別の正答率、よく間違える問題、模試の得点推移。</li>' +
+      '<li><b>学習記録</b>：直近30日の解答数、学習カレンダー、' + SL + '別・' + esc(GROUP_LABEL) + '別の正答率、よく間違える問題、模試の得点推移。</li>' +
       '<li><b>オフライン・ホーム画面に追加</b>：一度開けば電波がなくても使えます。</li></ul>' +
       '<h3>キーボード操作（パソコン）</h3><ul><li><kbd>1</kbd>〜<kbd>5</kbd>：選択肢を選ぶ　<kbd>Enter</kbd>：解答／次へ　<kbd>←</kbd><kbd>→</kbd>：前後の問題</li><li><kbd>F</kbd>：付箋　<kbd>R</kbd>：見直し印（模試）　<kbd>S</kbd>：読み上げ　<kbd>P</kbd>：問題一覧　<kbd>Esc</kbd>：閉じる</li><li>一問一答：<kbd>O</kbd>または<kbd>1</kbd>＝正しい、<kbd>X</kbd>または<kbd>2</kbd>＝誤り</li></ul>' +
-      '<h3>試験の概要（第39回）</h3><ul><li>試験日：2027年2月7日（日）。受験申込は2026年10月2日（金）まで。</li><li>19科目・129問（共通科目84問／専門科目45問）。1問1点、五肢択一を基本とする多肢選択式。</li><li>合格基準：総得点の60%程度を基準として問題の難易度で補正した点数以上、かつ<b>6科目群すべてで得点</b>があること。第37回は62点、第38回は50点が合格点でした。</li>' +
-      '<li>科目群：①医学概論・心理学と心理的支援・社会学と社会システム／②社会福祉の原理と政策・社会保障・権利擁護を支える法制度／③地域福祉と包括的支援体制・障害者福祉・刑事司法と福祉／④ソーシャルワークの基盤と専門職・ソーシャルワークの理論と方法・社会福祉調査の基礎／⑤高齢者福祉・児童・家庭福祉・貧困に対する支援・保健医療と福祉／⑥ソーシャルワークの基盤と専門職（専門）・ソーシャルワークの理論と方法（専門）・福祉サービスの組織と経営</li></ul>' +
-      '<p class="small">試験日程・合格基準などは必ず公益財団法人 社会福祉振興・試験センターの公式情報で確認してください。</p>' +
+      APP.helpExamHtml +
       '<h3 id="fmt">問題データの取り込み書式</h3><p>JSON（配列、または <code>{"name":"…","questions":[…]}</code>）か、1行目が見出しの CSV/TSV に対応しています。</p><ul>' +
       '<li><code>question</code>（問題文・必須）、<code>options</code>（選択肢の配列・必須）、<code>answer</code>（正答の番号・<b>1始まり</b>・必須。2つ選ぶ問題は <code>[2,5]</code> や <code>"2,5"</code>）</li>' +
-      '<li>任意：<code>subject</code>（科目名。本アプリの19科目名と一致すると科目別集計・模試の科目群判定に入ります）、<code>label</code>（例「第37回 問12」）、<code>case</code>（事例文）、<code>explanation</code>（解説）、<code>optionExplanations</code>（選択肢ごとの解説の配列）、<code>topic</code>（論点）</li>' +
+      '<li>任意：<code>subject</code>（' + SL + '名。本アプリの' + META.subjects.length + 'の' + SL + 'の名前と一致すると' + SL + '別に集計されます）、<code>label</code>（例「' + esc(APP.labelExample) + '」）、<code>case</code>（事例文）、<code>explanation</code>（解説）、<code>optionExplanations</code>（選択肢ごとの解説の配列）、<code>topic</code>（論点）</li>' +
       '<li>CSVの見出しは <code>問題文, 選択肢1〜選択肢5, 正答, 解説, 科目, 問題番号, 事例, 解説1〜解説5</code>（英語名も可）。</li></ul>' +
       '<pre class="code">' + esc(TPL_JSON) + '</pre>' +
       '<h3>収録問題とご注意</h3><ul><li>収録問題はすべて、出題基準と出題形式に沿って<b>独自に作成した練習問題</b>です。実際の国家試験の問題（過去問）や、他の過去問サイト・問題集の問題・解説を転載したものではありません。</li>' +
@@ -1564,7 +1575,7 @@
         store.setup[k] = v;
         if (k === 'src') { save(); VIEWS.setup({}); return; }
         updateSetupCount();
-      } else if (k === 'qset') { store.setup.qset = v; updateSetupCount(); }
+      } else if (k === 'qset' || k === 'kind') { store.setup[k] = v; updateSetupCount(); }
       else if (k === 'mockset') { store.mockSet = v; save(); VIEWS.mock(); }
       else if (k === 'oxstatus') { store.oxSetup.status = v; updateOxCount(); }
       else if (k === 'oxcount') { store.oxSetup.count = v; updateOxCount(); }
@@ -1581,7 +1592,7 @@
       updateSetupCount();
     },
     grpToggle: function (el) {
-      var g = META.groups[+el.getAttribute('data-g') - 1];
+      var gid = +el.getAttribute('data-g'), g = META.groups.filter(function (x) { return x.id === gid; })[0];
       var boxes = $all('input[name="subj"]').filter(function (i) { return g.subjects.indexOf(i.value) >= 0; });
       var allOn = boxes.every(function (i) { return i.checked; });
       boxes.forEach(function (i) { i.checked = !allOn; });
@@ -1591,7 +1602,7 @@
       var cfg = store.setup, ids = setupMatches();
       if (cfg.order === 'rand') ids = shuffle(ids);
       if (cfg.count !== 'all') ids = ids.slice(0, +cfg.count);
-      var names = cfg.subjects.length === META.subjects.length ? '全科目' : cfg.subjects.length <= 2 ? cfg.subjects.map(function (s) { return (SUBJ[s] || OTHER).name; }).join('・') : cfg.subjects.length + '科目';
+      var names = cfg.subjects.length === META.subjects.length ? '全' + SL : cfg.subjects.length <= 2 ? cfg.subjects.map(function (s) { return (SUBJ[s] || OTHER).name; }).join('・') : cfg.subjects.length + '科目';
       var st = STATUS_FILTERS.filter(function (f) { return f[0] === cfg.status; })[0];
       startSession({ kind: 'practice', title: names + (cfg.status !== 'all' ? '（' + st[1].replace(/（.*）/, '') + '）' : ''), ids: ids });
     },
@@ -1690,7 +1701,7 @@
     oxSource: function () {
       var s = S(), it = oxParse(s.ids[s.i]), q = it.q;
       openModal({
-        title: qLabel(q), html: '<p>' + fmt(q.q) + '</p>' + (q.case ? '<div class="qcase">' + fmt(q.case) + '</div>' : '') + '<ul class="oe">' + q.opts.map(function (o, i) {
+        title: qLabel(q), html: (APP.caseFirst && q.case ? '<div class="qcase">' + fmt(q.case) + '</div><p>' + fmt(q.q) + '</p>' : '<p>' + fmt(q.q) + '</p>' + (q.case ? '<div class="qcase">' + fmt(q.case) + '</div>' : '')) + '<ul class="oe">' + q.opts.map(function (o, i) {
           var isA = q.ans.indexOf(i) >= 0;
           return '<li class="' + (isA ? 'is-ans' : '') + '"><span class="tf ' + (oxTruth(q, i) ? 't' : 'f') + '">' + (oxTruth(q, i) ? '○' : '×') + '</span><span class="b"><span class="o">' + (i + 1) + '. ' + fmt(o) + (isA ? '　<span class="chip ok">正答</span>' : '') + '</span>' + fmt(q.oe[i] || '') + '</span></li>';
         }).join('') + '</ul>' + (q.exp ? '<div class="exp"><h4>ポイント</h4><div class="point">' + fmt(q.exp) + '</div></div>' : '')
@@ -1705,7 +1716,7 @@
       var ids = listIds();
       if (!ids.length) { toast('印刷する問題がありません'); return; }
       if (ids.length > 150) { toast('150問までにしぼってください'); return; }
-      printQuestions(ids, listState.kw ? '検索「' + listState.kw + '」' : (listState.subj !== 'all' ? (SUBJ[listState.subj] || OTHER).name : '社会福祉士 練習問題'));
+      printQuestions(ids, listState.kw ? '検索「' + listState.kw + '」' : (listState.subj !== 'all' ? (SUBJ[listState.subj] || OTHER).name : APP.printTitle));
     },
     openOne: function (el) { startSession({ kind: 'practice', title: '1問だけ解く', ids: [el.getAttribute('data-id')] }); },
     weakSubj: function (el) { var subs = el.getAttribute('data-v').split(','); store.setup = Object.assign(defaultSetup(), store.setup || {}, { subjects: subs, status: 'all', order: 'rand', src: 'b' }); save(); go('#/setup'); },
@@ -1720,8 +1731,8 @@
         store = freshStore(); custom = { packs: [] }; save(true); saveCustom(); buildBank(); applyLook(); toast('初期化しました'); go('#/');
       }, true);
     },
-    tplJson: function () { download('swdrill-template.json', TPL_JSON); },
-    tplCsv: function () { download('swdrill-template.csv', '﻿' + TPL_CSV, 'text/csv'); },
+    tplJson: function () { download(APPID + '-template.json', TPL_JSON); },
+    tplCsv: function () { download(APPID + '-template.csv', '﻿' + TPL_CSV, 'text/csv'); },
     importPaste: function () { importQuestions($('#qPaste').value, $('#packName').value.trim()); },
     packDel: function (el) {
       var pid = el.getAttribute('data-pack'), p = custom.packs.filter(function (x) { return x.id === pid; })[0];
@@ -1732,7 +1743,7 @@
     },
     packExport: function (el) {
       var p = custom.packs.filter(function (x) { return x.id === el.getAttribute('data-pack'); })[0];
-      download('swdrill-pack-' + dkey().replace(/-/g, '') + '.json', JSON.stringify({ name: p.name, questions: p.qs.map(function (q) {
+      download(APPID + '-pack-' + dkey().replace(/-/g, '') + '.json', JSON.stringify({ name: p.name, questions: p.qs.map(function (q) {
         return { id: q.id.split(':').slice(1).join(':'), subject: q.subj === 'other' ? (q.subjName || '') : SUBJ[q.subj].name, label: q.label, topic: q.topic, question: q.q, case: q.case, options: q.opts, answer: q.ans.map(function (x) { return x + 1; }), explanation: q.exp, optionExplanations: q.oe, neg: q.neg || undefined, ox: q.ox || undefined };
       }) }, null, 2));
     }
@@ -1815,7 +1826,7 @@
     if (speechSynthesis.speaking) { stopSpeech(); return; }
     var s = S(), q = curQ(); if (!q) return;
     var order = optOrder(s, q);
-    var text = plain(q.q) + '。' + (q.case ? '事例。' + plain(q.case) + '。' : '') + order.map(function (oi, k) { return (k + 1) + '。' + plain(q.opts[oi]); }).join('。');
+    var text = (APP.caseFirst && q.case ? '事例。' + plain(q.case) + '。' + plain(q.q) + '。' : plain(q.q) + '。' + (q.case ? '事例。' + plain(q.case) + '。' : '')) + order.map(function (oi, k) { return (k + 1) + '。' + plain(q.opts[oi]); }).join('。');
     var a = s.ans[q.id];
     if (a && s.kind !== 'mock') text += '。正答は' + q.ans.map(function (oi) { return order.indexOf(oi) + 1; }).join('と') + '。' + plain(q.exp || '');
     var u = new SpeechSynthesisUtterance(text);

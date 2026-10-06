@@ -1,0 +1,7 @@
+/* 公認心理師 国試ドリル：アクセント色（紫）。共通スタイル drill/style.css の色トークンを上書きする。
+   正誤の緑・赤と見分けやすい色相にしている。 */
+:root{ --accent:#6a45c9; --accent-ink:#5633ad; --accent-soft:#efe9fd; --on-accent:#ffffff; }
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --accent:#b9a3ff; --accent-ink:#cbbaff; --accent-soft:#2a2442; --on-accent:#170f2e; }
+}
+:root[data-theme="dark"]{ --accent:#b9a3ff; --accent-ink:#cbbaff; --accent-soft:#2a2442; --on-accent:#170f2e; }
