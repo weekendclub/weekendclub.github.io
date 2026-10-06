@@ -36,6 +36,7 @@
     padding:32px 20px; text-decoration:none; color:var(--ink); transition:transform .15s ease, border-color .15s ease;
   }
   a.card:hover{transform:translateY(-3px); border-color:var(--gold);}
+  .cards > a.card:last-child:nth-child(odd){grid-column:1 / -1;}
   a.card .icon{font-size:32px; display:block; margin-bottom:14px;}
   a.card .title{display:block; font-size:17px; font-weight:700; margin-bottom:6px;}
   a.card .desc{display:block; font-size:12.5px; color:var(--ink-dim); line-height:1.6;}
@@ -77,6 +78,11 @@
       <span class="title">公認心理師 CBT模擬問題</span>
       <span class="desc">放送大学の選考試験を想定した練習問題集。22科目・83問、復習モード対応</span>
     </a>
+    <a class="card" href="kouninshinrishi/">
+      <span class="icon">📗</span>
+      <span class="title">公認心理師 国試ドリル</span>
+      <span class="desc">広告なしの練習問題154問（本番と同じ一般116問・事例38問）。230点満点の模擬試験・一問一答・間隔反復の復習つき</span>
+    </a>
     <a class="card" href="shakaifukushi/">
       <span class="icon">📘</span>
       <span class="title">社会福祉士 国試ドリル</span>
@@ -87,6 +93,7 @@
   <section class="news">
     <h2>更新情報</h2>
     <ul class="news-list">
+      <li><time datetime="2026-10-06">2026.10.06</time><span class="t"><a href="kouninshinrishi/">公認心理師 国試ドリル</a>を公開。広告なし・登録不要・オフライン対応で、出題基準の24の大項目に沿った独自作成の練習問題154問（一般問題116問・事例問題38問）を、大項目別の演習・一問一答・本番形式の模擬試験（事例問題は3点、230点満点）で解けます。</span></li>
       <li><time datetime="2026-10-04">2026.10.04</time><span class="t"><a href="shakaifukushi/">社会福祉士 国試ドリル</a>に第2回分の129問を追加し、計258問に。模擬試験は第1回・第2回・ランダム組合せから選べます。一問一答は1,160文になりました。</span></li>
       <li><time datetime="2026-10-03">2026.10.03</time><span class="t"><a href="shakaifukushi/">社会福祉士 国試ドリル</a>を公開。広告なし・登録不要・オフライン対応で、独自作成の練習問題129問（本番と同じ19科目構成）を科目別演習・一問一答・模擬試験で解けます。</span></li>
       <li><time datetime="2026-08-23">2026.08.23</time><span class="t"><a href="hitsujibungaku/index.html">羊文学の隣にある音楽</a>を公開。羊文学が好きな人に向けて、似ている海外アーティスト21組をApple Musicのリンクつきで紹介しています。</span></li>
@@ -104,6 +111,7 @@
     <a href="vinyl/index.html">レコード棚</a>
     <a href="smartwatch/index.html">スマートウォッチの選び方</a>
     <a href="kounin/index.html">公認心理師 CBT模擬問題</a>
+    <a href="kouninshinrishi/">公認心理師 国試ドリル</a>
     <a href="shakaifukushi/">社会福祉士 国試ドリル</a>
     <a href="vinyl/privacy.html">プライバシーポリシー</a>
   </nav>

@@ -17,6 +17,7 @@
   var LS_CUSTOM = APPID + '.custom.v1';
   var APP_VERSION = APP.version;
   var GROUP_LABEL = META.groupLabel || '科目群';
+  var SL = META.subjLabel || '科目';          // 出題の単位の呼び名（公認心理師は「大項目」）
   function points(q) { return MOCK.points ? MOCK.points(q) : 1; }
 
   /* ---------------------------------------------------------------------
@@ -24,7 +25,7 @@
      --------------------------------------------------------------------- */
   var SUBJ = {};
   META.subjects.forEach(function (s, i) { s.order = i; SUBJ[s.id] = s; });
-  var OTHER = { id: 'other', name: '取り込んだ問題（科目未設定）', short: 'その他', cat: '追加', group: 0, count: 0, session: '', order: 99 };
+  var OTHER = { id: 'other', name: '取り込んだ問題（' + SL + '未設定）', short: 'その他', cat: '追加', group: 0, count: 0, session: '', order: 99 };
   SUBJ.other = OTHER;
   var GROUP_OF = {};
   META.groups.forEach(function (g) { g.subjects.forEach(function (sid) { GROUP_OF[sid] = g.id; }); });
@@ -496,7 +497,7 @@
 
     html += '<div class="hero">' +
       '<div class="card count-card"><div class="k">' + esc(META.exam.name) + '</div>' +
-      (exam && left >= 0 ? '<div class="big num">あと ' + left + '<small>日</small></div>' : '<div class="big" style="font-size:1.6em">' + (exam ? '試験日を過ぎました' : '試験日は未発表') + '</div>') +
+      (exam && left >= 0 ? '<div class="big num">あと ' + left + '<small>日</small></div>' : '<div class="big" style="font-size:1.6em">' + (exam ? '試験日を過ぎました' : '試験日を設定') + '</div>') +
       '<div class="d">' + (exam ? '試験日 ' + jaDate(exam) + (exam !== META.exam.date ? '（設定で変更済み）' : '') : esc(META.exam.dateNote || '設定で試験日を入力すると、残り日数を表示します')) + '</div>' +
       '<div class="d small" style="margin-top:6px">' + esc(APP.heroNote) + '</div></div>' +
       '<div class="card today"><div class="row between"><b>今日の学習</b><a class="small" href="#/stats">記録を見る</a></div>' +
@@ -509,8 +510,8 @@
 
     html += '<h2 class="sec">学習モード</h2><div class="modes">' +
       modeCard('repeat', '今日の復習', '間違えた・あいまいだった問題を、忘れかけの頃に再出題（間隔反復）。', due ? due + '問が復習時期' : '復習予定はまだありません', 'quick', 'due', due > 0) +
-      modeCard('list', '科目別演習', '科目・出題数・出題順・絞り込みを選んで解く。過去問サイトの「出題範囲を選択」にあたる機能。', BANK.length + '問から選択', 'href', '#/setup') +
-      modeCard('shuffle', 'ランダム10問', '全科目からランダムに10問。すき間時間に。', 'すぐ始める', 'quick', 'rand10') +
+      modeCard('list', SL + '別演習', SL + '・出題数・出題順・絞り込みを選んで解く。過去問サイトの「出題範囲を選択」にあたる機能。', BANK.length + '問から選択', 'href', '#/setup') +
+      modeCard('shuffle', 'ランダム10問', '全' + SL + 'からランダムに10問。すき間時間に。', 'すぐ始める', 'quick', 'rand10') +
       modeCard('ox', '一問一答（○×）', '選択肢を1文ずつ○×で判定。知識の穴が見つかる。', oxAll(null).length + '文', 'href', '#/ox') +
       modeCard('clock', '模擬試験', esc(APP.mockCard), (store.mocks.length ? '受験 ' + store.mocks.length + '回' : '時間を計って挑戦'), 'href', '#/mock') +
       modeCard('target', '苦手克服', '前回不正解・正答率60%未満・「自信なし」の問題だけ。', weak ? weak + '問' : 'まだありません', 'quick', 'weak', weak > 0) +
@@ -519,7 +520,7 @@
       modeCard('search', '一覧・検索', 'キーワードで問題と解説を横断検索。印刷用の問題用紙も作れる。', '', 'href', '#/list') +
       '</div>';
 
-    html += '<h2 class="sec">科目別の進み具合 <span class="sub">科目名をタップするとその科目を演習</span></h2><div class="card" style="padding:10px 12px">' + subjTable(BUILTIN_IDS) + '</div>';
+    html += '<h2 class="sec">' + SL + '別の進み具合 <span class="sub">' + SL + '名をタップするとその' + SL + 'を演習</span></h2><div class="card" style="padding:10px 12px">' + subjTable(BUILTIN_IDS) + '</div>';
 
     if (custom.packs.length) {
       html += '<h2 class="sec">取り込んだ問題</h2><div class="card">' + custom.packs.map(function (p) {
@@ -542,7 +543,7 @@
   }
   function subjTable(ids) {
     var ss = subjStats(ids);
-    var h = '<table class="subj-table"><thead><tr><th>科目</th><th class="r">解答済</th><th style="width:34%">正答率（累計）</th><th class="r">%</th></tr></thead><tbody>';
+    var h = '<table class="subj-table"><thead><tr><th>' + SL + '</th><th class="r">解答済</th><th style="width:34%">正答率（累計）</th><th class="r">%</th></tr></thead><tbody>';
     META.groups.forEach(function (g) {
       h += '<tr class="grp"><td colspan="4">' + esc(g.name) + (g.note ? '　' + esc(g.note) : '') + '</td></tr>';
       g.subjects.forEach(function (sid) {
@@ -561,7 +562,7 @@
      画面：出題設定（演習）
      ===================================================================== */
   function defaultSetup() {
-    return { subjects: META.subjects.map(function (s) { return s.id; }), status: 'all', order: 'seq', count: 'all', src: 'b', qset: 'all' };
+    return { subjects: META.subjects.map(function (s) { return s.id; }), status: 'all', order: 'seq', count: 'all', src: 'b', qset: 'all', kind: 'all' };
   }
   VIEWS.setup = function (p) {
     var cfg = Object.assign(defaultSetup(), store.setup || {});
@@ -569,7 +570,7 @@
     if (p.status) cfg.status = p.status;
     if (cfg.src !== 'b' && cfg.src !== 'all' && !custom.packs.some(function (pk) { return pk.id === cfg.src; })) cfg.src = 'b';
     store.setup = cfg;
-    var html = '<div class="wrap"><h1 class="page">科目別演習</h1><p class="lead">出題範囲と条件を選んで「演習スタート」。1問ごとに正誤と解説が表示されます。</p>';
+    var html = '<div class="wrap"><h1 class="page">' + SL + '別演習</h1><p class="lead">出題範囲と条件を選んで「演習スタート」。1問ごとに正誤と解説が表示されます。</p>';
 
     if (custom.packs.length) {
       html += '<div class="field"><span class="lab">問題の種類</span><div class="seg" id="srcSeg">' +
@@ -580,7 +581,7 @@
       html += '<div class="field"><span class="lab">問題セット</span><div class="seg">' + segBtn('qset', 'all', 'すべて', cfg.qset) +
         SETS.map(function (n) { return segBtn('qset', String(n), '第' + n + '回', cfg.qset); }).join('') + '</div></div>';
     }
-    html += '<div class="field"><span class="lab">科目（複数選択可）</span><div class="row" style="margin-bottom:8px">' +
+    html += '<div class="field"><span class="lab">' + SL + '（複数選択可）</span><div class="row" style="margin-bottom:8px">' +
       '<button class="btn small" data-act="subjAll" data-v="1">すべて選択</button><button class="btn small" data-act="subjAll" data-v="0">すべて解除</button>' +
       (META.cats || []).map(function (c) { return '<button class="btn small" data-act="subjCat" data-v="' + esc(c[0]) + '">' + esc(c[1]) + '</button>'; }).join('') + '</div>' +
       '<div class="subj-pick">';
@@ -602,6 +603,11 @@
 
     html += '<div class="field"><span class="lab">絞り込み</span><select class="inp" id="statusSel">' +
       STATUS_FILTERS.map(function (f) { return '<option value="' + f[0] + '"' + (cfg.status === f[0] ? ' selected' : '') + '>' + f[1] + '</option>'; }).join('') + '</select></div>';
+    // 一般問題／事例問題（事例問題が収録されている場合だけ表示）
+    if (BANK.some(function (q) { return q.case; })) {
+      html += '<div class="field"><span class="lab">問題の形式</span><div class="seg">' + segBtn('kind', 'all', 'すべて', cfg.kind || 'all') + segBtn('kind', 'gen', '一般問題', cfg.kind) +
+        segBtn('kind', 'case', '事例問題' + (APP.casePoints ? '（' + APP.casePoints + '）' : ''), cfg.kind) + '</div></div>';
+    }
     html += '<div class="grid g2 stack-s"><div class="field"><span class="lab">出題順</span><div class="seg">' +
       segBtn('order', 'seq', '番号順', cfg.order) + segBtn('order', 'rand', 'ランダム', cfg.order) + '</div></div>' +
       '<div class="field"><span class="lab">出題数</span><div class="seg">' +
@@ -629,6 +635,8 @@
     return orderedIds(sourceIds(cfg.src).filter(function (id) {
       var q = BYID[id];
       if (qs !== 'all' && q.src === 'b' && q.set !== +qs) return false;
+      if (cfg.kind === 'gen' && q.case) return false;
+      if (cfg.kind === 'case' && !q.case) return false;
       return set[q.subj] && matchStatus(id, cfg.status);
     }));
   }
@@ -639,7 +647,7 @@
     var ids = setupMatches();
     var n = cfg.count === 'all' ? ids.length : Math.min(ids.length, +cfg.count);
     $('#matchN').textContent = n;
-    $('#matchSub').textContent = '該当 ' + ids.length + '問・' + cfg.subjects.length + '科目';
+    $('#matchSub').textContent = '該当 ' + ids.length + '問・' + cfg.subjects.length + SL;
     $('#goBtn').disabled = n === 0;
     save();
   }
@@ -688,10 +696,13 @@
     html += '<div class="qmeta"><span class="qno" id="qh">' + (isMock && s.mock && s.mock.offset != null ? '問題 ' + (s.mock.offset + s.i + 1) : isMock && q.gno && s.mock && s.mock.global ? '問題 ' + q.gno : '第' + (s.i + 1) + '問') + '</span>' +
       '<span class="chip acc">' + esc(subjName(q)) + '</span>' +
       (q.topic ? '<span class="chip">' + esc(q.topic) + '</span>' : '') +
+      (q.case && APP.casePoints ? '<span class="chip">事例問題・' + esc(APP.casePoints) + '</span>' : '') +
       (q.src !== 'b' ? '<span class="chip warn">取込: ' + esc(q.label || q.pack) + '</span>' : '') +
       (store.flags[q.id] ? '<span class="chip flag">付箋</span>' : '') + '</div>';
-    html += '<p class="qtext">' + emphasize(q.q) + '</p>';
-    if (q.case) html += '<div class="qcase"><span class="k">事例</span>' + fmt(q.case) + '</div>';
+    // 事例の位置：社会福祉士は「問い→事例」、公認心理師は「事例→問い」（APP.caseFirst）
+    var caseHtml = q.case ? '<div class="qcase"><span class="k">事例</span>' + fmt(q.case) + '</div>' : '';
+    if (APP.caseFirst) html += caseHtml + '<p class="qtext">' + emphasize(q.q) + '</p>';
+    else html += '<p class="qtext">' + emphasize(q.q) + '</p>' + caseHtml;
     if (need > 1 && !answered) html += '<div class="multi-hint">' + need + 'つ選んでください（' + pick.length + '/' + need + '）</div>';
 
     html += '<ol class="opts" role="list">';
@@ -856,7 +867,7 @@
     ids.forEach(function (id) { var q = BYID[id]; var o = by[q.subj] || (by[q.subj] = { n: 0, c: 0 }); o.n++; if (s.ans[id] && s.ans[id].ok) o.c++; });
     var keys = Object.keys(by).sort(function (a, b) { return SUBJ[a].order - SUBJ[b].order; });
     if (keys.length > 1) {
-      html += '<h2 class="sec">科目別</h2><div class="card"><div class="bars">' + keys.map(function (k) {
+      html += '<h2 class="sec">' + SL + '別</h2><div class="card"><div class="bars">' + keys.map(function (k) {
         var pp = pct(by[k].c, by[k].n);
         return '<div class="brow"><span class="lab">' + esc(SUBJ[k].name) + '</span><div class="meter"><i class="' + (pp >= 60 ? 'ok' : pp >= 40 ? 'warn' : 'ng') + '" style="width:' + pp + '%"></i><span class="line60"></span></div><span class="val">' + by[k].c + '/' + by[k].n + '</span></div>';
       }).join('') + '</div></div>';
@@ -894,7 +905,7 @@
     }
     html += '<div class="notice" style="margin-top:18px"><strong>採点と合否判定：</strong>' + MOCK.noticeHtml + '</div>';
     if (store.mocks.length) {
-      html += '<h2 class="sec">受験履歴</h2><div class="card" style="padding:6px 14px; overflow-x:auto"><table class="tbl"><thead><tr><th>日時</th><th>種類</th><th class="r">得点</th><th class="r">正答率</th><th class="r">時間</th><th></th></tr></thead><tbody>' +
+      html += '<h2 class="sec">受験履歴</h2><div class="card" style="padding:6px 14px; overflow-x:auto"><table class="tbl"><thead><tr><th>日時</th><th>種類</th><th class="r">得点</th><th class="r">得点率</th><th class="r">時間</th><th></th></tr></thead><tbody>' +
         store.mocks.map(function (m, i) { return { m: m, i: i }; }).reverse().map(function (x) {
           var m = x.m;
           return '<tr><td class="num small">' + fmtDate(m.ts) + '</td><td class="small">' + esc(m.label) + '</td><td class="r num"><b>' + m.score + '</b>/' + m.total + '</td><td class="r num">' + pct(m.score, m.total) + '%</td><td class="r num small">' + fmtDurJa(m.dur) + '</td>' +
@@ -907,7 +918,7 @@
   };
   function mockTrend() {
     var ms = store.mocks.filter(function (m) { return m.scope === 'full'; }).slice(-12);
-    if (ms.length < 1) return '<p class="small muted">本番形式（全科目）を受けると、得点の推移がここに表示されます。</p>';
+    if (ms.length < 1) return '<p class="small muted">' + esc(MOCK_SCOPES[0].t) + 'を受けると、得点の推移がここに表示されます。</p>';
     var W = 600, H = 180, pad = 28, max = MOCK.trendMax;
     var x = function (i) { return pad + (ms.length === 1 ? (W - 2 * pad) / 2 : i * (W - 2 * pad) / (ms.length - 1)); };
     var y = function (v) { return H - pad - v / max * (H - 2 * pad); };
@@ -1006,7 +1017,7 @@
     html += '<div class="row" style="margin-top:16px"><button class="btn primary" data-act="mockReview" data-i="' + p.i + '">' + icon('eye') + ' 全問の解説を見る</button>' +
       (m.score < m.total ? '<button class="btn" data-act="mockWrong" data-i="' + p.i + '">' + icon('repeat') + ' 間違えた問題を演習</button>' : '') +
       '<a class="btn ghost" href="#/mock">模試トップへ</a></div></div>';
-    html += '<h2 class="sec">科目別の得点</h2><div class="card"><div class="bars">' + Object.keys(m.bySubj).sort(function (a, b) { return (SUBJ[a] || OTHER).order - (SUBJ[b] || OTHER).order; }).map(function (k) {
+    html += '<h2 class="sec">' + SL + '別の正解数</h2><div class="card"><div class="bars">' + Object.keys(m.bySubj).sort(function (a, b) { return (SUBJ[a] || OTHER).order - (SUBJ[b] || OTHER).order; }).map(function (k) {
       var o = m.bySubj[k], pp = pct(o[0], o[1]);
       return '<div class="brow"><span class="lab">' + esc((SUBJ[k] || OTHER).name) + '</span><div class="meter"><i class="' + (pp >= 60 ? 'ok' : pp >= 40 ? 'warn' : 'ng') + '" style="width:' + pp + '%"></i><span class="line60"></span></div><span class="val">' + o[0] + '/' + o[1] + '</span></div>';
     }).join('') + '</div></div>';
@@ -1029,7 +1040,7 @@
     var all = oxAll(null);
     var done = all.filter(function (id) { return store.ox[id] && store.ox[id].n; }).length;
     var html = '<div class="wrap"><h1 class="page">一問一答（○×）</h1><p class="lead">5択問題の選択肢を1文ずつ取り出して、正しい記述か誤った記述かを判定します。全 <b>' + all.length + '</b> 文（回答済み ' + done + '）。</p>';
-    html += '<div class="field"><span class="lab">科目</span><div class="row" style="margin-bottom:8px"><button class="btn small" data-act="subjAll" data-v="1">すべて選択</button><button class="btn small" data-act="subjAll" data-v="0">すべて解除</button></div><div class="subj-pick"><div class="grp-box"><div class="grp-items">';
+    html += '<div class="field"><span class="lab">' + SL + '</span><div class="row" style="margin-bottom:8px"><button class="btn small" data-act="subjAll" data-v="1">すべて選択</button><button class="btn small" data-act="subjAll" data-v="0">すべて解除</button></div><div class="subj-pick"><div class="grp-box"><div class="grp-items">';
     META.subjects.forEach(function (sj) {
       var n = all.filter(function (id) { return oxParse(id).q.subj === sj.id; }).length;
       html += '<label class="chk"><input type="checkbox" name="subj" value="' + sj.id + '"' + (cfg.subjects.indexOf(sj.id) >= 0 ? ' checked' : '') + '><span>' + esc(sj.name) + '</span><span class="c">' + n + '文</span></label>';
@@ -1114,7 +1125,7 @@
     if (p.kw != null) listState.kw = p.kw;
     var html = '<div class="wrap"><h1 class="page">一覧・検索</h1><p class="lead">問題文・選択肢・解説をまとめて検索できます（ひらがな／カタカナ、全角／半角の違いは無視）。</p>';
     html += '<div class="searchbar"><label class="sr" for="kw">キーワード</label><input class="inp" id="kw" type="search" placeholder="' + esc(APP.searchPlaceholder) + '" value="' + esc(listState.kw) + '" autocomplete="off"></div>';
-    html += '<div class="filters"><select class="inp" id="fSubj" aria-label="科目"><option value="all">すべての科目</option>' +
+    html += '<div class="filters"><select class="inp" id="fSubj" aria-label="' + SL + '"><option value="all">すべての' + SL + '</option>' +
       META.subjects.map(function (s) { return '<option value="' + s.id + '"' + (listState.subj === s.id ? ' selected' : '') + '>' + esc(s.name) + '</option>'; }).join('') +
       (BANK.some(function (q) { return q.subj === 'other'; }) ? '<option value="other"' + (listState.subj === 'other' ? ' selected' : '') + '>' + esc(OTHER.name) + '</option>' : '') + '</select>' +
       '<select class="inp" id="fStatus" aria-label="状態">' + STATUS_FILTERS.map(function (f) { return '<option value="' + f[0] + '"' + (listState.status === f[0] ? ' selected' : '') + '>' + f[1] + '</option>'; }).join('') + '</select>' +
@@ -1181,14 +1192,14 @@
         (st && st.n ? '<span class="chip ' + (st.c / st.n >= 0.6 ? 'ok' : 'ng') + '">' + st.c + '/' + st.n + '</span>' : '') +
         (store.flags[id] ? '<span class="chip flag">付箋</span>' : '') + (store.notes[id] ? '<span class="chip">メモ</span>' : '') +
         (q.ans.length > 1 ? '<span class="chip warn">2つ選ぶ</span>' : '') + '</span></span></button></li>';
-    }).join('') + (ids.length > 200 ? '<li class="empty">ほか ' + (ids.length - 200) + '問。キーワードや科目で絞り込んでください。</li>' : '');
+    }).join('') + (ids.length > 200 ? '<li class="empty">ほか ' + (ids.length - 200) + '問。キーワードや' + SL + 'で絞り込んでください。</li>' : '');
   }
   function printQuestions(ids, title) {
     var h = '<h1>' + esc(title) + '（' + ids.length + '問）</h1><p style="font-size:9pt">' + esc(APP.name) + '／独自作成の練習問題　印刷日 ' + dkey() + '</p>';
     ids.forEach(function (id, i) {
       var q = BYID[id];
       h += '<div class="pq"><div class="h">問' + (i + 1) + '　<span style="font-weight:normal;font-size:9pt">［' + esc(subjName(q)) + '］</span></div>' +
-        '<div>' + esc(plain(q.q)) + '</div>' + (q.case ? '<div class="pcase">' + esc(plain(q.case)) + '</div>' : '') + '<ol class="po">' +
+        (APP.caseFirst && q.case ? '<div class="pcase">' + esc(plain(q.case)) + '</div><div>' + esc(plain(q.q)) + '</div>' : '<div>' + esc(plain(q.q)) + '</div>' + (q.case ? '<div class="pcase">' + esc(plain(q.case)) + '</div>' : '')) + '<ol class="po">' +
         q.opts.map(function (o) { return '<li>' + esc(plain(o)) + '</li>'; }).join('') + '</ol></div>';
     });
     h += '<div class="pans"><h1>解答・解説</h1>';
@@ -1234,12 +1245,12 @@
 
     // 科目別
     var ss = subjStats(BUILTIN_IDS);
-    html += '<h2 class="sec">科目別の正答率 <span class="sub">縦線は60%</span></h2><div class="card"><div class="bars">' + META.subjects.map(function (sj) {
+    html += '<h2 class="sec">' + SL + '別の正答率 <span class="sub">縦線は60%</span></h2><div class="card"><div class="bars">' + META.subjects.map(function (sj) {
       var o = ss[sj.id] || { n: 0, c: 0, done: 0, total: 0 }, p = pct(o.c, o.n);
       return '<div class="brow"><span class="lab" title="' + esc(sj.name) + '">' + esc(sj.name) + '</span><div class="meter"><i class="' + (p == null ? '' : p >= 60 ? 'ok' : p >= 40 ? 'warn' : 'ng') + '" style="width:' + (p || 0) + '%"></i><span class="line60"></span></div><span class="val">' + (p == null ? '–' : p + '%') + '</span></div>';
     }).join('') + '</div>';
     var weakS = META.subjects.map(function (sj) { var o = ss[sj.id]; return { sj: sj, p: o && o.n >= 3 ? o.c / o.n : null }; }).filter(function (x) { return x.p != null; }).sort(function (a, b) { return a.p - b.p; }).slice(0, 3);
-    if (weakS.length) html += '<div class="row" style="margin-top:14px"><span class="small">苦手な科目：' + weakS.map(function (x) { return '<b>' + esc(x.sj.short) + '</b>（' + Math.round(x.p * 100) + '%）'; }).join('、') + '</span><span class="spacer"></span><button class="btn small primary" data-act="weakSubj" data-v="' + weakS.map(function (x) { return x.sj.id; }).join(',') + '">この科目を集中演習</button></div>';
+    if (weakS.length) html += '<div class="row" style="margin-top:14px"><span class="small">苦手な' + SL + '：' + weakS.map(function (x) { return '<b>' + esc(x.sj.short) + '</b>（' + Math.round(x.p * 100) + '%）'; }).join('、') + '</span><span class="spacer"></span><button class="btn small primary" data-act="weakSubj" data-v="' + weakS.map(function (x) { return x.sj.id; }).join(',') + '">この科目を集中演習</button></div>';
     html += '</div>';
 
     // 科目群別（分野別）
@@ -1316,12 +1327,14 @@
     download(APPID + '-backup-' + dkey().replace(/-/g, '') + '.json', JSON.stringify(data));
     toast('書き出しました');
   }
+  // 他の試験のドリル（社会福祉士版・公認心理師版など）の書き出しファイルか
+  function otherDrill(d) { return !!(d && typeof d.app === 'string' && /drill$/.test(d.app) && d.app !== APPID && d.store); }
   function importData(text) {
     var d;
     try { d = JSON.parse(text); } catch (e) { toast('ファイルを読み込めませんでした（JSONではありません）'); return; }
     if (!d || d.app !== APPID || !d.store) {
       if (Array.isArray(d) || (d && (d.questions || d.qs))) { toast('問題データのようです。「問題データの取り込み」から読み込んでください'); return; }
-      toast('このアプリの書き出しファイルではありません'); return;
+      toast(otherDrill(d) ? '別の試験のドリルの書き出しファイルです。そのアプリで読み込んでください' : 'このアプリの書き出しファイルではありません'); return;
     }
     openModal({
       title: '学習データの読み込み',
@@ -1414,7 +1427,7 @@
       var nn = normalize(s.name).replace(/\s|・/g, '');
       if (s.id === v || nn === n || normalize(s.short).replace(/\s|・/g, '') === n) return { id: s.id };
     }
-    // 旧カリキュラム（第36回まで）の科目名 → 対応する新科目
+    // 別名（旧カリキュラムの科目名など）→ 対応する科目
     var OLD = APP.aliases || {};
     for (var k in OLD) if (normalize(k).replace(/\s|・/g, '') === n) return { id: OLD[k], name: String(v) };
     return { id: 'other', name: String(v) };
@@ -1437,6 +1450,7 @@
     if (text[0] === '[' || text[0] === '{') {
       var d; try { d = JSON.parse(text); } catch (e) { toast('JSONの形式に誤りがあります：' + e.message); return; }
       if (d && d.app === APPID) { importData(text); return; }
+      if (otherDrill(d)) { toast('別の試験のドリルの書き出しファイルです。そのアプリで読み込んでください'); return; }
       items = Array.isArray(d) ? d : (d.questions || d.qs || []);
       if (!packName && d.name) packName = d.name;
     } else items = parseCSV(text);
@@ -1473,7 +1487,7 @@
     var other = ok.filter(function (q) { return q.subj === 'other'; }).length;
     openModal({
       title: '取り込みました', html: '<p><b>' + esc(pack.name) + '</b>：' + ok.length + '問</p>' +
-        (other ? '<p class="small">科目名が一致しなかった問題が ' + other + '問あります（「' + esc(OTHER.name) + '」として扱います）。</p>' : '') +
+        (other ? '<p class="small">' + SL + '名が一致しなかった問題が ' + other + '問あります（「' + esc(OTHER.name) + '」として扱います）。</p>' : '') +
         (errs.length ? '<p class="small">読み飛ばした行：' + errs.length + '件</p><pre class="code">' + esc(errs.slice(0, 20).join('\n')) + '</pre>' : ''),
       actions: [{ label: '閉じる', fn: function () { route(); } }, { label: '演習する', cls: 'primary', fn: function () { packPlay(pid); } }]
     });
@@ -1503,7 +1517,7 @@
      画面：メニュー（スマホ）・使い方
      ===================================================================== */
   VIEWS.more = function () {
-    var items = [['#/mock', 'clock', '模擬試験', APP.moreMock], ['#/stats', 'chart', '学習記録', '科目別正答率・カレンダー・模試の推移'], ['#/settings', 'gear', '設定・データ', 'テーマ・文字サイズ・書き出し・問題の取り込み'], ['#/help', 'help', '使い方・ご注意', 'ショートカット・合格基準・取り込みの書式']];
+    var items = [['#/mock', 'clock', '模擬試験', APP.moreMock], ['#/stats', 'chart', '学習記録', SL + '別正答率・カレンダー・模試の推移'], ['#/settings', 'gear', '設定・データ', 'テーマ・文字サイズ・書き出し・問題の取り込み'], ['#/help', 'help', '使い方・ご注意', 'ショートカット・合格基準・取り込みの書式']];
     setView('<div class="wrap"><h1 class="page">メニュー</h1><ul class="morelist">' + items.map(function (x) {
       return '<li><a href="' + x[0] + '"><span class="ic">' + icon(x[1]) + '</span><span>' + x[2] + '<span class="d">' + x[3] + '</span></span></a></li>';
     }).join('') + '</ul>' + footer() + '</div>');
@@ -1511,7 +1525,7 @@
   VIEWS.help = function () {
     var html = '<div class="wrap prose"><h1 class="page">使い方・ご注意</h1>' +
       '<h3>このアプリでできること</h3><ul>' +
-      '<li><b>科目別演習</b>：科目（複数可）・絞り込み（未解答／前回まちがえた／苦手／付箋／メモ）・出題順・出題数を選んで解きます。1問ごとに正誤と、選択肢ごとの○×解説が表示されます。</li>' +
+      '<li><b>' + SL + '別演習</b>：' + SL + '（複数可）・絞り込み（未解答／前回まちがえた／苦手／付箋／メモ）・出題順・出題数を選んで解きます。1問ごとに正誤と、選択肢ごとの○×解説が表示されます。</li>' +
       '<li><b>一問一答（○×）</b>：選択肢を1文ずつ取り出して正誤を判定。5択の「なんとなく正解」を防げます。</li>' +
       '<li><b>模擬試験</b>：' + APP.helpMock + '</li>' +
       '<li><b>今日の復習（間隔反復）</b>：間違えた問題は翌日、「自信あり」で正解した問題は3日→7日→14日→30日→60日と間隔をあけて再出題します。「あいまい」「勘で当たった」を押すと早めに出題されます。</li>' +
@@ -1519,13 +1533,13 @@
       '<li><b>消去法</b>：選択肢右側の × で、選択肢に取り消し線を引けます。</li>' +
       '<li><b>読み上げ</b>：問題文と選択肢を音声で読み上げます（端末の音声合成を使用）。</li>' +
       '<li><b>一覧・検索・印刷</b>：問題文・選択肢・解説・メモを横断検索。表示中の問題を問題用紙＋解答解説の形で印刷できます。</li>' +
-      '<li><b>学習記録</b>：直近30日の解答数、学習カレンダー、科目別・' + esc(GROUP_LABEL) + '別の正答率、よく間違える問題、模試の得点推移。</li>' +
+      '<li><b>学習記録</b>：直近30日の解答数、学習カレンダー、' + SL + '別・' + esc(GROUP_LABEL) + '別の正答率、よく間違える問題、模試の得点推移。</li>' +
       '<li><b>オフライン・ホーム画面に追加</b>：一度開けば電波がなくても使えます。</li></ul>' +
       '<h3>キーボード操作（パソコン）</h3><ul><li><kbd>1</kbd>〜<kbd>5</kbd>：選択肢を選ぶ　<kbd>Enter</kbd>：解答／次へ　<kbd>←</kbd><kbd>→</kbd>：前後の問題</li><li><kbd>F</kbd>：付箋　<kbd>R</kbd>：見直し印（模試）　<kbd>S</kbd>：読み上げ　<kbd>P</kbd>：問題一覧　<kbd>Esc</kbd>：閉じる</li><li>一問一答：<kbd>O</kbd>または<kbd>1</kbd>＝正しい、<kbd>X</kbd>または<kbd>2</kbd>＝誤り</li></ul>' +
       APP.helpExamHtml +
       '<h3 id="fmt">問題データの取り込み書式</h3><p>JSON（配列、または <code>{"name":"…","questions":[…]}</code>）か、1行目が見出しの CSV/TSV に対応しています。</p><ul>' +
       '<li><code>question</code>（問題文・必須）、<code>options</code>（選択肢の配列・必須）、<code>answer</code>（正答の番号・<b>1始まり</b>・必須。2つ選ぶ問題は <code>[2,5]</code> や <code>"2,5"</code>）</li>' +
-      '<li>任意：<code>subject</code>（科目名。本アプリの' + META.subjects.length + '科目の名前と一致すると科目別に集計されます）、<code>label</code>（例「' + esc(APP.labelExample) + '」）、<code>case</code>（事例文）、<code>explanation</code>（解説）、<code>optionExplanations</code>（選択肢ごとの解説の配列）、<code>topic</code>（論点）</li>' +
+      '<li>任意：<code>subject</code>（' + SL + '名。本アプリの' + META.subjects.length + 'の' + SL + 'の名前と一致すると' + SL + '別に集計されます）、<code>label</code>（例「' + esc(APP.labelExample) + '」）、<code>case</code>（事例文）、<code>explanation</code>（解説）、<code>optionExplanations</code>（選択肢ごとの解説の配列）、<code>topic</code>（論点）</li>' +
       '<li>CSVの見出しは <code>問題文, 選択肢1〜選択肢5, 正答, 解説, 科目, 問題番号, 事例, 解説1〜解説5</code>（英語名も可）。</li></ul>' +
       '<pre class="code">' + esc(TPL_JSON) + '</pre>' +
       '<h3>収録問題とご注意</h3><ul><li>収録問題はすべて、出題基準と出題形式に沿って<b>独自に作成した練習問題</b>です。実際の国家試験の問題（過去問）や、他の過去問サイト・問題集の問題・解説を転載したものではありません。</li>' +
@@ -1561,7 +1575,7 @@
         store.setup[k] = v;
         if (k === 'src') { save(); VIEWS.setup({}); return; }
         updateSetupCount();
-      } else if (k === 'qset') { store.setup.qset = v; updateSetupCount(); }
+      } else if (k === 'qset' || k === 'kind') { store.setup[k] = v; updateSetupCount(); }
       else if (k === 'mockset') { store.mockSet = v; save(); VIEWS.mock(); }
       else if (k === 'oxstatus') { store.oxSetup.status = v; updateOxCount(); }
       else if (k === 'oxcount') { store.oxSetup.count = v; updateOxCount(); }
@@ -1588,7 +1602,7 @@
       var cfg = store.setup, ids = setupMatches();
       if (cfg.order === 'rand') ids = shuffle(ids);
       if (cfg.count !== 'all') ids = ids.slice(0, +cfg.count);
-      var names = cfg.subjects.length === META.subjects.length ? '全科目' : cfg.subjects.length <= 2 ? cfg.subjects.map(function (s) { return (SUBJ[s] || OTHER).name; }).join('・') : cfg.subjects.length + '科目';
+      var names = cfg.subjects.length === META.subjects.length ? '全' + SL : cfg.subjects.length <= 2 ? cfg.subjects.map(function (s) { return (SUBJ[s] || OTHER).name; }).join('・') : cfg.subjects.length + '科目';
       var st = STATUS_FILTERS.filter(function (f) { return f[0] === cfg.status; })[0];
       startSession({ kind: 'practice', title: names + (cfg.status !== 'all' ? '（' + st[1].replace(/（.*）/, '') + '）' : ''), ids: ids });
     },
@@ -1687,7 +1701,7 @@
     oxSource: function () {
       var s = S(), it = oxParse(s.ids[s.i]), q = it.q;
       openModal({
-        title: qLabel(q), html: '<p>' + fmt(q.q) + '</p>' + (q.case ? '<div class="qcase">' + fmt(q.case) + '</div>' : '') + '<ul class="oe">' + q.opts.map(function (o, i) {
+        title: qLabel(q), html: (APP.caseFirst && q.case ? '<div class="qcase">' + fmt(q.case) + '</div><p>' + fmt(q.q) + '</p>' : '<p>' + fmt(q.q) + '</p>' + (q.case ? '<div class="qcase">' + fmt(q.case) + '</div>' : '')) + '<ul class="oe">' + q.opts.map(function (o, i) {
           var isA = q.ans.indexOf(i) >= 0;
           return '<li class="' + (isA ? 'is-ans' : '') + '"><span class="tf ' + (oxTruth(q, i) ? 't' : 'f') + '">' + (oxTruth(q, i) ? '○' : '×') + '</span><span class="b"><span class="o">' + (i + 1) + '. ' + fmt(o) + (isA ? '　<span class="chip ok">正答</span>' : '') + '</span>' + fmt(q.oe[i] || '') + '</span></li>';
         }).join('') + '</ul>' + (q.exp ? '<div class="exp"><h4>ポイント</h4><div class="point">' + fmt(q.exp) + '</div></div>' : '')
@@ -1812,7 +1826,7 @@
     if (speechSynthesis.speaking) { stopSpeech(); return; }
     var s = S(), q = curQ(); if (!q) return;
     var order = optOrder(s, q);
-    var text = plain(q.q) + '。' + (q.case ? '事例。' + plain(q.case) + '。' : '') + order.map(function (oi, k) { return (k + 1) + '。' + plain(q.opts[oi]); }).join('。');
+    var text = (APP.caseFirst && q.case ? '事例。' + plain(q.case) + '。' + plain(q.q) + '。' : plain(q.q) + '。' + (q.case ? '事例。' + plain(q.case) + '。' : '')) + order.map(function (oi, k) { return (k + 1) + '。' + plain(q.opts[oi]); }).join('。');
     var a = s.ans[q.id];
     if (a && s.kind !== 'mock') text += '。正答は' + q.ans.map(function (oi) { return order.indexOf(oi) + 1; }).join('と') + '。' + plain(q.exp || '');
     var u = new SpeechSynthesisUtterance(text);
