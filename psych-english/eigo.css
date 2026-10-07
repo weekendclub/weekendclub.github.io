@@ -1,0 +1,239 @@
+/* =========================================================================
+   心理英語ノート  psych-english/eigo.css
+   共通スタイル ../drill/style.css の上に、このページ固有の部品を重ねる。
+   アクセント色は青緑（ペトロール）。正誤の緑・赤、国試ドリルの青・紫と見分けやすい色相。
+   ========================================================================= */
+:root{
+  --accent:#0d6e8c; --accent-ink:#0a5a73; --accent-soft:#e2f2f7; --on-accent:#ffffff;
+  /* 構造の色：S 主語・V 動詞・O 目的語・C 補語・M 修飾 */
+  --pS:#2c62c9; --pV:#c8382f; --pO:#18805a; --pC:#b36b00; --pM:#6b7280;
+  --pA:#8a3fb8; --pAdv:#a8611a; --pN:#2c62c9;
+  --en:"Iowan Old Style","Palatino Linotype","Book Antiqua",Palatino,Georgia,"Times New Roman",serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --accent:#62c3df; --accent-ink:#86d3ea; --accent-soft:#16323b; --on-accent:#05222b;
+    --pS:#86aaff; --pV:#ff8e84; --pO:#6fd3a5; --pC:#f3b95a; --pM:#a3aab5;
+    --pA:#d29bff; --pAdv:#f0a868; --pN:#86aaff;
+  }
+}
+:root[data-theme="dark"]{
+  --accent:#62c3df; --accent-ink:#86d3ea; --accent-soft:#16323b; --on-accent:#05222b;
+  --pS:#86aaff; --pV:#ff8e84; --pO:#6fd3a5; --pC:#f3b95a; --pM:#a3aab5;
+  --pA:#d29bff; --pAdv:#f0a868; --pN:#86aaff;
+}
+
+.en{font-family:var(--en); font-size:1.06em; letter-spacing:.005em;}
+.ja{margin:4px 0;}
+.crumb{margin:0 0 6px; color:var(--mute);}
+.crumb a{color:var(--mute);}
+.row.small-gap{gap:6px;}
+.btn.big{padding:14px 18px; font-size:1.05em;}
+.lab.small, p.lab{font-size:.78em; font-weight:800; color:var(--ink2); letter-spacing:.05em; margin:14px 0 4px; display:block;}
+.k4{grid-template-columns:repeat(4,1fr);}
+@media (max-width:640px){ .k4{grid-template-columns:repeat(2,1fr);} }
+kbd{font-size:.72em;}
+
+/* ---------- 構造の表記 ---------- */
+.parse{line-height:2.45;}
+.pc{border-radius:4px; padding:1px 2px; margin:0 1px; -webkit-box-decoration-break:clone; box-decoration-break:clone;}
+.pc .pl{font-family:var(--font); font-size:.6em; font-weight:800; vertical-align:.55em; margin-right:2px; letter-spacing:0; line-height:1;}
+.pc-S{background:color-mix(in srgb, var(--pS) 13%, transparent);} .pc-S > .pl{color:var(--pS);}
+.pc-V{background:color-mix(in srgb, var(--pV) 13%, transparent);} .pc-V > .pl{color:var(--pV);}
+.pc-O{background:color-mix(in srgb, var(--pO) 14%, transparent);} .pc-O > .pl{color:var(--pO);}
+.pc-C{background:color-mix(in srgb, var(--pC) 15%, transparent);} .pc-C > .pl{color:var(--pC);}
+.pc-M{background:color-mix(in srgb, var(--pM) 12%, transparent);} .pc-M > .pl{color:var(--pM);}
+.pc.sub{background:none; border-bottom:2px dotted; border-radius:0; padding:0 1px 1px;}
+.pc-S.sub{border-color:var(--pS);} .pc-V.sub{border-color:var(--pV);} .pc-O.sub{border-color:var(--pO);} .pc-C.sub{border-color:var(--pC);} .pc-M.sub{border-color:var(--pM);}
+.pm .pb{font-weight:800; font-family:var(--font); font-size:.95em; padding:0 1px; font-feature-settings:"halt";}
+.pm-a > .pb{color:var(--pA);} .pm-v > .pb{color:var(--pAdv);} .pm-n > .pb{color:var(--pN);}
+.kw{font-weight:800; text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:3px; text-decoration-color:color-mix(in srgb, var(--accent) 60%, transparent);}
+.plegend{display:flex; flex-wrap:wrap; gap:6px 14px; align-items:center; font-size:.82em; margin:6px 0 10px; line-height:2;}
+.legend-card summary, .legend-inline summary{cursor:pointer; font-weight:700;}
+.legend-inline{margin:8px 0 0;}
+
+/* ---------- 読み上げボタン ---------- */
+.sbtn{display:inline-flex; align-items:center; gap:4px; border:1px solid var(--line2); background:var(--surface); color:var(--accent-ink); border-radius:99px; height:32px; min-width:32px; padding:0 8px; cursor:pointer; vertical-align:middle; font-family:var(--font); font-size:.78rem;}
+.sbtn svg{width:16px; height:16px;}
+.sbtn:hover{border-color:var(--accent);}
+.sbtn .sl{font-weight:700;}
+
+/* ---------- ホーム ---------- */
+.hero-pe{background:linear-gradient(160deg, var(--accent-soft), var(--surface) 70%); border-color:color-mix(in srgb, var(--accent) 30%, var(--line));}
+.hero-pe h1{margin:0 0 4px; font-size:1.45em;}
+.eyebrow{margin:0; color:var(--accent-ink); font-weight:800; letter-spacing:.08em;}
+.tsteps{list-style:none; margin:14px 0 0; padding:0; display:grid; gap:8px;}
+.tstep{display:flex; align-items:center; gap:12px; background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:10px 12px;}
+.tstep .tn{flex:0 0 30px; height:30px; border-radius:50%; background:var(--accent); color:var(--on-accent); display:flex; align-items:center; justify-content:center; font-weight:800;}
+.tstep .tn svg{width:18px; height:18px;}
+.tstep.done .tn{background:var(--ok); color:#fff;}
+.tstep .b{flex:1; min-width:0; display:flex; flex-direction:column;}
+.tstep .t{font-weight:800;}
+.tstep .btn{flex:0 0 auto;}
+
+/* ---------- 単語 ---------- */
+.today-cards .big{font-size:1.35em; font-weight:800;}
+.today-cards .big small{font-size:.6em; font-weight:600; color:var(--mute); margin-left:2px;}
+.decks .mode{min-height:0;}
+.decks .meter{margin-top:6px;}
+.wlist{list-style:none; margin:10px 0 0; padding:0; display:grid; gap:6px;}
+.witem{background:var(--surface); border:1px solid var(--line); border-radius:12px; overflow:hidden;}
+.witem.open{border-color:var(--accent);}
+.wh{display:grid; grid-template-columns:14px minmax(0,auto) auto 1fr; align-items:baseline; gap:10px; width:100%; text-align:left; background:none; border:0; padding:11px 14px; cursor:pointer;}
+.wh .ww{font-weight:700;}
+.wh .wj{color:var(--ink2); font-size:.9em; text-align:right; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.wbody{padding:0 14px 14px;}
+.st{width:10px; height:10px; border-radius:50%; display:inline-block; border:2px solid var(--line2); align-self:center;}
+.st-learning{border-color:var(--accent); background:color-mix(in srgb, var(--accent) 35%, transparent);}
+.st-mature{border-color:var(--ok); background:var(--ok);}
+.wd p{margin:6px 0;}
+.wd .lab{display:inline-block; font-size:.74em; font-weight:800; color:var(--mute); margin-right:8px; letter-spacing:.06em;}
+.wd-note{background:var(--surface2); border:1px solid var(--line); border-radius:10px; padding:10px 12px; font-size:.92em;}
+.wd-ex{border-left:3px solid var(--accent); padding:2px 0 2px 12px; margin:10px 0 0;}
+.wd-ex p{margin:2px 0;}
+@media (max-width:560px){
+  .wh{grid-template-columns:14px 1fr; row-gap:0;}
+  .wh .pos{display:none;}
+  .wh .wj{grid-column:2; text-align:left; white-space:normal;}
+}
+
+/* フラッシュカード */
+.cards-play .ptop, .qz-top{display:flex; align-items:center; gap:10px; margin-bottom:8px;}
+.ptop .title{flex:1; text-align:center;}
+.fc{margin:12px 0 14px; text-align:center; padding:26px 18px; min-height:220px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;}
+.fc.open{text-align:left; align-items:stretch;}
+.fc > .sbtn{align-self:center;}
+.fc.open > .sbtn{align-self:flex-start;}
+.fc .sbtn{flex:0 0 auto;}
+.fc-back .fc-w .sbtn, .wd-ex .sbtn{margin-left:4px;}
+.fc-meta{display:flex; gap:6px; justify-content:center; margin-bottom:6px;}
+.fc.open .fc-meta{justify-content:flex-start;}
+.fc-w{font-family:var(--en); font-size:2em; font-weight:600; line-height:1.3; word-break:break-word;}
+.fc.open .fc-w{font-size:1.6em;}
+.fc-pos{color:var(--mute); font-size:.85em;}
+.fc-ja{font-size:1.35em; font-weight:800; line-height:1.5;}
+.fc-hint{color:var(--ink2); font-size:.92em;}
+.fc-back{border-top:1px dashed var(--line2); margin-top:10px; padding-top:12px;}
+.grades{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:0 0 10px;}
+.gbtn{display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 4px; border-radius:12px; border:1.5px solid var(--line2); background:var(--surface); cursor:pointer;}
+.gbtn b{font-size:.95em;} .gbtn span{font-size:.74em; color:var(--mute);} .gbtn kbd{display:none;}
+@media (min-width:700px){ .gbtn kbd{display:inline-block; margin-top:2px;} }
+.gbtn.g0{border-color:var(--ng-line);} .gbtn.g0 b{color:var(--ng);}
+.gbtn.g1{border-color:var(--warn-line);} .gbtn.g1 b{color:var(--warn);}
+.gbtn.g2{border-color:var(--ok-line);} .gbtn.g2 b{color:var(--ok);}
+.gbtn.g3{border-color:color-mix(in srgb, var(--accent) 50%, var(--line2));} .gbtn.g3 b{color:var(--accent-ink);}
+.gbtn:hover{background:var(--surface2);}
+.done-card{text-align:center; padding:28px 18px;}
+.big-ok{width:56px; height:56px; border-radius:50%; background:var(--ok); color:#fff; display:flex; align-items:center; justify-content:center; margin:0 auto 8px;}
+.big-ok svg{width:30px; height:30px;}
+.qz .fc-w{text-align:center;} .qz .fc-pos{text-align:center; margin-bottom:12px;}
+.qz > p.small{text-align:center;}
+
+/* ---------- 構文 ---------- */
+.glist, .plist, .nlist{list-style:none; margin:0; padding:0; display:grid; gap:8px;}
+.gitem, .pitem, .nitem{display:flex; align-items:center; gap:12px; padding:12px 14px; background:var(--surface); border:1px solid var(--line); border-radius:12px; text-decoration:none; color:var(--ink);}
+.gitem:hover, .pitem:hover, .nitem:hover{border-color:var(--accent);}
+.gitem > svg, .pitem > svg, .nitem > svg{width:18px; height:18px; flex:0 0 18px; color:var(--mute);}
+.gitem .b, .pitem .b, .nitem .b{flex:1; min-width:0; display:flex; flex-direction:column; gap:1px;}
+.gitem .t, .pitem .t, .nitem .t{font-weight:800;}
+.pitem .te{color:var(--ink2);}
+.fic{color:var(--warn); font-weight:700;}
+.gexp{line-height:1.9;}
+.exs .parse{margin:8px 0 6px; font-size:1.05em;}
+.exs .ja{color:var(--ink2);}
+.note{color:var(--ink2); background:var(--surface2); border-radius:8px; padding:8px 10px; margin:8px 0 0;}
+.mcq .mq{margin:0 0 10px; font-weight:700;}
+.mq-en{background:var(--surface2); border:1px solid var(--line); border-radius:10px; padding:8px 12px; line-height:1.8; font-weight:400;}
+.mcq .opt-main{align-items:center;}
+
+/* ---------- 訳読 ---------- */
+.lvseg{margin:6px 0 4px;}
+.lvd{margin:4px 0 12px;}
+.banner.info{text-decoration:none; color:var(--ink); margin:0 0 12px;}
+.banner.info svg{width:18px; height:18px;}
+.phead .chips{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:6px;}
+.pte{color:var(--ink2); margin:-6px 0 6px; font-style:italic;}
+.ptools{display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin:12px 0;}
+.ptools .seg button svg{width:16px; height:16px; vertical-align:-3px;}
+.ropts{gap:16px; align-items:center; margin:0 0 6px;}
+.tgl{display:inline-flex; align-items:center; gap:8px; cursor:pointer; min-height:40px;}
+.tgl input{width:20px; height:20px; accent-color:var(--accent); margin:0;}
+.sents{list-style:none; margin:0; padding:0; display:grid; gap:8px;}
+.sent{background:var(--surface); border:1px solid var(--line); border-radius:12px; transition:border-color .12s, box-shadow .12s;}
+.sent.open{border-color:var(--accent);}
+.sent.speaking{border-color:var(--accent); box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);}
+.sent-main{display:flex; gap:10px; align-items:flex-start; width:100%; text-align:left; background:none; border:0; padding:12px 14px; cursor:pointer; line-height:1.9;}
+.sent-main .sn{flex:0 0 22px; height:22px; border-radius:6px; background:var(--bg2); color:var(--ink2); font-size:.75em; font-weight:800; display:flex; align-items:center; justify-content:center; margin-top:4px;}
+.sent-main .se{flex:1; min-width:0;}
+.sent.open .se, .sents .se .pc{line-height:2.45;}
+.sja{margin:-4px 14px 12px 46px; color:var(--ink2); font-size:.92em;}
+.sdet{padding:0 14px 14px 46px;}
+@media (max-width:560px){ .sdet{padding-left:14px;} .sja{margin-left:14px;} }
+.snotes{margin:4px 0 8px; padding-left:1.2em; font-size:.92em;}
+.snotes li{margin:4px 0;}
+.lit{color:var(--ink2);}
+.mine{background:var(--accent-soft); border-radius:8px; padding:6px 10px;}
+.rmark{flex:0 0 auto; font-weight:800; font-size:.85em; width:24px; height:24px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; margin-top:3px;}
+.rmark.r2{color:var(--ok); background:var(--ok-bg);} .rmark.r1{color:var(--warn); background:var(--warn-bg);} .rmark.r0{color:var(--ng); background:var(--ng-bg);}
+.sdots{display:flex; flex-wrap:wrap; gap:6px; margin:0 0 10px;}
+.sdots button{width:34px; height:34px; border-radius:9px; border:1.5px solid var(--line2); background:var(--surface); cursor:pointer; font-weight:700; font-size:.85em;}
+.sdots button.cur{border-color:var(--accent); background:var(--accent); color:var(--on-accent);}
+.sdots button.r2:not(.cur){border-color:var(--ok-line); background:var(--ok-bg); color:var(--ok);}
+.sdots button.r1:not(.cur){border-color:var(--warn-line); background:var(--warn-bg); color:var(--warn);}
+.sdots button.r0:not(.cur){border-color:var(--ng-line); background:var(--ng-bg); color:var(--ng);}
+.trcard .tr-en{font-size:1.18em; line-height:2.3; margin:10px 0 6px;}
+.trcard textarea{width:100%; resize:vertical; min-height:84px; margin-bottom:10px;}
+.answer{border-top:1px dashed var(--line2); margin-top:12px; padding-top:4px;}
+.rates{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:6px;}
+.rbtn{display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 6px; border-radius:12px; border:1.5px solid var(--line2); background:var(--surface); cursor:pointer;}
+.rbtn b{font-size:1.25em;} .rbtn span{font-size:.74em; color:var(--mute); text-align:center;}
+.rbtn.r2 b{color:var(--ok);} .rbtn.r1 b{color:var(--warn);} .rbtn.r0 b{color:var(--ng);}
+.rbtn[aria-pressed="true"]{border-color:var(--accent); background:var(--accent-soft);}
+.gloss summary{cursor:pointer; font-weight:800;}
+.glosslist{list-style:none; margin:10px 0 0; padding:0; display:grid; gap:4px;}
+.glosslist li{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.3fr) auto; gap:10px; align-items:center; padding:6px 0; border-bottom:1px solid var(--line);}
+.glosslist li:last-child{border-bottom:0;}
+.glosslist .gw{font-weight:700;}
+.glosslist .btn svg{width:14px; height:14px;}
+@media (max-width:560px){ .glosslist li{grid-template-columns:1fr auto;} .glosslist .gj{grid-column:1; grid-row:2; font-size:.9em; color:var(--ink2);} .glosslist li > :last-child{grid-row:1 / span 2; grid-column:2;} }
+.finish{margin-top:18px;}
+.pnav{display:flex; justify-content:space-between; gap:10px; margin:18px 0 0; flex-wrap:wrap;}
+.pnav .btn{white-space:normal; min-width:0; max-width:100%; line-height:1.45; text-align:left;}
+.pnav .btn svg{width:16px; height:16px; flex:0 0 16px;}
+.redo li{align-items:flex-start;}
+.redo .b{display:flex; flex-direction:column; text-decoration:none; color:var(--ink);}
+
+/* ---------- 予習ノート ---------- */
+.steps{padding-left:1.4em;}
+.steps li{margin:6px 0;}
+.nitems{list-style:none; margin:12px 0; padding:0; display:grid; gap:12px;}
+.nit textarea{width:100%; resize:vertical;}
+.nit .iconbtn{width:32px; height:32px; flex:0 0 32px; font-weight:800;}
+.nit .iconbtn[disabled]{opacity:.35; cursor:default;}
+.paste summary{cursor:pointer; font-weight:800; display:flex; align-items:center; gap:6px;}
+.paste summary svg{width:16px; height:16px;}
+.paste textarea{width:100%; margin:10px 0;}
+.nword{flex-wrap:wrap;}
+.nword .inp{flex:1 1 160px;}
+.ntools{margin:14px 0 0;}
+.ntools .btn svg{width:15px; height:15px;}
+
+/* ---------- 学び方 ---------- */
+.toc ol{margin:0; padding-left:1.4em; columns:2; column-gap:28px;}
+.toc li{margin:3px 0; break-inside:avoid;}
+@media (max-width:560px){ .toc ol{columns:1;} }
+.guide-sec h2{font-size:1.15em; margin:0 0 10px;}
+.guide-sec{scroll-margin-top:72px;}
+.prose table{width:100%; border-collapse:collapse; font-size:.9em; margin:8px 0;}
+.prose th, .prose td{border-bottom:1px solid var(--line); padding:7px 6px; text-align:left; vertical-align:top;}
+.prose th{font-size:.85em; color:var(--ink2); background:var(--surface2);}
+.prose .tblwrap{overflow-x:auto;}
+.prose .en{font-size:1em;}
+.prose blockquote{margin:10px 0; padding:8px 14px; border-left:3px solid var(--accent); background:var(--surface2); border-radius:0 8px 8px 0;}
+
+/* ---------- 記録 ---------- */
+.bars .brow .lab{min-width:9em;}
+
+@media print{
+  .print-area .pq div{margin:2pt 0;}
+}

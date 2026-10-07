@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<!-- 広告・解析・外部フォントを一切読み込まないことをブラウザ側でも保証する -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; font-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<title>心理英語ノート｜心理学・精神分析の英語を読むための単語・構文・訳読</title>
+<meta name="description" content="心理学・精神分析の英語文献を読めるようになるための、広告なし・登録不要・オフライン対応の学習ページ。専門用語と学術英語の単語カード（間隔反復）、文献を読むための構文、レベル別の訳読トレーニング（全文に構造の解説と訳つき）、講読会の予習ノート、読み上げ機能まで。">
+<meta name="theme-color" content="#f6f4ef" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14161a" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="weekendclub">
+<meta property="og:title" content="心理英語ノート｜心理学・精神分析の英語を読む">
+<meta property="og:description" content="広告なし・登録不要・オフライン対応。専門用語の単語カード、構文、レベル別の訳読、講読会の予習ノートで、心理学・精神分析の英語文献を読む力をつける。">
+<meta property="og:url" content="https://weekendclub.github.io/psych-english/">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://weekendclub.github.io/psych-english/">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="心理英語">
+<link rel="stylesheet" href="../drill/style.css">
+<link rel="stylesheet" href="eigo.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"心理英語ノート","applicationCategory":"EducationalApplication","operatingSystem":"Any","inLanguage":"ja","isAccessibleForFree":true,"url":"https://weekendclub.github.io/psych-english/","description":"心理学・精神分析の英語文献を読むための学習ページ。単語カード、構文、訳読、講読会の予習ノート。広告なし・登録不要・オフライン対応。"}</script>
+</head>
+<body>
+<a class="skip" href="#main" data-act="skip">本文へ移動</a>
+
+<header class="appbar" id="appbar">
+  <div class="appbar-in">
+    <a class="brand" href="#/" aria-label="ホームへ">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="2" width="28" height="28" rx="8" fill="currentColor"/><path d="M8 10.5c2.6-1 5.3-.8 8 .9 2.7-1.7 5.4-1.9 8-.9v11c-2.6-1-5.3-.8-8 .9-2.7-1.7-5.4-1.9-8-.9z" fill="none" stroke="var(--on-accent)" stroke-width="2.2" stroke-linejoin="round"/><path d="M16 11.4v11" fill="none" stroke="var(--on-accent)" stroke-width="2.2" stroke-linecap="round"/></svg>
+      <span class="brand-t">心理英語 <b>ノート</b></span>
+    </a>
+    <nav class="topnav" aria-label="メインメニュー">
+      <a href="#/" data-nav="home">ホーム</a>
+      <a href="#/words" data-nav="words">単語</a>
+      <a href="#/grammar" data-nav="grammar">構文</a>
+      <a href="#/read" data-nav="read">訳読</a>
+      <a href="#/notes" data-nav="notes">予習ノート</a>
+      <a href="#/guide" data-nav="guide">学び方</a>
+      <a href="#/stats" data-nav="stats">記録</a>
+    </nav>
+    <button class="iconbtn theme-toggle" id="themeToggle" type="button" aria-label="表示テーマを切り替え" title="テーマ切替">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z" fill="currentColor"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+  <div id="view" class="view" aria-live="polite">
+    <noscript><div class="wrap"><p class="notice">このページを使うには JavaScript を有効にしてください。</p></div></noscript>
+  </div>
+</main>
+
+<nav class="tabbar" id="tabbar" aria-label="メインメニュー（スマートフォン）">
+  <a href="#/" data-nav="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>ホーム</span></a>
+  <a href="#/words" data-nav="words"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="13" height="15" rx="2"/><path d="M8 3h11a2 2 0 0 1 2 2v13"/></svg><span>単語</span></a>
+  <a href="#/read" data-nav="read"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c3-1.2 6-1 9 1 3-2 6-2.2 9-1v13c-3-1.2-6-1-9 1-3-2-6-2.2-9-1z"/><path d="M12 6.5v13"/></svg><span>訳読</span></a>
+  <a href="#/notes" data-nav="notes"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h11l3 3v15H5zM8 9h8M8 13h8M8 17h5"/></svg><span>ノート</span></a>
+  <a href="#/more" data-nav="more"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>メニュー</span></a>
+</nav>
+
+<div id="modal" class="modal" hidden>
+  <div class="modal-back" data-close></div>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <h2 id="modalTitle"></h2>
+    <div id="modalBody"></div>
+    <div class="modal-actions" id="modalActions"></div>
+  </div>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<div id="printArea" class="print-area" aria-hidden="true"></div>
+
+<script src="data/words.js"></script>
+<script src="data/grammar.js"></script>
+<script src="data/read1.js"></script>
+<script src="data/read2.js"></script>
+<script src="data/read3.js"></script>
+<script src="data/guide.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
