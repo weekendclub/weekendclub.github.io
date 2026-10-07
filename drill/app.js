@@ -507,8 +507,9 @@
       '<div class="small"><b class="num">' + td.n + '</b> / ' + goal + '問' + (td.n >= goal ? '　<span class="chip ok">目標達成</span>' : '') + '</div>' +
       '<div class="kpis"><div class="kpi"><div class="k">今日の正答率</div><div class="v num">' + (td.n ? pct(td.c, td.n) + '<small>%</small>' : '–') + '</div></div>' +
       '<div class="kpi"><div class="k">連続学習</div><div class="v num">' + streak() + '<small>日</small></div></div>' +
-      '<div class="kpi"><div class="k">復習待ち</div><div class="v num">' + due + '<small>問</small></div></div></div></div>' +
-      '</div>';
+      '<div class="kpi"><div class="k">復習待ち</div><div class="v num">' + due + '<small>問</small></div></div></div>' +
+      (studyOn() ? '<div class="row" style="margin-top:10px"><button class="btn small" data-act="studySend">今日の分を勉強シートに送る</button></div>' : '') +
+      '</div></div>';
 
     html += '<h2 class="sec">学習モード</h2><div class="modes">' +
       modeCard('repeat', '今日の復習', '間違えた・あいまいだった問題を、忘れかけの頃に再出題（間隔反復）。', due ? due + '問が復習時期' : '復習予定はまだありません', 'quick', 'due', due > 0) +
@@ -862,7 +863,7 @@
       '<p class="small muted" style="margin:10px 0 0">' + (p >= 80 ? 'よくできています。「自信あり」で正解した問題は復習の間隔が延びていきます。' : p >= 60 ? '合格の目安（6割）に届いています。不正解の問題は明日の「今日の復習」に出てきます。' : '不正解の問題は明日の「今日の復習」に出てきます。まずは解説の○×を読み込むのが近道です。') + '</p>' +
       '</div></div>' +
       '<div class="row" style="margin-top:16px">' + (ng + skip ? '<button class="btn primary" data-act="retryWrong">' + icon('repeat') + ' 不正解・スキップだけ解き直す（' + (ng + skip) + '問）</button>' : '') +
-      '<button class="btn" data-act="retryAll">同じ問題をもう一度</button><a class="btn ghost" href="#/">ホームへ</a></div></div>';
+      '<button class="btn" data-act="retryAll">同じ問題をもう一度</button>' + (studyOn() ? '<button class="btn" data-act="studySend">勉強シートに送る</button>' : '') + '<a class="btn ghost" href="#/">ホームへ</a></div></div>';
 
     // 科目別
     var by = {};
@@ -1018,6 +1019,7 @@
     }
     html += '<div class="row" style="margin-top:16px"><button class="btn primary" data-act="mockReview" data-i="' + p.i + '">' + icon('eye') + ' 全問の解説を見る</button>' +
       (m.score < m.total ? '<button class="btn" data-act="mockWrong" data-i="' + p.i + '">' + icon('repeat') + ' 間違えた問題を演習</button>' : '') +
+      (studyOn() ? '<button class="btn" data-act="studySend">勉強シートに送る</button>' : '') +
       '<a class="btn ghost" href="#/mock">模試トップへ</a></div></div>';
     html += '<h2 class="sec">' + SL + '別の正解数</h2><div class="card"><div class="bars">' + Object.keys(m.bySubj).sort(function (a, b) { return (SUBJ[a] || OTHER).order - (SUBJ[b] || OTHER).order; }).map(function (k) {
       var o = m.bySubj[k], pp = pct(o[0], o[1]);
@@ -1111,7 +1113,7 @@
     var p = pct(ok, ok + ng) || 0;
     var html = '<div class="wrap"><h1 class="page">一問一答の結果</h1><div class="card"><div class="kpis" style="grid-template-columns:repeat(3,1fr)">' +
       '<div class="kpi"><div class="k">正答率</div><div class="v num">' + p + '<small>%</small></div></div><div class="kpi"><div class="k">正解</div><div class="v num" style="color:var(--ok)">' + ok + '</div></div><div class="kpi"><div class="k">不正解</div><div class="v num" style="color:var(--ng)">' + ng + '</div></div></div>' +
-      '<div class="row" style="margin-top:14px">' + (ng ? '<button class="btn primary" data-act="oxRetryWrong">間違えた文だけもう一度（' + ng + '）</button>' : '') + '<a class="btn" href="#/ox">一問一答トップへ</a></div></div>';
+      '<div class="row" style="margin-top:14px">' + (ng ? '<button class="btn primary" data-act="oxRetryWrong">間違えた文だけもう一度（' + ng + '）</button>' : '') + (studyOn() ? '<button class="btn" data-act="studySend">勉強シートに送る</button>' : '') + '<a class="btn" href="#/ox">一問一答トップへ</a></div></div>';
     html += '<h2 class="sec">回答一覧</h2><div class="card" style="padding:4px 14px"><ul class="rlist">' + s.ids.map(function (id, i) {
       var it = oxParse(id), a = s.ans[id], tr = oxTruth(it.q, it.i);
       return '<li><span class="mk ' + (!a ? 'n' : a.ok ? 'o' : 'x') + '">' + (!a ? '－' : a.ok ? '○' : '×') + '</span><button class="b" data-act="oxAt" data-i="' + i + '"><span class="muted tiny">' + esc(subjName(it.q)) + '｜答え：' + (tr ? '正しい' : '誤り') + '</span><span class="t">' + esc(plain(it.q.opts[it.i])) + '</span></button></li>';
@@ -1750,6 +1752,36 @@
       }) }, null, 2));
     }
   };
+  /* ---------------------------------------------------------------------
+     勉強シートへ送る（APP.studyLink が true で、../study-link.js を読み込んだアプリだけ）
+     今日解いた問題を科目ごとに数え、本人の勉強シート（claude.ai・非公開）へ送る
+     --------------------------------------------------------------------- */
+  function studyOn() { return !!(APP.studyLink && window.StudyLink); }
+  function todayStudy() {
+    var t0 = window.StudyLink.dayStart(dkey()), t1 = t0 + 86400000, subj = {}, ts = [];
+    function add(sid, ok, t) { var o = subj[sid] || (subj[sid] = [0, 0]); o[0]++; if (ok) o[1]++; ts.push(t); }
+    BANK.forEach(function (q) {
+      var st = store.q[q.id];
+      if (st && st.h) st.h.forEach(function (h) { if (h[0] >= t0 && h[0] < t1) add(q.subj, h[1], h[0]); });
+    });
+    Object.keys(store.ox).forEach(function (oid) {
+      var st = store.ox[oid]; if (!st || !(st.last >= t0 && st.last < t1)) return;
+      var it = oxParse(oid); if (it.q) add(it.q.subj, st.lastOk, st.last);
+    });
+    return { subj: subj, ts: ts };
+  }
+  ACT.studySend = function () {
+    var d = todayStudy(), n = 0, c = 0;
+    var keys = Object.keys(d.subj).sort(function (a, b) { return (SUBJ[a] || OTHER).order - (SUBJ[b] || OTHER).order; });
+    keys.forEach(function (k) { n += d.subj[k][0]; c += d.subj[k][1]; });
+    window.StudyLink.open({
+      title: APP.name, date: dkey(), minutes: window.StudyLink.estimate(d.ts), empty: !n,
+      lines: keys.map(function (k) { return (SUBJ[k] || OTHER).name + '　' + d.subj[k][0] + '問（正解 ' + d.subj[k][1] + '）'; }),
+      summary: '今日の合計 ' + n + '問・正答率 ' + (pct(c, n) || 0) + '%（一問一答を含む）',
+      build: function (min) { return { v: 1, src: 'k', key: 'k', app: APP.name, date: dkey(), min: min, subj: d.subj }; }
+    });
+  };
+
   document.addEventListener('click', function (e) {
     var el = e.target.closest('[data-act]');
     if (!el || el.disabled) return;
