@@ -2,7 +2,7 @@
    同じサイト内のファイルだけをキャッシュする（外部への通信はしない）。
    ファイルを更新したら CACHE の版を上げること。
    キャッシュ名の接頭辞は他のページ（swdrill-／cppdrill-／psyeng-）と分け、互いのキャッシュを消さないようにする。 */
-var CACHE = 'siinsi-v1.0.0';
+var CACHE = 'siinsi-v1.1.0';
 var FILES = [
   './', './index.html', './insi.css', './app.js', '../drill/style.css', './manifest.webmanifest',
   './data/facts.js', './data/terms.js', './data/essays.js', './data/oral.js', './data/plan.js',

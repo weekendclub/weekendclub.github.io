@@ -1,7 +1,8 @@
 /* =========================================================================
    臨床心理 院試ノート  sophia-insi/app.js
    上智大学大学院 臨床心理学コースの入試に向けた非公式の対策ページ。
-   ・試験の概要／用語説明の練習／論述の練習／模擬試験（120分）／研究計画書／口述試験
+   ・試験の概要／語句説明の練習／論述の練習／模擬試験（本番形式120分ほか）／研究計画書／口述試験
+   ・本番形式：公開されている過去問（2025・2026年度）にならい、問I 語句説明（全問）＋問II 論述（9問から4問選択）。
    ・広告なし／外部通信なし。答案・メモ・記録はこの端末のブラウザ（localStorage）だけに保存。
    ・見た目は国試ドリルと共通の ../drill/style.css を使い、固有の部品は insi.css に置く。
    データ：data/facts.js（SI_FACTS）、terms.js（SI_TERMS・SI_FIELDS）、essays.js（SI_ESSAYS）、
@@ -10,7 +11,7 @@
 (function () {
   'use strict';
 
-  var APP = { name: '臨床心理 院試ノート', version: '1.0.0', key: 'siinsi' };
+  var APP = { name: '臨床心理 院試ノート', version: '1.1.0', key: 'siinsi' };
   var LS_KEY = APP.key + '.v1';
   var FACTS = window.SI_FACTS || { schedule: [], sections: [] };
   var TERMS = window.SI_TERMS || [];
@@ -103,7 +104,7 @@
   function defaults() {
     return {
       v: 1,
-      settings: { theme: 'auto', font: 'm', examDate: FACTS.defaultExam || '', termSec: 300 },
+      settings: { theme: 'auto', font: 'm', examDate: FACTS.defaultExam || '', termSec: 180 },
       terms: {},    // 用語ID → { r:0|1|2, d:'YYYY-MM-DD', ans, n }
       essays: {},   // 論述ID → { r, d, ans, rub:{i:true}, sec }
       mocks: [],    // 模擬試験の記録
@@ -259,26 +260,28 @@
     var eDone = Object.keys(store.essays).filter(function (id) { return store.essays[id].r != null; }).length;
     var due = TERMS.filter(function (x) { return termDue(x.id); }).length;
     var chkAll = PLAN.checklist.reduce(function (n, g) { return n + g.items.length; }, 0), chkOn = Object.keys(store.plan.chk).filter(function (k) { return store.plan.chk[k]; }).length;
+    var alerts = (FACTS.alerts || []).filter(function (a) { return t <= a.until; });
     setView('<div class="wrap">' +
+      alerts.map(function (a) { return '<div class="banner"><span class="bi">' + icon('cal') + '</span><span>' + a.html + '</span></div>'; }).join('') +
       '<section class="card hero-si"><p class="eyebrow small">上智大学大学院 総合人間科学研究科 心理学専攻 臨床心理学コース（非公式）</p>' +
-      '<div class="hero-row"><div><h1>院試対策ノート</h1><p class="small muted">筆記（心理学）と口述試験、研究計画書の準備をまとめて進めるためのページです。</p></div>' +
+      '<div class="hero-row"><div><h1>院試対策ノート</h1><p class="small muted">筆記試験（心理学：問I 語句説明＋問II 論述）と口述試験、研究計画書の準備をまとめて進めるためのページです。</p></div>' +
       (ex ? '<div class="cd"><span class="small">' + esc(ex === FACTS.defaultExam && FACTS.examLabel ? FACTS.examLabel : '目標の筆記試験') + 'まで</span><b class="num">' + (left >= 0 ? left + '<small>日</small>' : '終了') + '</b><span class="small">' + esc(jdate(ex)) + '</span></div>' : '') + '</div>' +
       (up.length ? '<h2 class="sec small-sec">この先の主な日程</h2><ul class="sched">' + up.slice(0, 4).map(schedItem).join('') + '</ul><p class="small muted">日程は' + esc(FACTS.scheduleYear || '') + 'のものです。必ず最新の入試要項で確認してください。→ <a href="#/about">試験の概要</a></p>' : '') +
       '</section>' +
-      '<div class="kpis k4"><div class="kpi"><div class="k">用語（練習済み）</div><div class="v num">' + tSeen + '<small>/' + TERMS.length + '</small></div></div>' +
-      '<div class="kpi"><div class="k">用語（◎）</div><div class="v num">' + tOk + '<small>語</small></div></div>' +
+      '<div class="kpis k4"><div class="kpi"><div class="k">語句（練習済み）</div><div class="v num">' + tSeen + '<small>/' + TERMS.length + '</small></div></div>' +
+      '<div class="kpi"><div class="k">語句（◎）</div><div class="v num">' + tOk + '<small>語</small></div></div>' +
       '<div class="kpi"><div class="k">論述（解答済み）</div><div class="v num">' + eDone + '<small>/' + ESSAYS.length + '</small></div></div>' +
       '<div class="kpi"><div class="k">研究計画書チェック</div><div class="v num">' + chkOn + '<small>/' + chkAll + '</small></div></div></div>' +
-      '<h2 class="sec">今日の練習（40分の例）</h2><ol class="tsteps">' +
-      '<li class="tstep"><span class="tn">1</span><span class="b"><span class="t">用語説明 3語（15分）</span><span class="d small muted">' + (due ? '復習する用語が ' + due + ' 語あります' : '1語5分で、200字前後を目安に書く') + '</span></span><button class="btn small primary" data-act="termGo" data-mode="' + (due ? 'review' : 'new') + '">始める</button></li>' +
-      '<li class="tstep"><span class="tn">2</span><span class="b"><span class="t">論述の構成メモ 1題（15分）</span><span class="d small muted">全文を書かない日は、序論・本論・結論の骨組みだけ書く</span></span><a class="btn small" href="#/essays">選ぶ</a></li>' +
+      '<h2 class="sec">今日の練習（45分の例）</h2><ol class="tsteps">' +
+      '<li class="tstep"><span class="tn">1</span><span class="b"><span class="t">語句説明 5語（15分）</span><span class="d small muted">' + (due ? '復習する語句が ' + due + ' 語あります' : '1語3分で、辞書的な定義を簡潔に（60〜150字）') + '</span></span><button class="btn small primary" data-act="termGo" data-n="5" data-mode="' + (due ? 'review' : 'new') + '">始める</button></li>' +
+      '<li class="tstep"><span class="tn">2</span><span class="b"><span class="t">論述 1題（20分）</span><span class="d small muted">本番サイズ（1題20分）の設問を、まだ解いていないものから出します</span></span><button class="btn small" data-act="eRandom">始める</button></li>' +
       '<li class="tstep"><span class="tn">3</span><span class="b"><span class="t">口述の想定質問 2問（10分）</span><span class="d small muted">声に出して90秒で答え、要点をメモする</span></span><button class="btn small" data-act="oralRandom">始める</button></li>' +
       '</ol>' +
       '<h2 class="sec">対策する</h2><div class="modes">' +
-      mode('#/about', 'info', '試験の概要', '選考の流れ、出願書類、日程、過去問の入手方法。情報の確かさを「公式／二次情報／未確認」で表示。', '確認') +
-      mode('#/terms', 'cards', '用語説明', '臨床心理学を中心に、基礎心理学・研究法まで。200字前後の解答例とキーワード照合。', TERMS.length + '語') +
-      mode('#/essays', 'pen', '論述', '説明・比較・事例・研究法・思想の5タイプ。採点の観点、構成例、解答例つき。', ESSAYS.length + '題') +
-      mode('#/mock', 'clock', '模擬試験', '120分で用語説明と論述をまとめて解き、観点に沿って自己採点。', '120分') +
+      mode('#/about', 'info', '試験の概要', '公開された過去問4回分の形式と傾向、日程、出願書類、事前面談。情報の確かさを「公式／二次情報／未確認」で表示。', '確認') +
+      mode('#/terms', 'cards', '語句説明', '本番は9〜12問を全問解答。臨床系と基礎系（知覚・神経・社会・発達・測定）を、辞書的な「簡潔な定義」と詳しい解説で。', TERMS.length + '語') +
+      mode('#/essays', 'pen', '論述', '本番は9〜10問から4問を選択（臨床コースは臨床系から3問以上）。採点の観点、構成例、解答例つき。', ESSAYS.length + '題') +
+      mode('#/mock', 'clock', '模擬試験', '本番形式（語句10問＋論述9問から4問選択）で120分。短い練習形式もあり。自己採点つき。', '120分') +
       mode('#/plan', 'doc', '研究計画書', '約2000字の構成と字数配分、提出前のチェックリスト、下書きの字数カウンター。', 'チェック') +
       mode('#/oral', 'mic', '口述試験', '想定質問と答え方の要点。考える30秒・話す90秒のタイマーで練習。', ORAL.length + '問') +
       '</div>' +
@@ -305,24 +308,24 @@
   };
 
   /* ---------------------------------------------------------------------
-     用語説明
+     語句説明（本番の問I）
      --------------------------------------------------------------------- */
   var TL = { f: 'all', st: 'all', kw: '' };
   function tState(id) { var s = store.terms[id]; return !s ? 'new' : s.r === 2 ? 'ok' : s.r === 1 ? 'mid' : 'ng'; }
   VIEWS.terms = function () {
     var due = TERMS.filter(function (x) { return termDue(x.id); }).length;
     var fresh = TERMS.filter(function (x) { return !store.terms[x.id]; }).length;
-    setView('<div class="wrap"><h1 class="page">用語説明</h1>' +
-      '<p class="lead">用語を見て、<strong>200字前後</strong>で説明を書きます。書き終えたら解答例と比べ、<strong>キーワード照合</strong>で入れるべき要素が入っているかを確かめます。説明は「定義 → 提唱者・背景 → 具体例 → 臨床的な意義」の順にすると安定します。</p>' +
-      '<div class="card"><div class="row between"><div><div class="small muted">練習のしかた</div><div class="small">1回10語まで。◎は2週間後、△は3日後、×は翌日にもう一度出ます。</div></div>' +
-      '<div class="row small-gap"><button class="btn primary" data-act="termGo" data-mode="new"' + (fresh ? '' : ' disabled') + '>' + icon('cards') + ' まだ解いていない用語（' + fresh + '）</button>' +
+    setView('<div class="wrap"><h1 class="page">語句説明</h1>' +
+      '<p class="lead">本番の問Iは「語句の意味を簡潔に説明する」問題で、<strong>9〜12問すべてに答えます</strong>（公開された過去問4回分）。公式の解答例では、辞典や専門書にある<strong>基本的（辞書的）な定義が簡潔に述べられていること</strong>が求められています。まず「〜とは、…である。」の形で<strong>60〜150字</strong>程度の定義を書き、答え合わせでは「簡潔な定義」と「詳しい解説」を見比べます。</p>' +
+      '<div class="card"><div class="row between"><div><div class="small muted">練習のしかた</div><div class="small">1回10語まで。◎は2週間後、△は3日後、×は翌日にもう一度出ます。本番では半分以上が基礎系（知覚・神経・社会・発達・研究法）の語句でした。</div></div>' +
+      '<div class="row small-gap"><button class="btn primary" data-act="termGo" data-mode="new"' + (fresh ? '' : ' disabled') + '>' + icon('cards') + ' まだ解いていない語句（' + fresh + '）</button>' +
       '<button class="btn" data-act="termGo" data-mode="review"' + (due ? '' : ' disabled') + '>' + icon('redo') + ' 復習（' + due + '）</button>' +
       '<button class="btn" data-act="termGo" data-mode="random">ランダム10語</button></div></div></div>' +
       '<h2 class="sec">分野</h2><div class="seg wrapseg" role="group" aria-label="分野">' +
       '<button type="button" data-act="tlF" data-v="all" aria-pressed="' + (TL.f === 'all') + '">すべて（' + TERMS.length + '）</button>' +
       FIELDS.map(function (f) { var n = TERMS.filter(function (x) { return x.f === f.id; }).length; return '<button type="button" data-act="tlF" data-v="' + f.id + '" aria-pressed="' + (TL.f === f.id) + '">' + esc(f.name) + '（' + n + '）</button>'; }).join('') + '</div>' +
       (TL.f !== 'all' ? '<p class="small muted" style="margin:6px 0 0">' + esc(FBYID[TL.f].d || '') + '</p><div class="row" style="margin-top:8px"><button class="btn small primary" data-act="termGo" data-mode="field" data-f="' + TL.f + '">この分野で練習</button></div>' : '') +
-      '<div class="searchbar" style="margin-top:14px"><input class="inp" id="tkw" type="search" placeholder="用語を検索（例：転移、トリックスター、効果量）" value="' + esc(TL.kw) + '" aria-label="用語を検索"></div>' +
+      '<div class="searchbar" style="margin-top:14px"><input class="inp" id="tkw" type="search" placeholder="語句を検索（例：転移、扁桃体、効果量）" value="' + esc(TL.kw) + '" aria-label="語句を検索"></div>' +
       '<div class="filters"><div class="seg" role="group" aria-label="状態">' + [['all', 'すべて'], ['new', '未練習'], ['ng', '×'], ['mid', '△'], ['ok', '◎']].map(function (x) { return '<button type="button" data-act="tlSt" data-v="' + x[0] + '" aria-pressed="' + (TL.st === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div></div>' +
       '<ul class="tlist" id="tlist"></ul>' + footer() + '</div>');
     $('#tkw').addEventListener('input', function (e) { TL.kw = e.target.value; renderTermList(); });
@@ -333,16 +336,16 @@
     var list = TERMS.filter(function (x) {
       if (TL.f !== 'all' && x.f !== TL.f) return false;
       if (TL.st !== 'all' && tState(x.id) !== TL.st) return false;
-      return !kw || norm(x.t + x.en + x.a).indexOf(kw) >= 0;
+      return !kw || norm(x.t + x.en + x.s + x.a).indexOf(kw) >= 0;
     });
     if (kw) { var rank = function (x) { return norm(x.t + x.en).indexOf(kw) >= 0 ? 0 : 1; }; list = list.map(function (x, i) { return { x: x, i: i }; }).sort(function (a, b) { return rank(a.x) - rank(b.x) || a.i - b.i; }).map(function (o) { return o.x; }); }
     $('#tlist').innerHTML = list.length ? list.map(function (x) {
       var st = tState(x.id);
       return '<li><a class="titem" href="#/t?id=' + esc(x.id) + '"><span class="rm r-' + st + '">' + { 'new': '', ok: '◎', mid: '△', ng: '×' }[st] + '</span><span class="b"><span class="t">' + esc(x.t) + '</span>' + (x.en ? '<span class="en small muted">' + esc(x.en) + '</span>' : '') + '</span><span class="chip">' + esc(FBYID[x.f] ? FBYID[x.f].short : '') + '</span></a></li>';
-    }).join('') : '<li class="empty">該当する用語はありません。</li>';
+    }).join('') : '<li class="empty">該当する語句はありません。</li>';
   }
   var TS = null; // 用語の練習セッション { q:[ids], i, shown }
-  function startTerms(mode, f) {
+  function startTerms(mode, f, n) {
     var pool;
     if (mode === 'review') pool = shuffle(TERMS.filter(function (x) { return termDue(x.id); }));
     else if (mode === 'new') pool = TERMS.filter(function (x) { return !store.terms[x.id]; });
@@ -354,8 +357,8 @@
       while (more) { more = false; FIELDS.forEach(function (fd) { var a = byF[fd.id]; if (a && a[k]) { mixed.push(a[k]); more = true; } }); k++; }
       pool = mixed;
     }
-    if (!pool.length) { toast('対象の用語はありません'); return; }
-    TS = { q: pool.slice(0, 10).map(function (x) { return x.id; }), i: 0, shown: false, done: [] };
+    if (!pool.length) { toast('対象の語句はありません'); return; }
+    TS = { q: pool.slice(0, n || 10).map(function (x) { return x.id; }), i: 0, shown: false, done: [] };
     go('#/t?s=1');
   }
   VIEWS.t = function (p) {
@@ -365,12 +368,12 @@
     var x = TBYID[TS.q[TS.i]], st = store.terms[x.id] || {}, ans = TS.shown ? (TS.ans || '') : (TS.draft != null ? TS.draft : '');
     var multi = TS.q.length > 1;
     setView('<div class="wrap narrow">' +
-      '<div class="ptop"><a class="btn small ghost" href="#/terms">' + icon('x') + ' 終える</a><span class="title small muted">用語説明' + (multi ? '・' + (TS.i + 1) + ' / ' + TS.q.length : '') + '</span>' + (store.settings.termSec && !TS.shown ? timerHtml() : '<span></span>') + '</div>' +
+      '<div class="ptop"><a class="btn small ghost" href="#/terms">' + icon('x') + ' 終える</a><span class="title small muted">語句説明' + (multi ? '・' + (TS.i + 1) + ' / ' + TS.q.length : '') + '</span>' + (store.settings.termSec && !TS.shown ? timerHtml() : '<span></span>') + '</div>' +
       (multi ? '<div class="progress" aria-hidden="true"><i style="width:' + Math.round(TS.i / TS.q.length * 100) + '%"></i></div>' : '') +
       '<div class="card qbox"><div class="row small-gap"><span class="chip">' + esc(FBYID[x.f] ? FBYID[x.f].name : '') + '</span>' + (st.r != null ? '<span class="chip">前回 ' + ['×', '△', '◎'][st.r] + '</span>' : '') + '</div>' +
-      '<p class="qlead small muted">次の用語について、200字程度で説明しなさい。</p><h1 class="term">' + esc(x.t) + (x.en ? ' <span class="en">' + esc(x.en) + '</span>' : '') + '</h1>' +
-      '<textarea class="inp ansbox" id="tAns" rows="7" placeholder="定義 → 提唱者・背景 → 具体例 → 臨床的な意義、の順で書いてみましょう。"' + (TS.shown ? ' readonly' : '') + '>' + esc(ans) + '</textarea>' +
-      '<div class="row between small"><span id="tCnt" class="num muted">' + charCount(ans) + '字</span><span class="muted">目安 150〜250字</span></div>' +
+      '<p class="qlead small muted">次の語句の意味を簡潔に日本語で説明しなさい。</p><h1 class="term">' + esc(x.t) + (x.en ? '<span class="en">（' + esc(x.en) + '）</span>' : '') + '</h1>' +
+      '<textarea class="inp ansbox" id="tAns" rows="5" placeholder="辞書的な定義を2〜3文で。「〜とは、…である。」に、提唱者や具体例を一言添える。"' + (TS.shown ? ' readonly' : '') + '>' + esc(ans) + '</textarea>' +
+      '<div class="row between small"><span id="tCnt" class="num muted">' + charCount(ans) + '字</span><span class="muted">目安 60〜150字（このページの提案）</span></div>' +
       (TS.shown ? termAnswer(x, TS.ans || '') : '<div class="row end" style="margin-top:10px"><button class="btn" data-act="tSkip">わからない（解答例を見る）</button><button class="btn primary" data-act="tReveal">答え合わせ <kbd>Ctrl+Enter</kbd></button></div>') +
       '</div></div>');
     if (!TS.shown) {
@@ -380,11 +383,11 @@
   }
   function termAnswer(x, ans) {
     var keys = x.k || [], hit = keys.filter(function (k) { return hasKey(ans, k); }).length;
-    return '<div class="answer"><h2 class="sub">解答例</h2><div class="model">' + paras(x.a) + '</div>' +
-      '<div class="small muted">解答例 ' + charCount(x.a) + '字</div>' +
+    return '<div class="answer">' + (x.s ? '<h2 class="sub">簡潔な定義 <span class="small muted">本番の答案の目安・' + charCount(x.s) + '字</span></h2><div class="model def">' + paras(x.s) + '</div>' : '') +
+      '<h2 class="sub">詳しい解説 <span class="small muted">理解を深めるために・' + charCount(x.a) + '字</span></h2><div class="model">' + paras(x.a) + '</div>' +
       (keys.length ? '<h2 class="sub">キーワード照合 <span class="small muted">' + hit + ' / ' + keys.length + '</span></h2><ul class="keys">' + keys.map(function (k) {
         var ok = hasKey(ans, k); return '<li class="' + (ok ? 'hit' : 'miss') + '">' + icon(ok ? 'check' : 'x') + esc(k.split('/')[0]) + (k.indexOf('/') > 0 ? '<span class="small muted">（' + esc(k.split('/').slice(1).join('・')) + ' も可）</span>' : '') + '</li>';
-      }).join('') + '</ul><p class="small muted">キーワードは目安です。言い換えでも内容が合っていれば構いません。</p>' : '') +
+      }).join('') + '</ul><p class="small muted">キーワードは詳しい解説に含まれる要素です。簡潔な定義なら2〜3個入っていれば十分です。言い換えでも内容が合っていれば構いません。</p>' : '') +
       (x.p ? '<h2 class="sub">ポイント</h2><div class="note">' + fmt(x.p) + '</div>' : '') +
       '<h2 class="sub">自己評価</h2><div class="rates" role="group" aria-label="自己評価">' +
       [[2, '◎', '要点を押さえて書けた'], [1, '△', '一部書けた'], [0, '×', '書けなかった']].map(function (r) {
@@ -396,27 +399,36 @@
     setView('<div class="wrap narrow"><div class="card done-card"><h1 class="page">おつかれさまでした</h1>' +
       (d.length ? '<p>' + d.length + '語を練習しました（◎ ' + d.filter(function (x) { return x.r === 2; }).length + '・△ ' + d.filter(function (x) { return x.r === 1; }).length + '・× ' + d.filter(function (x) { return x.r === 0; }).length + '）。</p>' +
         '<ul class="rlist">' + d.map(function (x) { return '<li><span class="rm r-' + ['ng', 'mid', 'ok'][x.r] + '">' + ['×', '△', '◎'][x.r] + '</span><a class="b" href="#/t?id=' + esc(x.id) + '"><span class="t">' + esc(TBYID[x.id].t) + '</span></a></li>'; }).join('') + '</ul>' : '') +
-      '<div class="row" style="justify-content:center;margin-top:14px"><button class="btn primary" data-act="termGo" data-mode="random">もう10語</button><a class="btn" href="#/terms">一覧へ</a><a class="btn" href="#/essays">論述へ</a></div></div>' + footer() + '</div>');
+      '<div class="row" style="justify-content:center;margin-top:14px"><button class="btn primary" data-act="termGo" data-mode="random">ランダムに10語</button><a class="btn" href="#/terms">一覧へ</a><a class="btn" href="#/essays">論述へ</a></div></div>' + footer() + '</div>');
     TS = null;
   }
 
   /* ---------------------------------------------------------------------
      論述
      --------------------------------------------------------------------- */
-  var EL = { f: 'all' };
-  var ETYPES = ['説明', '比較', '事例', '研究法', '思想'];
+  var EL = { f: 'all', g: 'all' };
+  var ETYPES = ['説明', '比較', '事例', '研究法', '基礎', '思想'];
+  var ETLABEL = { '思想': '思想（参考）' };
+  function eGroup(e) { return e.cl ? '臨床系' : '基礎系'; }
+  function eReal(e) { return e.min <= 25; }   // 本番サイズ（1題20分前後）
   VIEWS.essays = function () {
-    var list = ESSAYS.filter(function (e) { return EL.f === 'all' || e.ty === EL.f; });
+    var inG = function (e) { return EL.g === 'all' || (EL.g === 'cl') === !!e.cl; };
+    var list = ESSAYS.filter(function (e) { return inG(e) && (EL.f === 'all' || e.ty === EL.f); });
+    if (EL.g !== 'all' || EL.f !== 'all') list.sort(function (a, b) { return (eReal(b) - eReal(a)) || a.idx - b.idx; });
+    var nCl = ESSAYS.filter(function (e) { return e.cl; }).length;
     setView('<div class="wrap"><h1 class="page">論述</h1>' +
-      '<p class="lead">一題ずつ、時間を計って書きます。書き終えたら<strong>採点の観点</strong>で自己点検し、構成例・解答例と比べます。時間がない日は「構成メモだけ」書くのも効果的です。</p>' +
-      '<div class="card prose"><h3 style="margin-top:0">答案の型（どのタイプにも使える）</h3><ol><li><strong>序論</strong>：問いの言い換えと、答えの方向を一文で（全体の1〜2割）。</li><li><strong>本論</strong>：定義・理論 → 根拠・研究 → 具体例（臨床場面）を、観点ごとに段落を分けて（6〜7割）。</li><li><strong>結論</strong>：問いへの答えを短くまとめ、限界や臨床上の課題に一言ふれる（1〜2割）。</li></ol></div>' +
+      '<p class="lead">本番の問IIは、<strong>9〜10問から4問を選んで論述</strong>します。臨床心理学コースは、<strong>4問のうち3問以上を臨床系の設問から</strong>選ぶ決まりでした（公開された過去問4回分）。120分から語句説明の時間を引くと、<strong>1題あたり20分前後</strong>です。「本番サイズ」の印がついた設問で時間を計って書き、<strong>採点の観点</strong>で自己点検しましょう。長めの設問は、理解を深める練習用です。</p>' +
+      '<div class="card prose"><h3 style="margin-top:0">答案の型（どのタイプにも使える）</h3><ol><li><strong>序論</strong>：問いの言い換えと、答えの方向を一文で（全体の1〜2割）。</li><li><strong>本論</strong>：定義・理論 → 根拠・研究 → 具体例（臨床場面）を、観点ごとに段落を分けて（6〜7割）。</li><li><strong>結論</strong>：問いへの答えを短くまとめ、限界や臨床上の課題に一言ふれる（1〜2割）。</li></ol>' +
+      '<p class="small" style="margin-bottom:0">設問で<strong>指定された語句</strong>（「〇〇と〇〇の2つの語を用いること」など）は必ず使い、<strong>設問が求める要素</strong>（意味と事例への当てはめ、共通点と相違点、方法とメリット・デメリットなど）を一つも落とさないことが、公式の解答例から読み取れる採点の基本です。</p></div>' +
+      '<h2 class="sec">系統</h2><div class="seg wrapseg" role="group" aria-label="系統">' +
+      [['all', 'すべて（' + ESSAYS.length + '）'], ['cl', '臨床系（' + nCl + '）'], ['ba', '基礎系（' + (ESSAYS.length - nCl) + '）']].map(function (x) { return '<button type="button" data-act="elG" data-v="' + x[0] + '" aria-pressed="' + (EL.g === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div>' +
       '<h2 class="sec">タイプ</h2><div class="seg wrapseg" role="group" aria-label="タイプ">' +
-      '<button type="button" data-act="elF" data-v="all" aria-pressed="' + (EL.f === 'all') + '">すべて（' + ESSAYS.length + '）</button>' +
-      ETYPES.map(function (t) { var n = ESSAYS.filter(function (e) { return e.ty === t; }).length; return n ? '<button type="button" data-act="elF" data-v="' + t + '" aria-pressed="' + (EL.f === t) + '">' + t + '（' + n + '）</button>' : ''; }).join('') + '</div>' +
-      '<ul class="elist">' + list.map(function (e) {
+      '<button type="button" data-act="elF" data-v="all" aria-pressed="' + (EL.f === 'all') + '">すべて</button>' +
+      ETYPES.map(function (t) { var n = ESSAYS.filter(function (e) { return inG(e) && e.ty === t; }).length; return n ? '<button type="button" data-act="elF" data-v="' + t + '" aria-pressed="' + (EL.f === t) + '">' + (ETLABEL[t] || t) + '（' + n + '）</button>' : ''; }).join('') + '</div>' +
+      '<ul class="elist">' + (list.length ? list.map(function (e) {
         var st = store.essays[e.id], r = st && st.r != null ? st.r : null;
-        return '<li><a class="eitem" href="#/e?id=' + esc(e.id) + '"><span class="rm r-' + (r == null ? 'new' : ['ng', 'mid', 'ok'][r]) + '">' + (r == null ? '' : ['×', '△', '◎'][r]) + '</span><span class="b"><span class="t">' + esc(e.q.split('\n')[0]) + '</span><span class="small muted">' + esc(e.ty) + '・' + esc(FBYID[e.f] ? FBYID[e.f].name : '') + '・目安' + e.min + '分／' + esc(e.len) + '</span></span>' + icon('right') + '</a></li>';
-      }).join('') + '</ul>' + footer() + '</div>');
+        return '<li><a class="eitem" href="#/e?id=' + esc(e.id) + '"><span class="rm r-' + (r == null ? 'new' : ['ng', 'mid', 'ok'][r]) + '">' + (r == null ? '' : ['×', '△', '◎'][r]) + '</span><span class="b"><span class="t">' + esc(e.q.split('\n')[0]) + '</span><span class="small muted">' + (eReal(e) ? '<span class="chip acc">本番サイズ</span> ' : '') + eGroup(e) + '・' + esc(ETLABEL[e.ty] || e.ty) + '・' + esc(FBYID[e.f] ? FBYID[e.f].name : '') + '・目安' + e.min + '分／' + esc(e.len) + '</span></span>' + icon('right') + '</a></li>';
+      }).join('') : '<li class="empty">該当する設問はありません。</li>') + '</ul>' + footer() + '</div>');
   };
   var ES = { id: null, shown: false, outline: false };
   VIEWS.e = function (p) {
@@ -425,7 +437,7 @@
     var st = store.essays[e.id] || {}, ans = st.ans || '';
     setView('<div class="wrap narrow">' +
       '<p class="crumb small"><a href="#/essays">論述</a> › ' + esc(e.ty) + '</p>' +
-      '<div class="card qbox"><div class="row small-gap"><span class="chip">' + esc(e.ty) + '</span><span class="chip">' + esc(FBYID[e.f] ? FBYID[e.f].name : '') + '</span><span class="chip">目安 ' + e.min + '分・' + esc(e.len) + '</span>' + (st.r != null ? '<span class="chip">前回 ' + ['×', '△', '◎'][st.r] + '</span>' : '') + '</div>' +
+      '<div class="card qbox"><div class="row small-gap"><span class="chip acc">' + eGroup(e) + '</span><span class="chip">' + esc(ETLABEL[e.ty] || e.ty) + '</span><span class="chip">' + esc(FBYID[e.f] ? FBYID[e.f].name : '') + '</span><span class="chip">目安 ' + e.min + '分・' + esc(e.len) + '</span>' + (st.r != null ? '<span class="chip">前回 ' + ['×', '△', '◎'][st.r] + '</span>' : '') + '</div>' +
       '<div class="eq">' + paras(e.q) + '</div>' +
       (ES.shown ? '' : '<div class="row between etools">' + (ES.started ? timerHtml() : '<button class="btn" data-act="eStart">' + icon('clock') + ' ' + e.min + '分で計る</button>') +
         '<button class="btn ghost" data-act="eOutline" aria-pressed="' + ES.outline + '">構成のヒント</button></div>') +
@@ -453,22 +465,26 @@
   }
 
   /* ---------------------------------------------------------------------
-     模擬試験（120分）
+     模擬試験。本番形式は、公開されている過去問（2025・2026年度の9月・2月入試）にならう：
+     問I 語句説明（全問）＋問II 論述（9問から4問を選択。臨床コースは設問(1)〜(5)から3問以上）、120分
      --------------------------------------------------------------------- */
+  var TP = 4, EP = 15;   // 自己採点の配点の目安：語句4点、論述15点（本番形式で100点）
   var PRESETS = [
-    { id: 'a', name: '用語6・論述2', t: 6, e: 2, min: 120, d: '用語説明（各200字程度）と、長めの論述（各800〜1200字）の標準的な組み合わせ。' },
-    { id: 'b', name: '用語12・論述4', t: 12, e: 4, min: 120, d: '問題数の多い形式。1問あたりの時間が短く、手早く要点を書く練習に。' },
-    { id: 'c', name: 'ミニ（用語3・論述1）', t: 3, e: 1, min: 45, d: '時間がない日の短縮版。' }
+    { id: 'real', name: '本番形式', t: 10, ec: 5, eb: 4, pick: 4, minCl: 3, min: 120, d: '問I 語句10問（全問）＋問II 論述9問から4問を選択。臨床系の設問(1)〜(5)から3問以上を選ぶ、過去問と同じルールです。' },
+    { id: 'terms', name: '語句10問', t: 10, ec: 0, eb: 0, min: 35, d: '問Iだけの練習。1語3〜4分で、辞書的な定義を簡潔に書く。' },
+    { id: 'essay', name: '論述2問', t: 0, ec: 2, eb: 0, min: 45, d: '臨床系の本番サイズの設問を2問。1問20分のペースをつかむ。' },
+    { id: 'mini', name: 'ミニ（語句3・論述1）', t: 3, ec: 1, eb: 0, min: 30, d: '時間がない日の短縮版。' }
   ];
+  var BASIC_F = { kiso: 1, neuro: 1, social: 1, kenkyu: 1 };
   VIEWS.mock = function () {
     var run = store.run;
     setView('<div class="wrap"><h1 class="page">模擬試験</h1>' +
-      '<p class="lead">用語説明と論述を、時間を計ってまとめて解きます。終わったら解答例と採点の観点を見ながら<strong>自己採点</strong>します。出題形式は年度によって変わる可能性があるため、<strong>公開されている過去問で実際の形式を確認したうえで</strong>、近い組み合わせを選んでください。</p>' +
+      '<p class="lead">公開された過去問4回分の筆記試験（心理学・120分）は、いずれも<strong>問I 語句説明9〜12問（全問解答）</strong>と<strong>問II 論述9〜10問から4問を選択</strong>の構成でした。「本番形式」はこれにならい、語句10問と論述9問（臨床系5問・基礎系4問）を出します。終わったら解答例と採点の観点を見ながら<strong>自己採点</strong>します。</p>' +
       (run ? '<div class="banner info"><span class="bi">' + icon('clock') + '</span><span>実施中の模擬試験があります（残り ' + fmtMin(run.left) + '）</span><span class="spacer"></span><a class="btn small primary" href="#/mockrun">再開</a><button class="btn small ghost" data-act="mockDiscard">破棄</button></div>' : '') +
-      '<div class="grid g3">' + PRESETS.map(function (p) {
-        return '<button class="mode" data-act="mockStart" data-p="' + p.id + '"><span class="ic">' + icon('clock') + '</span><span class="t">' + esc(p.name) + '</span><span class="d">' + esc(p.d) + '</span><span class="n">' + p.min + '分</span></button>';
+      '<div class="grid g2 stack-s">' + PRESETS.map(function (p) {
+        return '<button class="mode' + (p.pick ? ' hot' : '') + '" data-act="mockStart" data-p="' + p.id + '"><span class="ic">' + icon('clock') + '</span><span class="t">' + esc(p.name) + '</span><span class="d">' + esc(p.d) + '</span><span class="n">' + p.min + '分</span></button>';
       }).join('') + '</div>' +
-      '<div class="notice" style="margin-top:16px"><strong>出題のしかた：</strong>用語は分野がかたよらないように、論述はタイプが重ならないように選びます。まだ解いていない問題が優先されます。</div>' +
+      '<div class="notice" style="margin-top:16px"><strong>時間配分の例（本番形式）：</strong>語句10問を35〜40分（1語3〜4分）→ 論述4問を各20分 → 見直し5分。最初の数分で問IIの9問に目を通し、選ぶ4問を決めておくと、語句を書きながら構成を考えられます。<br><strong>出題のしかた：</strong>語句は臨床系と基礎系が半々になるように、論述は分野が重ならないように選びます。まだ解いていない問題と、本番サイズ（1題20分前後）の論述が優先されます。</div>' +
       (store.mocks.length ? '<h2 class="sec">記録</h2><div class="card" style="padding:6px 14px; overflow-x:auto"><table class="tbl"><thead><tr><th>日時</th><th>形式</th><th class="r">自己採点</th><th class="r">時間</th><th></th></tr></thead><tbody>' +
         store.mocks.map(function (m, i) { return { m: m, i: i }; }).reverse().map(function (x) {
           var m = x.m, sc = mockScore(m);
@@ -476,25 +492,61 @@
         }).join('') + '</tbody></table></div>' : '') +
       footer() + '</div>');
   };
-  function pickMock(p) {
-    var unseenT = function (x) { return !store.terms[x.id]; };
-    var byF = {}; shuffle(TERMS).sort(function (a, b) { return unseenT(b) - unseenT(a); }).forEach(function (x) { (byF[x.f] = byF[x.f] || []).push(x); });
-    var terms = [], fs = shuffle(FIELDS.map(function (f) { return f.id; })), k = 0;
-    while (terms.length < p.t && k < 20) { fs.forEach(function (f) { if (terms.length < p.t && byF[f] && byF[f][k]) terms.push(byF[f][k].id); }); k++; }
-    var unseenE = function (e) { return !(store.essays[e.id] && store.essays[e.id].r != null); };
-    var es = shuffle(ESSAYS).sort(function (a, b) { return unseenE(b) - unseenE(a); }), essays = [], used = {};
-    es.forEach(function (e) { if (essays.length < p.e && !used[e.ty]) { used[e.ty] = 1; essays.push(e.id); } });
-    es.forEach(function (e) { if (essays.length < p.e && essays.indexOf(e.id) < 0) essays.push(e.id); });
-    return { terms: terms, essays: essays };
+  // 語句：臨床系と基礎系を半々に、分野が重ならないように。まだ解いていない語句を優先
+  function pickTerms(n) {
+    if (!n) return [];
+    var unseen = function (x) { return !store.terms[x.id]; };
+    var byF = {}; shuffle(TERMS).sort(function (a, b) { return unseen(b) - unseen(a); }).forEach(function (x) { (byF[x.f] = byF[x.f] || []).push(x); });
+    var take = function (fs, k) {
+      var out = [], i = 0;
+      while (out.length < k && i < 40) { fs.forEach(function (f) { if (out.length < k && byF[f] && byF[f][i]) out.push(byF[f][i]); }); i++; }
+      return out;
+    };
+    var fb = shuffle(FIELDS.filter(function (f) { return BASIC_F[f.id]; }).map(function (f) { return f.id; }));
+    var fc = shuffle(FIELDS.filter(function (f) { return !BASIC_F[f.id]; }).map(function (f) { return f.id; }));
+    var nb = Math.floor(n / 2);
+    return shuffle(take(fc, n - nb).concat(take(fb, nb))).map(function (x) { return x.id; });
+  }
+  // 論述：臨床系を先に、基礎系を後に並べる（本番の設問番号の並びと同じ）。思想タイプは本番で確認できていないため出さない
+  function pickEssays(nc, nb) {
+    var unseen = function (e) { return !(store.essays[e.id] && store.essays[e.id].r != null); };
+    var rank = function (e) { return (unseen(e) ? 0 : 2) + (eReal(e) ? 0 : 1); };
+    var sorted = function (arr) { return shuffle(arr).sort(function (a, b) { return rank(a) - rank(b); }); };
+    var pick = function (arr, k, key) {
+      var out = [], used = {};
+      arr.forEach(function (e) { var kk = key(e); if (out.length < k && !used[kk]) { used[kk] = 1; out.push(e); } });
+      arr.forEach(function (e) { if (out.length < k && out.indexOf(e) < 0) out.push(e); });
+      return out;
+    };
+    var c = nc ? pick(sorted(ESSAYS.filter(function (e) { return e.cl && e.ty !== '思想'; })), nc, function (e) { return e.ty === '事例' ? '事例' : e.f; }) : [];
+    var b = nb ? pick(sorted(ESSAYS.filter(function (e) { return !e.cl; })), nb, function (e) { return e.f; }) : [];
+    return c.concat(b).map(function (e) { return e.id; });
   }
   function pauseRun() { var r = store.run; if (r && r.running) { r.left = TM ? tmLeft() : r.left; r.running = false; save(true); } }
+  function selInfo(r) {
+    var sel = r.sel || [], cl = sel.filter(function (id) { return EBYID[id].cl; }).length;
+    return { n: sel.length, cl: cl, ba: sel.length - cl };
+  }
+  function selStatus(r) { var s = selInfo(r); return '選択中 <b class="num">' + s.n + '</b> / ' + r.pick + '問（臨床系 ' + s.cl + '・基礎系 ' + s.ba + '）'; }
   VIEWS.mockrun = function () {
     var r = store.run; if (!r) { go('#/mock'); return; }
+    var real = !!r.pick, sel = r.sel || [];
+    var termsHtml = r.terms.length ? '<div class="card"><h2 class="sub">問I　次の語句の意味をそれぞれ簡潔に日本語で説明しなさい。</h2>' +
+      r.terms.map(function (id, i) { var x = TBYID[id]; return '<div class="mq"><h3>(' + (i + 1) + ') ' + esc(x.t) + (x.en ? '<span class="en small muted">（' + esc(x.en) + '）</span>' : '') + '</h3><textarea class="inp ansbox" rows="3" data-mans="' + esc(id) + '">' + esc(r.ans[id] || '') + '</textarea><div class="small muted num" data-mcnt="' + esc(id) + '">' + charCount(r.ans[id]) + '字</div></div>'; }).join('') + '</div>' : '';
+    var qII = r.terms.length ? '問II' : '論述';
+    var essaysHtml = !r.essays.length ? '' : real ?
+      '<div class="card"><h2 class="sub">' + qII + '　以下の設問から' + r.pick + '問を選んで、日本語で論述しなさい。</h2>' +
+      '<p class="small muted" style="margin:0 0 6px">注　臨床心理学コースは、' + r.pick + '問のうち少なくとも' + r.minCl + '問を設問(1)〜(' + r.essays.filter(function (id) { return EBYID[id].cl; }).length + ')の中から選ぶこと（公開された過去問と同じルール）。選んだ設問にだけ解答欄が表示されます。</p>' +
+      '<p class="small selst" id="selSt">' + selStatus(r) + '</p>' +
+      r.essays.map(function (id, i) {
+        var e = EBYID[id], on = sel.indexOf(id) >= 0;
+        return '<div class="mq eq-pick' + (on ? ' on' : '') + '" data-eq="' + esc(id) + '"><div class="row between"><h3>(' + (i + 1) + ')</h3><button type="button" class="btn small' + (on ? ' primary' : '') + '" data-act="mSel" data-id="' + esc(id) + '" aria-pressed="' + on + '">' + (on ? '選択中' : 'この設問を選ぶ') + '</button></div>' +
+          '<div class="eq">' + paras(e.q) + '</div><div class="ansarea"' + (on ? '' : ' hidden') + '><textarea class="inp ansbox big" rows="12" data-mans="' + esc(id) + '">' + esc(r.ans[id] || '') + '</textarea><div class="small muted num" data-mcnt="' + esc(id) + '">' + charCount(r.ans[id]) + '字</div></div></div>';
+      }).join('') + '</div>'
+      : r.essays.map(function (id, i) { var e = EBYID[id]; return '<div class="card"><h2 class="sub">' + qII + '(' + (i + 1) + ')</h2><div class="eq">' + paras(e.q) + '</div><p class="small muted">目安 ' + esc(e.len) + '</p><textarea class="inp ansbox big" rows="12" data-mans="' + esc(id) + '">' + esc(r.ans[id] || '') + '</textarea><div class="small muted num" data-mcnt="' + esc(id) + '">' + charCount(r.ans[id]) + '字</div></div>'; }).join('');
     setView('<div class="wrap narrow mockrun">' +
       '<div class="ptop sticky-top">' + timerHtml('残り時間') + '<span class="title small muted">' + esc(r.name) + '</span><button class="btn small primary" data-act="mockSubmit">提出する</button></div>' +
-      '<div class="card"><h2 class="sub">第1問　次の用語について、それぞれ200字程度で説明しなさい。</h2>' +
-      r.terms.map(function (id, i) { var x = TBYID[id]; return '<div class="mq"><h3>(' + (i + 1) + ') ' + esc(x.t) + (x.en ? ' <span class="en small muted">' + esc(x.en) + '</span>' : '') + '</h3><textarea class="inp ansbox" rows="5" data-mans="' + esc(id) + '">' + esc(r.ans[id] || '') + '</textarea><div class="small muted num" data-mcnt="' + esc(id) + '">' + charCount(r.ans[id]) + '字</div></div>'; }).join('') + '</div>' +
-      r.essays.map(function (id, i) { var e = EBYID[id]; return '<div class="card"><h2 class="sub">第' + (i + 2) + '問</h2><div class="eq">' + paras(e.q) + '</div><p class="small muted">目安 ' + esc(e.len) + '</p><textarea class="inp ansbox big" rows="14" data-mans="' + esc(id) + '">' + esc(r.ans[id] || '') + '</textarea><div class="small muted num" data-mcnt="' + esc(id) + '">' + charCount(r.ans[id]) + '字</div></div>'; }).join('') +
+      termsHtml + essaysHtml +
       '<div class="row end"><button class="btn primary" data-act="mockSubmit">提出する</button></div></div>');
     r.running = true;
     timerStart(r.left, function () { toast('時間になりました。自動で提出しました'); submitMock(); });
@@ -502,44 +554,56 @@
   function submitMock() {
     var r = store.run; if (!r) return;
     var left = TM ? tmLeft() : r.left; timerStop();
-    store.mocks.push({ ts: Date.now(), name: r.name, preset: r.preset, terms: r.terms, essays: r.essays, ans: r.ans, used: r.min * 60 - left, scores: {} });
+    var essays = r.pick ? r.essays.filter(function (id) { return (r.sel || []).indexOf(id) >= 0; }) : r.essays;
+    var ans = {}; r.terms.concat(essays).forEach(function (id) { if (r.ans[id]) ans[id] = r.ans[id]; });
+    store.mocks.push({ ts: Date.now(), name: r.name, preset: r.preset, terms: r.terms, essays: essays, offered: r.pick ? r.essays : null, ne: r.pick || essays.length, tp: r.tp || TP, ep: r.ep || EP, ans: ans, used: r.min * 60 - left, scores: {} });
     if (store.mocks.length > 30) store.mocks = store.mocks.slice(-30);
     store.run = null; logAdd('m'); save(true);
     go('#/mockres?i=' + (store.mocks.length - 1));
   }
-  // 配点の目安：用語5点、論述25点（自己採点用）
+  // 自己採点の合計。v1.0の記録（配点の記録なし）は、語句5点・論述25点で数える
   function mockScore(m) {
-    var max = m.terms.length * 5 + m.essays.length * 25, got = 0, n = 0;
-    m.terms.concat(m.essays).forEach(function (id) { if (m.scores[id] != null) { got += m.scores[id]; n++; } });
-    return { max: max, got: got, done: n === m.terms.length + m.essays.length, pct: max ? Math.round(got / max * 100) : 0 };
+    var tp = m.tp || 5, ep = m.ep || 25, ne = m.ne != null ? m.ne : m.essays.length;
+    var max = m.terms.length * tp + ne * ep, got = 0, n = 0, all = m.terms.concat(m.essays);
+    all.forEach(function (id) { if (m.scores[id] != null) { got += m.scores[id]; n++; } });
+    return { max: max, got: got, done: all.length > 0 && n === all.length, pct: max ? Math.round(got / max * 100) : 0 };
   }
   VIEWS.mockres = function (p) {
     var m = store.mocks[+p.i]; if (!m) { go('#/mock'); return; }
-    var sc = mockScore(m);
+    var sc = mockScore(m), tp = m.tp || 5, ep = m.ep || 25;
     var sel = function (id, max) {
-      var v = m.scores[id], opts = []; for (var i = 0; i <= max; i++) opts.push(i);
-      if (max > 5) opts = [0, 5, 10, 15, 20, 25];
+      var v = m.scores[id], opts = [];
+      if (max <= 5) { for (var i = 0; i <= max; i++) opts.push(i); } else { var st = max / 5; for (var j = 0; j <= 5; j++) opts.push(j * st); }
       return '<label class="small sclab">自己採点 <select class="inp sc" data-act="mScore" data-id="' + esc(id) + '"><option value="">—</option>' + opts.map(function (o) { return '<option value="' + o + '"' + (v === o ? ' selected' : '') + '>' + o + '点</option>'; }).join('') + '</select> / ' + max + '点</label>';
     };
+    var qno = function (id, i) { return m.offered ? '(' + (m.offered.indexOf(id) + 1) + ')' : '(' + (i + 1) + ')'; };
+    var qII = m.terms.length ? '問II' : '論述';
+    var skipped = m.offered ? m.offered.filter(function (id) { return m.essays.indexOf(id) < 0; }) : [];
     setView('<div class="wrap narrow"><p class="crumb small"><a href="#/mock">模擬試験</a> › 結果</p><h1 class="page">模擬試験の自己採点</h1>' +
       '<div class="card score-card"><div class="row between"><div><div class="small muted">' + esc(m.name) + '・' + fmtDate(m.ts) + '・解答時間 ' + fmtMin(m.used) + '</div><div class="big num" id="mTotal">' + sc.got + ' <small>/ ' + sc.max + '点</small>' + (sc.done ? '（' + sc.pct + '%）' : '') + '</div></div>' +
-      '<div class="small muted">配点は自己採点用の目安です<br>（用語5点・論述25点）</div></div></div>' +
-      '<h2 class="sec">第1問　用語説明</h2>' + m.terms.map(function (id) {
+      '<div class="small muted">配点は自己採点用の目安です<br>（語句' + tp + '点・論述' + ep + '点）</div></div></div>' +
+      (m.offered && m.essays.length < m.ne ? '<div class="notice">選んだ論述が ' + m.essays.length + ' 問でした（' + m.ne + '問を選ぶ形式）。足りない分は0点として合計しています。</div>' : '') +
+      (m.terms.length ? '<h2 class="sec">問I　語句説明</h2>' : '') + m.terms.map(function (id) {
         var x = TBYID[id], a = m.ans[id] || '', keys = x.k || [], hit = keys.filter(function (k) { return hasKey(a, k); }).length;
-        return '<div class="card rdet"><div class="rhead"><div class="rt"><b>' + esc(x.t) + '</b><span class="small muted">' + charCount(a) + '字・キーワード ' + hit + '/' + keys.length + '</span></div>' + sel(id, 5) + '</div>' +
+        return '<div class="card rdet"><div class="rhead"><div class="rt"><b>' + esc(x.t) + '</b><span class="small muted">' + charCount(a) + '字・キーワード ' + hit + '/' + keys.length + '</span></div>' + sel(id, tp) + '</div>' +
           '<details><summary>答案と解答例を見る</summary>' +
           '<h3 class="sub">あなたの答案</h3><div class="mine">' + (a ? paras(a) : '<p class="muted">（未記入）</p>') + '</div>' +
-          '<h3 class="sub">解答例</h3><div class="model">' + paras(x.a) + '</div>' +
+          (x.s ? '<h3 class="sub">簡潔な定義</h3><div class="model def">' + paras(x.s) + '</div>' : '') +
+          '<h3 class="sub">詳しい解説</h3><div class="model">' + paras(x.a) + '</div>' +
           '<ul class="keys">' + keys.map(function (k) { var ok = hasKey(a, k); return '<li class="' + (ok ? 'hit' : 'miss') + '">' + icon(ok ? 'check' : 'x') + esc(k.split('/')[0]) + '</li>'; }).join('') + '</ul></details></div>';
       }).join('') +
       m.essays.map(function (id, i) {
         var e = EBYID[id], a = m.ans[id] || '';
-        return '<h2 class="sec">第' + (i + 2) + '問　論述</h2><div class="card rdet"><div class="rhead"><div class="rt"><b>' + esc(e.q.split('\n')[0]) + '</b><span class="small muted">' + charCount(a) + '字（目安 ' + esc(e.len) + '）</span></div>' + sel(id, 25) + '</div>' +
+        return '<h2 class="sec">' + qII + qno(id, i) + '　論述<span class="sub">' + eGroup(e) + '</span></h2><div class="card rdet"><div class="rhead"><div class="rt"><b>' + esc(e.q.split('\n')[0]) + '</b><span class="small muted">' + charCount(a) + '字（目安 ' + esc(e.len) + '）</span></div>' + sel(id, ep) + '</div>' +
           '<details><summary>答案・採点の観点・解答例を見る</summary>' +
           '<h3 class="sub">あなたの答案</h3><div class="mine">' + (a ? paras(a) : '<p class="muted">（未記入）</p>') + '</div>' +
           '<h3 class="sub">採点の観点</h3><ul class="rubric plain">' + e.r.map(function (r) { return '<li>' + fmt(r) + '</li>'; }).join('') + '</ul>' +
           '<h3 class="sub">解答例</h3><div class="model">' + paras(e.a) + '</div></details></div>';
       }).join('') +
+      (skipped.length ? '<h2 class="sec">選ばなかった設問</h2><p class="small muted">あとで1題ずつ練習できます。</p><ul class="elist">' + skipped.map(function (id) {
+        var e = EBYID[id];
+        return '<li><a class="eitem" href="#/e?id=' + esc(id) + '"><span class="rm r-new"></span><span class="b"><span class="t">' + qno(id, 0) + ' ' + esc(e.q.split('\n')[0]) + '</span><span class="small muted">' + eGroup(e) + '・' + esc(ETLABEL[e.ty] || e.ty) + '</span></span>' + icon('right') + '</a></li>';
+      }).join('') + '</ul>' : '') +
       '<div class="row" style="margin-top:16px"><a class="btn" href="#/mock">模擬試験へ戻る</a></div>' + footer() + '</div>');
   };
 
@@ -551,7 +615,7 @@
     var total = planTotal();
     var all = PLAN.checklist.reduce(function (n, g) { return n + g.items.length; }, 0), on = Object.keys(store.plan.chk).filter(function (k) { return store.plan.chk[k]; }).length;
     setView('<div class="wrap narrow"><h1 class="page">研究計画書</h1>' +
-      '<div class="notice warnbox"><strong>必ずご自身で書いてください。</strong>出願書類の作成に生成AIを使うことは認められない場合があります（上智大学の学部入試の要項には「生成AIが出力した文章は本人が作成したものとは認められない」旨の記載があります。大学院の扱いは要項で確認してください）。このページは、構成の考え方と点検用のチェックリスト、字数を数える下書き欄だけを用意しています。</div>' +
+      '<div class="notice warnbox"><strong>必ずご自身で書いてください。</strong>2027年度の心理学専攻の試験概要には「出願書類の作成において、ChatGPT などの生成 AI を用いてはいけません。」と明記されています。また、偽造・虚偽記載・剽窃などがあった場合は入学が認められないとされています。このページは、構成の考え方と点検用のチェックリスト、字数を数える下書き欄だけを用意しており、文章を作る機能はありません。</div>' +
       (PLAN.sections || []).map(function (s) { return '<section class="card prose"><h2>' + esc(s.t) + '</h2>' + s.html + '</section>'; }).join('') +
       '<h2 class="sec">提出前のチェックリスト <span class="sub num">' + on + ' / ' + all + '</span></h2>' +
       PLAN.checklist.map(function (g, gi) {
@@ -606,7 +670,7 @@
   /* ---------------------------------------------------------------------
      過去問の分析メモ（公式の過去問を読んだ記録。問題文の転載ではなく、形式と分野を記録する）
      --------------------------------------------------------------------- */
-  var KTYPES = ['用語説明', '論述（説明）', '論述（比較）', '事例', '研究法・統計', '思想・哲学', '英語', 'その他'];
+  var KTYPES = ['語句説明', '論述（臨床系）', '論述（基礎系）', '事例', '研究法・統計', '思想・哲学', 'その他'];
   VIEWS.kako = function () {
     var list = store.kako || [];
     var byTy = {}, byF = {};
@@ -620,15 +684,15 @@
       '<label class="field"><span class="lab">大問</span><input class="inp" id="kNo" placeholder="例：第1問" maxlength="20"></label>' +
       '<label class="field"><span class="lab">形式</span><select class="inp" id="kTy">' + KTYPES.map(function (t) { return opt(t, t); }).join('') + '</select></label>' +
       '<label class="field"><span class="lab">分野</span><select class="inp" id="kF">' + opt('', '（選ばない）') + FIELDS.map(function (f) { return opt(f.id, f.name); }).join('') + '</select></label>' +
-      '<label class="field wide"><span class="lab">分量・時間の目安</span><input class="inp" id="kN" placeholder="例：用語6問・各200字程度" maxlength="60"></label>' +
+      '<label class="field wide"><span class="lab">分量・時間の目安</span><input class="inp" id="kN" placeholder="例：語句10問（全問）／論述10問から4問" maxlength="60"></label>' +
       '<label class="field wide"><span class="lab">テーマ・メモ</span><textarea class="inp" id="kM" rows="3" placeholder="何が問われたか（キーワード）、出題意図から読み取れたこと、自分が書けそうか など" maxlength="600"></textarea></label>' +
       '</div><div class="row end"><button class="btn primary" data-act="kAdd">記録する</button></div></div>' +
       (list.length ?
         '<h2 class="sec">傾向 <span class="sub">' + list.length + '件</span></h2><div class="card"><div class="ksum"><div><div class="small muted">形式</div><ul class="kbars">' +
-        KTYPES.filter(function (t) { return byTy[t]; }).map(function (t) { return '<li><span>' + esc(t) + '</span><i style="--w:' + Math.round(byTy[t] / list.length * 100) + '%"></i><b class="num">' + byTy[t] + '</b></li>'; }).join('') + '</ul></div>' +
+        KTYPES.concat(Object.keys(byTy).filter(function (t) { return KTYPES.indexOf(t) < 0; })).filter(function (t) { return byTy[t]; }).map(function (t) { return '<li><span>' + esc(t) + '</span><i style="--w:' + Math.round(byTy[t] / list.length * 100) + '%"></i><b class="num">' + byTy[t] + '</b></li>'; }).join('') + '</ul></div>' +
         '<div><div class="small muted">分野</div>' + (Object.keys(byF).length ? '<ul class="kbars">' + FIELDS.filter(function (f) { return byF[f.id]; }).map(function (f) {
-          return '<li><button type="button" class="linkbtn" data-act="kField" data-f="' + f.id + '" title="この分野の用語を練習">' + esc(f.name) + '</button><i style="--w:' + Math.round(byF[f.id] / list.length * 100) + '%"></i><b class="num">' + byF[f.id] + '</b></li>';
-        }).join('') + '</ul><p class="small muted">分野名を押すと、その分野の用語一覧を開きます。</p>' : '<p class="small muted">分野を選んだ記録はまだありません。</p>') + '</div></div></div>' +
+          return '<li><button type="button" class="linkbtn" data-act="kField" data-f="' + f.id + '" title="この分野の語句を練習">' + esc(f.name) + '</button><i style="--w:' + Math.round(byF[f.id] / list.length * 100) + '%"></i><b class="num">' + byF[f.id] + '</b></li>';
+        }).join('') + '</ul><p class="small muted">分野名を押すと、その分野の語句の一覧を開きます。</p>' : '<p class="small muted">分野を選んだ記録はまだありません。</p>') + '</div></div></div>' +
         '<h2 class="sec">記録</h2><ul class="klist">' + list.map(function (k, i) { return { k: k, i: i }; }).reverse().map(function (x) {
           var k = x.k;
           return '<li class="card"><div class="row between"><b>' + esc(k.y || '（年度未入力）') + (k.no ? '　' + esc(k.no) : '') + '</b><button type="button" class="btn small ghost" data-act="kDel" data-i="' + x.i + '" aria-label="この記録を削除">' + icon('x') + ' 削除</button></div>' +
@@ -646,7 +710,7 @@
   VIEWS.more = function () {
     var item = function (h, ic, t, d) { return '<li><a href="' + h + '"><span class="ic">' + icon(ic) + '</span><span>' + t + '<span class="d">' + d + '</span></span></a></li>'; };
     setView('<div class="wrap narrow"><h1 class="page">メニュー</h1><ul class="morelist">' +
-      item('#/about', 'info', '試験の概要', '選考の流れ、出願書類、日程、過去問の入手方法') +
+      item('#/about', 'info', '試験の概要', '過去問4回分の形式と傾向、日程、出願書類、事前面談') +
       item('#/plan', 'doc', '研究計画書', '構成と字数配分、チェックリスト、字数カウンター') +
       item('#/oral', 'mic', '口述試験', '想定質問と答え方の要点、タイマー練習') +
       item('#/kako', 'chart', '過去問の分析メモ', '公式の過去問を読んで、形式と分野の傾向を記録') +
@@ -661,7 +725,7 @@
     var days = Object.keys(store.log).length;
     setView('<div class="wrap narrow"><h1 class="page">設定・記録</h1><div class="card">' +
       '<div class="field"><label class="lab" for="exIn">目標の筆記試験日（ホームにカウントダウンを表示）</label><input class="inp" type="date" id="exIn" value="' + esc(st.examDate || '') + '"><p class="small muted">初期値は ' + esc(FACTS.scheduleYear || '') + ' の2月入試の筆記試験日です。受験する年度の日程に合わせて変えてください。</p></div>' +
-      '<div class="field"><span class="lab">用語説明のタイマー（1語あたり）</span><div class="seg">' + seg('termSec', 0, 'なし', st.termSec) + seg('termSec', 180, '3分', st.termSec) + seg('termSec', 300, '5分', st.termSec) + seg('termSec', 420, '7分', st.termSec) + '</div></div>' +
+      '<div class="field"><span class="lab">語句説明のタイマー（1語あたり）</span><div class="seg">' + seg('termSec', 0, 'なし', st.termSec) + seg('termSec', 120, '2分', st.termSec) + seg('termSec', 180, '3分', st.termSec) + seg('termSec', 240, '4分', st.termSec) + seg('termSec', 300, '5分', st.termSec) + '</div><p class="small muted">本番形式で語句10問を35〜40分で書くなら、1語3〜4分が目安です。</p></div>' +
       '<div class="field"><span class="lab">テーマ</span><div class="seg">' + seg('theme', 'auto', '端末に合わせる', st.theme) + seg('theme', 'light', 'ライト', st.theme) + seg('theme', 'dark', 'ダーク', st.theme) + '</div></div>' +
       '<div class="field"><span class="lab">文字の大きさ</span><div class="seg">' + seg('font', 's', '小', st.font) + seg('font', 'm', '標準', st.font) + seg('font', 'l', '大', st.font) + seg('font', 'xl', '特大', st.font) + '</div></div></div>' +
       '<h2 class="sec">記録</h2><div class="card"><p class="small">学習した日数：<b class="num">' + days + '</b>日　模擬試験：<b class="num">' + store.mocks.length + '</b>回</p>' +
@@ -696,7 +760,7 @@
   var ACT = {
     skip: function (el, e) { e.preventDefault(); var m = $('#main'); m.focus(); m.scrollIntoView(); },
     tmToggle: function () { timerToggle(); },
-    termGo: function (el) { startTerms(el.getAttribute('data-mode'), el.getAttribute('data-f')); },
+    termGo: function (el) { startTerms(el.getAttribute('data-mode'), el.getAttribute('data-f'), +el.getAttribute('data-n') || 10); },
     tlF: function (el) { TL.f = el.getAttribute('data-v'); VIEWS.terms(); },
     tlSt: function (el) { TL.st = el.getAttribute('data-v'); $all('[data-act="tlSt"]').forEach(function (b) { b.setAttribute('aria-pressed', String(b === el)); }); renderTermList(); },
     tReveal: function () { if (!TS) return; TS.ans = $('#tAns').value; TS.draft = null; TS.shown = true; timerStop(); VIEWS.t({}); var r = $('.rbtn'); if (r) r.scrollIntoView({ block: 'center' }); },
@@ -709,6 +773,14 @@
       TS.i++; TS.shown = false; TS.ans = ''; TS.draft = ''; VIEWS.t({}); window.scrollTo(0, 0);
     },
     elF: function (el) { EL.f = el.getAttribute('data-v'); VIEWS.essays(); },
+    elG: function (el) { EL.g = el.getAttribute('data-v'); EL.f = 'all'; VIEWS.essays(); },
+    eRandom: function () {
+      var fresh = function (e) { return !(store.essays[e.id] && store.essays[e.id].r != null); };
+      var pool = ESSAYS.filter(function (e) { return eReal(e) && fresh(e) && e.cl; });
+      if (!pool.length) pool = ESSAYS.filter(function (e) { return eReal(e) && fresh(e); });
+      if (!pool.length) pool = ESSAYS.filter(eReal);
+      var e = shuffle(pool)[0]; ES = { id: null }; go('#/e?id=' + e.id);
+    },
     eStart: function () { ES.started = true; ES.left = null; var y = window.scrollY; VIEWS.e({ id: ES.id }); window.scrollTo(0, y); $('#eAns').focus({ preventScroll: true }); },
     eOutline: function () { ES.outline = !ES.outline; ES.left = TM ? tmLeft() : null; var y = window.scrollY; VIEWS.e({ id: ES.id }); window.scrollTo(0, y); },
     eReveal: function () {
@@ -720,11 +792,34 @@
     eRetry: function () { var st = store.essays[ES.id] || {}; st.ans = ''; st.rub = {}; ES.shown = false; ES.started = false; save(); VIEWS.e({ id: ES.id }); },
     mockStart: function (el) {
       var p = PRESETS.filter(function (x) { return x.id === el.getAttribute('data-p'); })[0];
-      var go2 = function () { var pk = pickMock(p); store.run = { preset: p.id, name: p.name + '（' + p.min + '分）', min: p.min, left: p.min * 60, terms: pk.terms, essays: pk.essays, ans: {}, running: false }; save(true); go('#/mockrun'); };
+      var go2 = function () {
+        store.run = { preset: p.id, name: p.name + '（' + p.min + '分）', min: p.min, left: p.min * 60, terms: pickTerms(p.t), essays: pickEssays(p.ec, p.eb), pick: p.pick || 0, minCl: p.minCl || 0, sel: [], tp: TP, ep: EP, ans: {}, running: false };
+        save(true); go('#/mockrun');
+      };
       if (store.run) confirmBox('模擬試験', '<p>実施中の模擬試験を破棄して、新しく始めますか？</p>', '新しく始める', go2, true); else go2();
     },
     mockDiscard: function () { confirmBox('模擬試験の破棄', '<p>実施中の模擬試験の答案を破棄します。</p>', '破棄', function () { store.run = null; save(true); VIEWS.mock(); }, true); },
-    mockSubmit: function () { confirmBox('提出', '<p>提出して自己採点に進みますか？（提出後は答案を書き直せません）</p>', '提出する', function () { submitMock(); }); },
+    mockSubmit: function () {
+      var r = store.run, warn = '';
+      if (r && r.pick) { var s = selInfo(r); if (s.n < r.pick) warn = '<p><strong>選んだ論述が ' + s.n + ' 問です</strong>（' + r.pick + '問まで選べます）。足りない分は0点になります。</p>'; }
+      confirmBox('提出', warn + '<p>提出して自己採点に進みますか？（提出後は答案を書き直せません）</p>', '提出する', function () { submitMock(); });
+    },
+    mSel: function (el) {
+      var r = store.run; if (!r || !r.pick) return;
+      var id = el.getAttribute('data-id'), e = EBYID[id], sel = r.sel || (r.sel = []), i = sel.indexOf(id), s = selInfo(r);
+      if (i >= 0) sel.splice(i, 1);
+      else {
+        if (s.n >= r.pick) { toast('選べるのは' + r.pick + '問までです。ほかの設問の選択を外してください'); return; }
+        if (!e.cl && s.ba >= r.pick - r.minCl) { toast('臨床コースは' + r.minCl + '問以上を臨床系の設問から選ぶため、基礎系は' + (r.pick - r.minCl) + '問までです'); return; }
+        sel.push(id);
+      }
+      if (TM) r.left = tmLeft(); save();
+      var on = sel.indexOf(id) >= 0, box = el.closest('.eq-pick');
+      box.classList.toggle('on', on); box.querySelector('.ansarea').hidden = !on;
+      el.classList.toggle('primary', on); el.setAttribute('aria-pressed', String(on)); el.textContent = on ? '選択中' : 'この設問を選ぶ';
+      $('#selSt').innerHTML = selStatus(r);
+      if (on) { var ta = box.querySelector('textarea'); if (ta) ta.focus({ preventScroll: true }); }
+    },
     oralRandom: function () {
       var pool = ORAL.filter(function (o) { return !(store.oral[o.id] && store.oral[o.id].d === today()); }); if (!pool.length) pool = ORAL;
       var o = shuffle(pool)[0]; OS = { id: o.id, phase: 0 }; go('#/o?id=' + o.id);
@@ -753,7 +848,7 @@
     },
     export: function () { download('siinsi-backup-' + today() + '.json', JSON.stringify({ app: APP.key, v: 1, exported: new Date().toISOString(), store: store }, null, 1), 'application/json'); toast('書き出しました'); },
     reset: function () {
-      confirmBox('記録を消す', '<p>用語・論述・模擬試験・口述の記録と答案を消します。研究計画書の下書きとチェック、過去問の分析メモは残ります。</p>', '消す', function () {
+      confirmBox('記録を消す', '<p>語句・論述・模擬試験・口述の記録と答案を消します。研究計画書の下書きとチェック、過去問の分析メモは残ります。</p>', '消す', function () {
         var keep = store.plan, s = store.settings, kk = store.kako; store = defaults(); store.plan = keep; store.settings = s; store.kako = kk; save(true); toast('記録を消しました'); route();
       }, true);
     }
