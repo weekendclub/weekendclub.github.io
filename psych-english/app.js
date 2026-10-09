@@ -942,7 +942,9 @@
       step(2, !!(tl.s), '訳読（20分）', np ? '次は「' + esc(np.t) + '」（' + esc(LEVELS[np.lv - 1].name) + '・' + np.s.length + '文）' : 'すべて読了しました', np ? '<a class="btn small" href="#/p?id=' + esc(np.id) + '&m=tr">訳す</a>' : '') +
       step(3, false, 'ふり返り（10分）', redo ? '△・× の文が ' + redo + ' 文。もう一度訳してみる' : '訳した文の模範訳と自分の訳を見比べ、違いを一つ言葉にする', '<a class="btn small" href="' + (redo ? '#/redo' : '#/read') + '">開く</a>') +
       step(4, false, 'メモ（5分）', '分からなかった点を一行で残す。講読会の予習もここで', '<a class="btn small" href="#/notes">ノート</a>') +
-      '</ol></section>' +
+      '</ol>' +
+      (window.StudyLink ? '<div class="row" style="margin-top:12px"><button class="btn small" data-act="studySend">今日の分を勉強シートに送る</button></div>' : '') +
+      '</section>' +
       '<div class="kpis k4"><div class="kpi"><div class="k">連続学習</div><div class="v num">' + streak() + '<small>日</small></div></div>' +
       '<div class="kpi"><div class="k">学習した単語</div><div class="v num">' + Object.keys(store.cards).length + '<small>/' + allWords().length + '</small></div></div>' +
       '<div class="kpi"><div class="k">読了した文章</div><div class="v num">' + PASSAGES.filter(pDone).length + '<small>/' + PASSAGES.length + '</small></div></div>' +
@@ -1085,6 +1087,35 @@
         store.cards = {}; store.pas = {}; store.gram = {}; store.log = {}; store.daily = { date: '', n: 0 }; save(true); toast('学習記録を消しました'); route();
       }, true);
     }
+  };
+  /* ---------------------------------------------------------------------
+     勉強シートへ送る（../study-link.js があるときだけ）
+     今日の単語カード・訳読・構文の量と、今日覚え始めた語を、本人の勉強シート（claude.ai・非公開）へ送る
+     --------------------------------------------------------------------- */
+  ACT.studySend = function () {
+    if (!window.StudyLink) return;
+    var k = today(), l = store.log[k] || {}, t0 = window.StudyLink.dayStart(k), t1 = t0 + 86400000;
+    var words = [];
+    store.custom.forEach(function (c) { if (c.ts >= t0 && c.ts < t1 && c.w) words.push({ en: c.w, ja: c.ja || '' }); });
+    Object.keys(store.cards).forEach(function (id) {
+      var c = store.cards[id], w = wordById(id);
+      if (c && c.intro === k && w && !words.some(function (x) { return x.en === w.w; })) words.push({ en: w.w, ja: w.ja || '' });
+    });
+    words = words.slice(0, 40);
+    var eng = { c: l.c || 0, n: l.n || 0, s: l.s || 0, g: l.g || 0, q: l.q || 0, p: l.p || 0 };
+    var lines = [];
+    if (eng.c) lines.push('単語カード ' + eng.c + '枚（新しい語 ' + eng.n + '）');
+    if (eng.s) lines.push('訳した文 ' + eng.s + '文');
+    if (eng.p) lines.push('読み終えた文章 ' + eng.p + '本');
+    if (eng.g) lines.push('構文 ' + eng.g + '項目');
+    if (eng.q) lines.push('単語クイズ ' + eng.q + '回');
+    if (words.length) lines.push('今日の語 ' + words.length + '語（勉強シートの単語帳に入ります）');
+    var est = Math.round(eng.c * 0.4 + eng.n * 0.6 + eng.s * 2 + eng.g * 4 + eng.q * 3);
+    window.StudyLink.open({
+      title: '心理英語ノート', date: k, minutes: est, empty: !lines.length,
+      lines: lines,
+      build: function (min) { return { v: 1, src: 'e', key: 'e', app: '心理英語ノート', date: k, min: min, eng: eng, words: words }; }
+    });
   };
   function rerenderKeep(fn, focusSel) {
     var y = window.scrollY; fn(); window.scrollTo(0, y);

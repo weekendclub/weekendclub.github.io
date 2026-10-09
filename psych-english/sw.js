@@ -2,9 +2,9 @@
    同じサイト内のファイルだけをキャッシュする（外部への通信はしない）。
    ファイルを更新したら CACHE の版を上げること。
    キャッシュ名の接頭辞は国試ドリル（swdrill-／cppdrill-）と分け、互いのキャッシュを消さないようにする。 */
-var CACHE = 'psyeng-v1.0.0';
+var CACHE = 'psyeng-v1.1.0';
 var FILES = [
-  './', './index.html', './eigo.css', './app.js', '../drill/style.css', './manifest.webmanifest',
+  './', './index.html', './eigo.css', './app.js', '../study-link.js', '../drill/style.css', './manifest.webmanifest',
   './data/words.js', './data/grammar.js', './data/read1.js', './data/read2.js', './data/read3.js', './data/guide.js',
   './icons/icon.svg', './icons/icon-180.png', './icons/icon-192.png', './icons/icon-512.png'
 ];
