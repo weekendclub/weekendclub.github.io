@@ -1,7 +1,7 @@
 /* 社会福祉士 国試ドリル  オフライン用 Service Worker
    同じサイト内のファイルだけをキャッシュする（外部への通信はしない）。
    ファイルを更新したら CACHE の版を上げること。 */
-var CACHE = 'swdrill-v1.2.0';
+var CACHE = 'swdrill-v1.2.1';
 var FILES = [
   './', './index.html', '../drill/style.css', '../drill/app.js', './manifest.webmanifest',
   './data/subjects.js', './data/g1.js', './data/g2.js', './data/g3.js', './data/g4.js', './data/g5.js', './data/g6.js',

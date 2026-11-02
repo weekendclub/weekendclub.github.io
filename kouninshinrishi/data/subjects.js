@@ -18,7 +18,8 @@ var SW_META = {
   app: {
     name: "公認心理師 国試ドリル",
     storeKey: "cppdrill",         // 学習データの保存キー（変えると記録が引き継がれない）
-    version: "1.1.0",
+    version: "1.2.0",
+    studyLink: true,              // 「勉強シートに送る」を出す（../study-link.js）
     caseFirst: true,              // 本番と同じく「事例 → 問い」の順に表示
     casePoints: "3点",
     heroNote: "154問・230点満点・午前／午後 各120分・事例問題は1問3点",

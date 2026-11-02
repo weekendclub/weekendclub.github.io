@@ -289,6 +289,7 @@
     <div style="display:flex; gap:12px; flex-wrap:wrap; margin:0 0 22px;">
       <button class="btn gold" id="btnReview" onclick="reviewMistakes()" style="display:none;">🔁 間違えた問題を復習する（<span id="btnReviewN">0</span>問）</button>
       <button class="btn" onclick="restart()">同じ設定でもう一度</button>
+      <button class="btn" id="btnStudy" onclick="sendStudy()" style="display:none;">勉強シートに送る</button>
       <button class="btn ghost" onclick="backToStart()">設定に戻る</button>
     </div>
     <div class="panel">
@@ -316,6 +317,7 @@
   </div>
 </footer>
 
+<script src="../study-link.js"></script>
 <script src="questions.js"></script>
 <script>
 var $ = function(id){ return document.getElementById(id); };
@@ -324,7 +326,7 @@ var MODE_LABEL = {exam:"試験モード", study:"学習モード", review:"復�
 var LS_WRONG = "kounin_wrong_v1";
 
 var cfg = { mode:"exam", subj:"all", order:"seq", count:"all" };
-var mode="exam", order=[], idx=0, answers={}, submitted=false, timerId=null, remaining=3600;
+var mode="exam", order=[], idx=0, answers={}, submitted=false, timerId=null, remaining=3600, quizStart=0, lastResult=null;
 
 /* ---- localStorage（復習リスト） ---- */
 function loadWrong(){ try{ return JSON.parse(localStorage.getItem(LS_WRONG)||"[]"); }catch(e){ return []; } }
@@ -397,7 +399,7 @@ function beginQuiz(){
     else alert("選択した条件に合う問題がありません。設定を見直してください。");
     return;
   }
-  mode=cfg.mode; answers={}; submitted=false; idx=0;
+  mode=cfg.mode; answers={}; submitted=false; idx=0; quizStart=Date.now();
   $("modeChip").textContent = MODE_LABEL[mode];
   $("start").style.display="none"; $("result").style.display="none"; $("quiz").style.display="block";
   if(mode==="exam"){
@@ -495,6 +497,9 @@ function grade(){
     if(isC){ correct++; bySubj[q.subj].c++; }
   });
   var total=order.length, pct=Math.round(correct/total*100);
+  var sb={}; Object.keys(bySubj).forEach(function(k){ sb[k]=[bySubj[k].n, bySubj[k].c]; });
+  lastResult={ subj:sb, n:total, c:correct, min:Math.max(1, Math.round((Date.now()-quizStart)/60000)), sid:Date.now().toString(36) };
+  if(window.StudyLink) $("btnStudy").style.display="";
   $("scoreN").textContent=correct; $("scoreT").textContent=total;
   $("scorePct").textContent="正答率 "+pct+"％（"+correct+" / "+total+" 問）";
   var v=$("verdict");
@@ -532,6 +537,17 @@ function grade(){
 }
 
 /* ---- 遷移 ---- */
+/* ---- 勉強シートへ送る（../study-link.js・本人の claude.ai の勉強シートへ） ---- */
+function sendStudy(){
+  if(!window.StudyLink || !lastResult) return;
+  var r=lastResult, d=window.StudyLink.today();
+  window.StudyLink.open({
+    title:"CBT模擬問題（"+MODE_LABEL[mode]+"）", date:d, minutes:r.min,
+    lines:Object.keys(r.subj).map(function(k){ return k+"　"+r.subj[k][0]+"問（正解 "+r.subj[k][1]+"）"; }),
+    summary:"この回の結果 "+r.c+" / "+r.n+"問（正答率 "+Math.round(r.c/r.n*100)+"%）",
+    build:function(min){ return { v:1, src:"c", key:"c"+r.sid, app:"CBT模擬問題", date:d, min:min, subj:r.subj }; }
+  });
+}
 function reviewMistakes(){ setMode("review"); cfg.subj="all"; cfg.count="all"; $("subjSel").value="all"; toggleSeg("segCount","data-count","all"); beginQuiz(); }
 function restart(){ beginQuiz(); }
 function backToStart(){ stopTimer(); $("result").style.display="none"; $("quiz").style.display="none"; $("start").style.display="block"; refreshStart(); window.scrollTo(0,0); }
