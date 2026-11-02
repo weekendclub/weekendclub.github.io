@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<!-- チーム内で共有するための限定ページ。検索結果には出さず、ホームページのメニューやサイトマップにも載せない -->
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>ポルト戦ふりかえり｜BOSCO NEXT</title>
+<meta name="description" content="ポルトとの練習試合の振り返り。受け方・3レーン・相手の縦軸・コートの広さを、動く戦術ボードで確認できます。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ポルト戦ふりかえり｜BOSCO NEXT">
+<meta property="og:description" content="ポルトとの練習試合の振り返り。受け方・3レーン・相手の縦軸・コートの広さを、動く戦術ボードで確認できます。">
+<meta name="theme-color" content="#eef1f4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f151b" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Dela+Gothic+One&display=swap" rel="stylesheet">
+<style>
+/* Layout: a team letter interleaved with tactics-board scenes. Each scene puts "よくある形" and "こうしてみよう" side by side on a full futsal court (attacking upward) and plays them together. */
+:root{
+  --bg:#eef1f4; --card:#ffffff; --ink:#16202a; --muted:#566573; --line:#d5dde3;
+  --accent:#1d5f86;
+  --us:#ef7d22; --them:#22303d;
+  --court:#2d6f8c; --court-edge:#245a72; --cline:rgba(255,255,255,.88);
+  --ng:#cc3344; --ok:#0f8467; --ng-soft:#fde8ea; --ok-soft:#dcf3ec;
+  --ng-c:#ff6b7a; --ok-c:#5ff0b8;
+  --f-body:"Zen Kaku Gothic New","Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic",sans-serif;
+  --f-num:"Dela Gothic One","Zen Kaku Gothic New","Hiragino Sans",sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f151b; --card:#172029; --ink:#e5ecf1; --muted:#9cadbb; --line:#2a3743;
+    --accent:#6fb3e0; --us:#f58d3a; --them:#111a23;
+    --court:#24586f; --court-edge:#1b4558;
+    --ng:#ff6b7a; --ok:#3fd0a6; --ng-soft:#3a1d23; --ok-soft:#123329;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f151b; --card:#172029; --ink:#e5ecf1; --muted:#9cadbb; --line:#2a3743;
+  --accent:#6fb3e0; --us:#f58d3a; --them:#111a23;
+  --court:#24586f; --court-edge:#1b4558;
+  --ng:#ff6b7a; --ok:#3fd0a6; --ng-soft:#3a1d23; --ok-soft:#123329;
+  color-scheme:dark;
+}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15.5px;line-height:1.8}
+.wrap{max-width:1000px;margin:0 auto;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:28px 64px;display:grid;grid-template-columns:minmax(0,1fr);gap:24px}
+h1,h2,h3{margin:0;text-wrap:balance}
+p{margin:0}
+.eyebrow{font-size:12.5px;letter-spacing:.12em;color:var(--accent);font-weight:700}
+h1{font-size:clamp(32px,7vw,48px);font-weight:900;line-height:1.2;margin-top:6px}
+.sub{font-size:clamp(17px,3.4vw,21px);font-weight:700;color:var(--muted);margin-top:4px}
+.letter{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;display:grid;gap:12px}
+.letter p{max-width:62ch}
+.letter h2{font-size:20px;font-weight:900}
+.note{font-size:13px;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips a{display:inline-flex;gap:8px;align-items:center;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:5px 14px 5px 6px;font-size:14px;font-weight:700}
+.chips a b{font-family:var(--f-num);font-weight:400;font-size:12px;color:#fff;background:var(--accent);border-radius:999px;width:24px;height:24px;display:inline-grid;place-items:center}
+.chips a:focus-visible,.play:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--muted);align-items:center}
+.legend > span{display:inline-flex;gap:6px;align-items:center}
+.scene{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;display:grid;gap:14px;scroll-margin-top:16px;min-width:0}
+.scene > *{min-width:0}
+.shead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.num{font-family:var(--f-num);font-size:40px;line-height:1;color:var(--accent)}
+.shead h2{font-size:22px;font-weight:900;line-height:1.3}
+.catch{display:inline-block;margin-top:4px;font-size:13.5px;font-weight:700;color:var(--accent)}
+.play{margin-left:auto;font:inherit;font-size:14px;font-weight:700;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:7px 16px;cursor:pointer}
+.play:hover{border-color:var(--accent)}
+.lead{max-width:62ch}
+.vs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.board{display:grid;gap:8px;align-content:start;min-width:0}
+.board .hd{justify-self:start;font-size:13.5px;font-weight:900;border-radius:999px;padding:1px 12px}
+.board.ng .hd{background:var(--ng-soft);color:var(--ng)}
+.board.ok .hd{background:var(--ok-soft);color:var(--ok)}
+.board svg{width:100%;max-width:300px;height:auto;display:block;border-radius:10px}
+.cap{margin:0;padding-left:1.4em;font-size:14px;line-height:1.65;display:grid;gap:4px}
+.cap li{transition:color .2s}
+.cap.running li{color:var(--muted)}
+.cap.running li.on{color:var(--ink);font-weight:700}
+.board.ng .cap li::marker{color:var(--ng);font-weight:700}
+.board.ok .cap li::marker{color:var(--ok);font-weight:700}
+.list{margin:0;padding-left:1.3em;display:grid;gap:4px}
+.notes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.notes label{display:grid;gap:6px;font-weight:700;font-size:14px;min-width:0}
+textarea{font:inherit;font-weight:400;font-size:15px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 10px;min-height:76px;resize:vertical;width:100%;box-sizing:border-box}
+footer{font-size:13px;color:var(--muted)}
+@media (max-width:640px){
+  body{font-size:15px}
+  .vs{gap:10px}
+  .cap{font-size:12.5px;padding-left:1.25em}
+  .notes{grid-template-columns:minmax(0,1fr)}
+  .scene{padding:14px}
+}
+/* board parts */
+.floor{fill:var(--court-edge)} .court{fill:var(--court)}
+.cl{fill:none;stroke:var(--cline);stroke-width:1.4}
+.spots circle{fill:var(--cline)}
+.lane{fill:#fff;opacity:.07}
+.shadow{fill:#000;opacity:.3}
+.zone-ng{fill:var(--ng-c);fill-opacity:.2;stroke:var(--ng-c);stroke-width:1.5;stroke-dasharray:4 3}
+.zone-ok{fill:var(--ok-c);fill-opacity:.2;stroke:var(--ok-c);stroke-width:1.5;stroke-dasharray:4 3}
+.ln-ok{stroke:var(--ok-c);stroke-width:2.2;stroke-dasharray:5 4}
+.ln-ng{stroke:var(--ng-c);stroke-width:2.2;stroke-dasharray:5 4}
+.dash-w{stroke:#fff;stroke-width:1.4;stroke-dasharray:4 4;opacity:.85}
+.hd-ok{fill:var(--ok-c)}
+.xmark{stroke:var(--ng-c);stroke-width:3;stroke-linecap:round;fill:none}
+.lab{font-family:var(--f-body);font-size:10px;font-weight:700;fill:#fff;text-anchor:middle;paint-order:stroke;stroke:rgba(0,0,0,.6);stroke-width:3px;stroke-linejoin:round}
+.lab.ng{fill:#ffc2c8} .lab.ok{fill:#aef7da}
+.tr{fill:none;stroke-width:1.6;stroke-dasharray:3 3}
+.tr.us{stroke:var(--us)} .tr.them{stroke:#cfd8e0;opacity:.6} .tr.ball{stroke:#fff;stroke-width:1.2;stroke-dasharray:1.5 3}
+.trh.us{fill:var(--us)} .trh.them{fill:#cfd8e0;opacity:.6} .trh.ball{fill:#fff}
+.pl circle.body{stroke:#fff;stroke-width:1.6}
+.pl.us circle.body,.pl.us polygon{fill:var(--us)}
+.pl.them circle.body,.pl.them polygon{fill:var(--them)}
+.halo{fill:none;stroke:#fff;stroke-width:1.4;stroke-dasharray:3 2}
+.tag{font-family:var(--f-body);font-size:9.5px;font-weight:700;fill:#fff;text-anchor:middle;paint-order:stroke;stroke:rgba(0,0,0,.65);stroke-width:3px;stroke-linejoin:round}
+.ball{fill:#fff;stroke:#111;stroke-width:1.2}
+.ov{transition:opacity .25s}
+@media (prefers-reduced-motion: reduce){ .play{display:none} .ov{transition:none} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">BOSCO NEXT ／ 全国大会に向けて</p>
+    <h1>ポルト戦ふりかえり</h1>
+    <p class="sub">考えるフットサルへ</p>
+  </header>
+
+  <section class="letter">
+    <p>ポルトとの練習試合、おつかれさまでした！　映像を見返して、感じたことをまとめました。</p>
+    <p>コートが狭かったこともありますが、もっとコートを広く使えると、プレーがずっと楽になると思います。追い越すランニングはたくさん出ていました。そのうえで、後ろのスペースも使ったり、相手の位置を考えてポジションをとったりできると、もっと良くなるはずです。</p>
+    <p>気づいたことを4つの場面にして、動く図にしました。左が「よくある形」、右が「こうしてみよう」です。「▶ 動きを見る」を押すと、2つが同時に動きます。</p>
+    <p class="note">図はイメージです。実際の試合の場面を、そのまま再現したものではありません。</p>
+  </section>
+
+  <nav class="chips" aria-label="4つの場面">
+    <a href="#sc1"><b>1</b>離れて受ける</a><a href="#sc2"><b>2</b>3レーン</a><a href="#sc3"><b>3</b>相手の縦軸</a><a href="#sc4"><b>4</b>広く・後ろも</a>
+  </nav>
+
+  <div class="legend" aria-label="図の見方">
+    <span><svg width="18" height="18" viewBox="-10 -10 20 20" aria-hidden="true"><circle r="8" fill="var(--us)" stroke="#fff" stroke-width="1.6"/></svg>BOSCO</span>
+    <span><svg width="18" height="18" viewBox="-10 -10 20 20" aria-hidden="true"><circle r="8" fill="var(--them)" stroke="#fff" stroke-width="1.6"/></svg>相手</span>
+    <span><svg width="18" height="18" viewBox="-10 -10 20 20" aria-hidden="true"><circle r="4.5" fill="#fff" stroke="#111" stroke-width="1.2"/></svg>ボール</span>
+    <span><svg width="26" height="18" viewBox="-10 -10 26 20" aria-hidden="true"><circle r="7" fill="var(--us)" stroke="#fff" stroke-width="1.4"/><polygon points="13,0 6.5,-4 6.5,4" fill="var(--us)"/></svg>とがった方が体の向き</span>
+    <span><svg width="30" height="18" viewBox="0 0 30 18" aria-hidden="true"><path d="M2 9 H28" stroke="var(--us)" stroke-width="1.8" stroke-dasharray="3 3"/></svg>動いた道すじ</span>
+    <span>上が相手ゴール（攻める方向）</span>
+  </div>
+
+  <main id="scenes" style="display:grid;grid-template-columns:minmax(0,1fr);gap:18px"></main>
+
+  <section class="letter">
+    <h2>周りを見るために</h2>
+    <p>今は、ボールと自分と味方1人くらいの関係でプレーしている場面が多いように感じます。もっと視野を広く、周りを見ることが大切です。</p>
+    <p>そのために必要なのが、足元の技術です。ボールを見なくても扱えるようになれば、顔を上げられます。全国大会までもう残り少ないですが、触った分だけボールは言うことを聞くし、技術は嘘をつきません。</p>
+    <p>そして、自分の持ち味は何か。自分が生きるのは、どんな場面・位置・時間帯か。相手の選手の特徴は何か。これを知っておくだけでも、だいぶ違います。</p>
+  </section>
+
+  <section class="letter">
+    <h2>練習で意識したいこと</h2>
+    <ul class="list">
+      <li>アップの最初に、ボールタッチを10分（足裏・インとアウト）</li>
+      <li>鳥かごでは、受ける前に首を振って周りを見る</li>
+      <li>ゲーム形式では「同じレーンに2人並ばない」「相手と相手の間で受ける」</li>
+    </ul>
+  </section>
+
+  <section class="letter">
+    <h2>全国大会に向けて</h2>
+    <p>全国大会の優勝が目標なのは、もちろんです。そのうえで、チャレンジャーとして、頭を使って意識したプレー、「考えるフットサル」をしてみたいと思っています。そのチャレンジは、きっとこの先にも活きていきます。</p>
+    <p>練習時間が少ないからこそ、一回一回の質をどう上げるか。一人ひとりが意識することが大切だと思います。</p>
+  </section>
+
+  <section class="letter">
+    <h2>一人ひとりの目標</h2>
+    <p>個人的には、来年度はフットサルC級の取得と、強化指定選手への復帰を目指しています。だから、高いレベルを求めてしまっているところもあるかもしれません。それでも、一人ひとりが自分の目標を一つ、具体的に持ってみるのがいいと思います。もちろん、純粋に楽しむだけでもいいと思います。</p>
+    <p>ソーシャルフットボールでやっていることは、きっといろんなことに活きてきます。特にフットサルは判断する場面が多いので、日常生活でも活きると思います。</p>
+    <h2 style="font-size:17px;margin-top:6px">自分ノート</h2>
+    <div class="notes">
+      <label for="n1">自分の持ち味<textarea id="n1" placeholder="例：左足のシュート、運ぶドリブル"></textarea></label>
+      <label for="n2">自分が生きる場面・位置・時間帯<textarea id="n2" placeholder="例：右アラで受けて前を向いたとき、後半の立ち上がり"></textarea></label>
+      <label for="n3">知っておきたい相手の特徴<textarea id="n3" placeholder="例：前からプレスに来る、ピヴォが強い"></textarea></label>
+      <label for="n4">全国大会までの自分の目標（1つ）<textarea id="n4" placeholder="例：受ける前に必ず首を振る"></textarea></label>
+    </div>
+    <p class="note">書いた内容は、いま見ているスマホやパソコンの中だけに保存されます。チームには送られません。</p>
+  </section>
+
+  <footer>図はイメージです。実際の試合の場面をそのまま再現したものではありません。</footer>
+</div>
+
+<script>
+(function(){
+  const f1 = n => Math.round(n * 10) / 10;
+  // ---------- コート（縦向き。上が相手ゴール。1m = 10） ----------
+  const COURT = '<rect class="floor" x="-10" y="-14" width="220" height="428"/><rect class="court" x="0" y="0" width="200" height="400"/>'
+    + '<g class="cl"><rect x="0" y="0" width="200" height="400"/><line x1="0" y1="200" x2="200" y2="200"/><circle cx="100" cy="200" r="30"/>'
+    + '<path d="M 24.2 0 A 60 60 0 0 0 84.2 60 L 115.8 60 A 60 60 0 0 0 175.8 0"/><path d="M 24.2 400 A 60 60 0 0 1 84.2 340 L 115.8 340 A 60 60 0 0 1 175.8 400"/>'
+    + '<rect x="85" y="-8" width="30" height="8"/><rect x="85" y="400" width="30" height="8"/></g>'
+    + '<g class="spots"><circle cx="100" cy="200" r="1.6"/><circle cx="100" cy="60" r="1.6"/><circle cx="100" cy="340" r="1.6"/><circle cx="100" cy="100" r="1.6"/><circle cx="100" cy="300" r="1.6"/></g>';
+
+  const T = (x, y, s, c) => `<text class="lab ${c || ''}" x="${x}" y="${y}">${s}</text>`;
+  const L = (x1, y1, x2, y2, c) => `<line class="${c}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
+  const X = (x, y) => `<path class="xmark" d="M ${x - 5} ${y - 5} L ${x + 5} ${y + 5} M ${x + 5} ${y - 5} L ${x - 5} ${y + 5}"/>`;
+  function head(x1, y1, x2, y2, c){
+    const a = Math.atan2(y2 - y1, x2 - x1), ca = Math.cos(a), sa = Math.sin(a);
+    const p = [[x2, y2], [x2 - 9 * ca + 5 * sa, y2 - 9 * sa - 5 * ca], [x2 - 9 * ca - 5 * sa, y2 - 9 * sa + 5 * ca]];
+    return `<polygon class="${c}" points="${p.map(q => q.map(f1).join(',')).join(' ')}"/>`;
+  }
+
+  // ---------- 場面 ----------
+  // 位置は [x, y, 体の向き(度。0=右、-90=上)]。g=ゴレイロ f=フィクソ l=左アラ r=右アラ p=ピヴォ／og,o1〜o4=相手
+  const US = ['g', 'f', 'l', 'r', 'p'], THEM = ['og', 'o1', 'o2', 'o3', 'o4'];
+  const LANES = '<rect class="lane" x="0" y="0" width="66.7" height="400"/><rect class="lane" x="133.3" y="0" width="66.7" height="400"/>'
+    + T(33, 298, '左レーン') + T(100, 298, '中央レーン') + T(167, 298, '右レーン');
+  const SHADOW = '<polygon class="shadow" points="111,206 134,140 66,140 89,206"/>' + T(100, 134, '相手の影');
+
+  const S1P = { g: [100, 386, -90], f: [100, 246, -90], l: [28, 200, -60], r: [172, 204, -120], p: [100, 96, 90], og: [100, 12, 90], o1: [94, 222, 90], o2: [160, 188, 120], o3: [40, 188, 60], o4: [100, 80, 90] };
+  const S2P = { g: [100, 386, -90], f: [100, 246, -90], l: [26, 200, -60], r: [170, 204, -120], p: [100, 98, 90], og: [100, 12, 90], o1: [100, 222, 90], o2: [150, 186, 120], o3: [48, 186, 60], o4: [100, 82, 90] };
+  const S3P = { g: [100, 386, -90], f: [100, 248, -90], l: [26, 196, -60], r: [168, 226, -120], p: [124, 66, 90], og: [100, 12, 90], o1: [100, 206, 90], o2: [58, 162, 80], o3: [156, 150, 100], o4: [110, 90, 90] };
+  const S4P = { g: [100, 386, -90], f: [100, 240, -90], l: [24, 196, -60], r: [176, 168, -90], p: [120, 92, 90], og: [100, 12, 90], o1: [92, 212, 60], o2: [166, 150, 100], o3: [50, 170, 60], o4: [110, 76, 90] };
+
+  const SCENES = [
+    { id: 'sc1', title: '寄るより、離れて受ける', catchy: '合言葉：半身で、離れて受ける',
+      lead: 'ボールを持っている味方に、体ごと向いて寄っていって受ける場面が多かったように思います。助けようとする動きが、マークも一緒に連れてきてしまい、かえって味方を苦しめているかもしれません。少し離れて、半身（ボールとゴールの両方が見える体の向き）で受けると、前を向けます。',
+      labels: { r: 'アラ' },
+      ng: { halo: ['r'], frames: [{ P: S1P, B: [100, 237] }, { d: 1200, P: { r: [138, 236, 170], o2: [146, 224, 150] } }, { d: 650, B: [129, 238] }, { d: 900, P: { o2: [140, 224, 110], o1: [116, 228, 20] } }, { d: 700, B: [100, 237] }],
+        caps: ['アラが、ボールに体ごと向いて寄っていく。マークも一緒に寄ってくる', 'フィクソから短いパス', '受けた瞬間に、相手2人に囲まれる', '前を向けず、戻すしかない'],
+        ov: [{ at: 0.3, s: '<rect class="zone-ng" x="150" y="140" width="48" height="70" rx="6"/>' + T(174, 170, '空いた') + T(174, 182, 'スペース') },
+             { at: 0.45, s: '<ellipse class="zone-ng" cx="124" cy="231" rx="36" ry="22"/>' + T(124, 268, '密集', 'ng') }] },
+      ok: { halo: ['r'], frames: [{ P: S1P, B: [100, 237] }, { d: 1200, P: { r: [184, 180, -150], o2: [170, 186, 140] } }, { d: 700, B: [176, 176] }, { d: 1000, P: { r: [182, 146, -90], o2: [174, 166, -80] }, B: [182, 137] }],
+        caps: ['アラは寄らずに、外へ・少し前へ離れる。体は半身', '相手と距離がある状態でパスを受ける', 'そのまま前を向いて運べる'],
+        ov: [{ at: 0.2, s: T(152, 166, '半身', 'ok') },
+             { at: 0.78, s: L(182, 126, 182, 70, 'ln-ok') + head(182, 120, 182, 62, 'hd-ok') + T(150, 52, '前が空いている', 'ok') }] } },
+
+    { id: 'sc2', title: '3レーンで立つ', catchy: '合言葉：同じレーンに2人並ばない',
+      lead: '3-1は、左・中央・右の3レーンで考えるのが基本です。同じレーンに人が集まると、相手は少ない人数で守れてしまいます。各レーンに1人ずつ立つと、相手も広がって、中にすき間ができます。',
+      labels: { r: 'アラ', l: 'アラ' }, base: LANES,
+      ng: { halo: ['r', 'l'], frames: [{ P: S2P, B: [100, 237] }, { d: 1300, P: { r: [118, 182, -120], l: [52, 198, -60], o2: [130, 164, 110], o3: [66, 174, 70] } }, { d: 900 }],
+        caps: ['両アラが中へ寄ってきて、中央レーンに3人', '右レーンに誰もいない。相手は中を固めるだけで守れる'],
+        ov: [{ at: 0.6, s: T(33, 314, '1人') + T(100, 314, '3人', 'ng') + T(167, 314, '0人', 'ng')
+          + L(100, 237, 52, 198, 'ln-ok') + L(100, 237, 118, 182, 'ln-ng') + X(106, 216) + L(100, 237, 100, 108, 'ln-ng') + X(100, 160)
+          + '<rect class="zone-ng" x="136" y="120" width="62" height="104" rx="6"/>' + T(167, 176, '誰もいない', 'ng') }] },
+      ok: { halo: ['r', 'l'], frames: [{ P: S2P, B: [100, 237] }, { d: 1300, P: { r: [180, 184, -130], l: [20, 184, -50], o2: [166, 174, 120], o3: [34, 174, 60] } }, { d: 900 }],
+        caps: ['アラは幅をとって、左右のレーンに1人ずつ', '相手も広がるので、中央にすき間ができる'],
+        ov: [{ at: 0.6, s: T(33, 314, '1人') + T(100, 314, '2人') + T(167, 314, '1人')
+          + L(100, 237, 26, 188, 'ln-ok') + L(100, 237, 174, 188, 'ln-ok')
+          + '<ellipse class="zone-ok" cx="100" cy="150" rx="30" ry="26"/>' + T(100, 154, 'すき間', 'ok') }] } },
+
+    { id: 'sc3', title: '相手の縦軸に入らない', catchy: '合言葉：相手と相手の間に立つ',
+      lead: 'ボール・相手・自分が一直線に並ぶ位置（相手の縦軸）に立つと、相手1人に2人とも見られてしまい、パスも通りません。相手の位置を見て、自分の立ち位置を決めましょう。',
+      labels: { r: '受け手' }, base: SHADOW,
+      ng: { halo: ['r'], frames: [{ P: S3P, B: [100, 239] }, { d: 1300, P: { r: [100, 176, 90] } }, { d: 700, B: [100, 215] }, { d: 600, P: { o1: [100, 206, -90] }, B: [100, 197] }],
+        caps: ['パスを受けようと、相手の真後ろ（縦軸）に入る。ボール・相手・自分が一直線', 'パスは相手に引っかかる', '相手1人に、2人とも見られてしまう'],
+        ov: [{ at: 0.45, s: L(100, 237, 100, 186, 'ln-ng') + X(100, 191) }, { at: 0.85, s: T(150, 228, '1人で2人を見られる', 'ng') }] },
+      ok: { halo: ['r'], frames: [{ P: S3P, B: [100, 239] }, { d: 1300, P: { r: [138, 192, -145] } }, { d: 700, B: [130.6, 186.8] }, { d: 900, P: { r: [138, 188, -95] }, B: [137, 179] }],
+        caps: ['相手と相手の間（影の外）に立つ。体は半身', 'パスが通る', '前を向いて、次のプレーを選べる'],
+        ov: [{ at: 0.45, s: L(100, 237, 130, 188, 'ln-ok') }, { at: 0.85, s: T(166, 128, '前を向ける', 'ok') }] } },
+
+    { id: 'sc4', title: 'コートを広く、後ろも使う', catchy: '合言葉：詰まったら、やり直す',
+      lead: '追い越すランニングは多く出ていました。その分、攻撃が前と縦だけになり、片側に人が集まりがちでした。詰まったら後ろに戻して、逆サイドを使う。後ろのスペースも立派な選択肢です。',
+      labels: { f: 'フィクソ', l: 'アラ' },
+      ng: { halo: ['f'], frames: [{ P: S4P, B: [176, 159] }, { d: 800, P: { f: [186, 206, -60], l: [60, 184, -60] } },
+          { d: 900, P: { f: [186, 124, -90], l: [80, 172, -60], p: [150, 104, 90], o1: [146, 192, 40], o3: [118, 150, 40], o4: [170, 90, 90] } },
+          { d: 800, P: { o2: [172, 156, 100] } }, { d: 700, P: { o2: [172, 156, -90] }, B: [172, 147] }],
+        caps: ['フィクソが、ボールを持ったアラの外を追い越す', 'みんなが右サイドに集まる', '左サイドと後ろが空っぽ。サイドで詰まる', 'ボールを奪われる'],
+        ov: [{ at: 0.5, s: '<ellipse class="zone-ng" cx="166" cy="140" rx="34" ry="62"/>' + T(150, 52, '片側に集まる', 'ng')
+          + '<rect class="zone-ng" x="6" y="110" width="66" height="150" rx="6"/>' + T(39, 240, '使えていない', 'ng') },
+             { at: 0.9, s: T(138, 176, '奪われる', 'ng') }] },
+      ok: { halo: ['l'], frames: [{ P: S4P, B: [176, 159] }, { d: 900, P: { r: [176, 168, -150] }, B: [100, 231] },
+          { d: 800, P: { f: [100, 240, -150], o1: [130, 214, 120], o2: [150, 170, 120] } }, { d: 900, B: [28.4, 185.6] },
+          { d: 1100, P: { l: [26, 140, -80], o3: [44, 150, 120] }, B: [27.6, 131] }],
+        caps: ['詰まったら、後ろ（フィクソ）に戻してやり直す', 'フィクソは顔を上げて逆サイドを見る（ゴレイロに戻すのもあり）', '幅をとっていたアラへ', '空いたスペースを前へ運べる'],
+        ov: [{ at: 0.2, s: T(100, 272, 'やり直し', 'ok') },
+             { at: 0.35, s: L(100, 252, 100, 374, 'dash-w') + T(140, 318, 'ゴレイロも使える') },
+             { at: 0.6, s: '<rect class="zone-ok" x="6" y="100" width="76" height="130" rx="6"/>' + T(44, 222, '空いている', 'ok') }] } }
+  ];
+
+  // フレームを、全員の位置がそろった状態の列にする
+  function states(v){
+    let P = {}, B = null;
+    return v.frames.map(fr => {
+      P = Object.assign({}, P, fr.P || {});
+      B = fr.B || B;
+      return { P: JSON.parse(JSON.stringify(P)), B: B.slice(), d: fr.d || 0 };
+    });
+  }
+
+  function trails(st){
+    let s = '';
+    const ids = US.concat(THEM);
+    for (const id of ids){
+      const pts = [];
+      st.forEach(x => { const q = x.P[id]; const last = pts[pts.length - 1]; if (!last || Math.hypot(q[0] - last[0], q[1] - last[1]) > 3) pts.push([q[0], q[1]]); });
+      if (pts.length < 2) continue;
+      const team = US.includes(id) ? 'us' : 'them';
+      s += `<polyline class="tr ${team}" points="${pts.map(p => p.map(f1).join(',')).join(' ')}"/>`;
+      const a = pts[pts.length - 2], b = pts[pts.length - 1];
+      const ang = Math.atan2(b[1] - a[1], b[0] - a[0]);
+      s += head(a[0], a[1], b[0] - Math.cos(ang) * 10, b[1] - Math.sin(ang) * 10, 'trh ' + team);
+    }
+    const bp = [];
+    st.forEach(x => { const last = bp[bp.length - 1]; if (!last || Math.hypot(x.B[0] - last[0], x.B[1] - last[1]) > 3) bp.push(x.B.slice()); });
+    for (let i = 1; i < bp.length; i++){
+      s += `<line class="tr ball" x1="${bp[i - 1][0]}" y1="${bp[i - 1][1]}" x2="${bp[i][0]}" y2="${bp[i][1]}"/>`;
+    }
+    return s;
+  }
+
+  function board(sc, key){
+    const v = sc[key], st = states(v);
+    let s = `<svg viewBox="-10 -14 220 428" role="img" aria-label="${sc.title}：${key === 'ng' ? 'よくある形' : 'こうしてみよう'}">` + COURT + (sc.base || '');
+    s += `<g class="trails">${trails(st)}</g>`;
+    v.ov.forEach((o, i) => { s += `<g class="ov" data-at="${o.at}">${o.s}</g>`; });
+    const fin = st[st.length - 1].P;
+    for (const id of US.concat(THEM)){
+      const team = US.includes(id) ? 'us' : 'them';
+      const q = fin[id];
+      s += `<g class="pl ${team}" data-id="${id}" transform="translate(${q[0]} ${q[1]})">`
+        + (v.halo.includes(id) ? '<circle class="halo" r="14"/>' : '')
+        + `<polygon points="16,0 8.5,-5 8.5,5" transform="rotate(${q[2]})"/><circle class="body" r="9"/>`
+        + (sc.labels[id] && team === 'us' ? `<text class="tag" y="-15">${sc.labels[id]}</text>` : '') + '</g>';
+    }
+    const b = st[st.length - 1].B;
+    s += `<circle class="ball" r="4.2" cx="${b[0]}" cy="${b[1]}"/>`;
+    return { svg: s + '</svg>', st };
+  }
+
+  const root = document.getElementById('scenes');
+  const RUN = [];
+  SCENES.forEach((sc, i) => {
+    const art = document.createElement('article');
+    art.className = 'scene'; art.id = sc.id;
+    const ng = board(sc, 'ng'), ok = board(sc, 'ok');
+    art.innerHTML = `<div class="shead"><span class="num">${i + 1}</span><div><h2>${sc.title}</h2><span class="catch">${sc.catchy}</span></div><button class="play" type="button" id="play-${sc.id}">▶ 動きを見る</button></div>`
+      + `<p class="lead">${sc.lead}</p>`
+      + `<div class="vs"><div class="board ng"><span class="hd">よくある形</span>${ng.svg}<ol class="cap">${sc.ng.caps.map(c => `<li>${c}</li>`).join('')}</ol></div>`
+      + `<div class="board ok"><span class="hd">こうしてみよう</span>${ok.svg}<ol class="cap">${sc.ok.caps.map(c => `<li>${c}</li>`).join('')}</ol></div></div>`;
+    root.appendChild(art);
+    const boards = [...art.querySelectorAll('.board')].map((el, k) => ({ el, st: (k ? ok : ng).st }));
+    RUN.push({ art, boards });
+    art.querySelector('.play').addEventListener('click', () => play(RUN[i]));
+  });
+
+  // ---------- 再生 ----------
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const lerpAng = (a, b, t) => { let d = ((b - a + 540) % 360) - 180; return a + d * t; };
+
+  function apply(bd, P, B){
+    bd.el.querySelectorAll('.pl').forEach(g => {
+      const q = P[g.dataset.id];
+      g.setAttribute('transform', `translate(${f1(q[0])} ${f1(q[1])})`);
+      g.querySelector('polygon').setAttribute('transform', `rotate(${f1(q[2])})`);
+    });
+    const ball = bd.el.querySelector('.ball');
+    ball.setAttribute('cx', f1(B[0])); ball.setAttribute('cy', f1(B[1]));
+  }
+  function runBoard(bd, done){
+    const st = bd.st, T = [0];
+    for (let k = 1; k < st.length; k++) T.push(T[k - 1] + st[k].d);
+    const total = T[T.length - 1] || 1;
+    const ovs = [...bd.el.querySelectorAll('.ov')], caps = [...bd.el.querySelectorAll('.cap li')], cap = bd.el.querySelector('.cap');
+    const trailsEl = bd.el.querySelector('.trails');
+    ovs.forEach(o => o.style.opacity = 0);
+    trailsEl.style.opacity = .25;
+    cap.classList.add('running');
+    apply(bd, st[0].P, st[0].B);
+    const t0 = performance.now() + 350;
+    function step(now){
+      const e = Math.max(0, now - t0);
+      let k = 1; while (k < T.length - 1 && e > T[k]) k++;
+      const seg = Math.min(1, Math.max(0, (e - T[k - 1]) / (st[k].d || 1)));
+      const t = ease(seg), A = st[k - 1], Bs = st[k], P = {};
+      for (const id in Bs.P){ const a = A.P[id], b = Bs.P[id]; P[id] = [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerpAng(a[2], b[2], t)]; }
+      apply(bd, P, [lerp(A.B[0], Bs.B[0], t), lerp(A.B[1], Bs.B[1], t)]);
+      const prog = Math.min(1, e / total);
+      ovs.forEach(o => { o.style.opacity = prog >= +o.dataset.at ? 1 : 0; });
+      caps.forEach((li, i) => li.classList.toggle('on', i === k - 1));
+      if (e < total) requestAnimationFrame(step);
+      else {
+        const L = st[st.length - 1]; apply(bd, L.P, L.B);
+        ovs.forEach(o => o.style.opacity = 1); trailsEl.style.opacity = 1;
+        caps.forEach(li => li.classList.remove('on')); cap.classList.remove('running');
+      }
+    }
+    requestAnimationFrame(step);
+  }
+  function play(run){ if (reduce) return; run.boards.forEach(bd => runBoard(bd)); }
+
+  if (!reduce && 'IntersectionObserver' in window){
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting){ io.unobserve(e.target); const r = RUN.find(x => x.art === e.target); if (r) play(r); }
+    }), { threshold: 0.5 });
+    RUN.forEach(r => io.observe(r.art));
+  }
+
+  // ---------- 自分ノート（この端末にだけ保存） ----------
+  const KEY = 'porto-notes-v1';
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { saved = {}; }
+  ['n1', 'n2', 'n3', 'n4'].forEach(id => {
+    const ta = document.getElementById(id);
+    if (saved[id]) ta.value = saved[id];
+    ta.addEventListener('input', () => {
+      saved[id] = ta.value;
+      try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) {}
+    });
+  });
+})();
+</script>
+</body>
+</html>
